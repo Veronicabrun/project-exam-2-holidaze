@@ -2,11 +2,15 @@ import { request } from "./api";
 import { VENUES, venueById } from "../config/api";
 
 export async function getVenues() {
-  console.log("getVenues() calling:", VENUES);
   return request(VENUES);
 }
 
-export async function getVenue(id) {
-  console.log("getVenue() calling:", venueById(id));
-  return request(venueById(id));
+export async function getVenue(id, options = {}) {
+  const { withBookings = false } = options;
+
+  const url = withBookings
+    ? `${venueById(id)}?_bookings=true`
+    : venueById(id);
+
+  return request(url);
 }

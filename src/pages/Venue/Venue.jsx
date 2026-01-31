@@ -4,19 +4,18 @@ import { getVenue } from "../../services/venues";
 import { createBooking } from "../../services/bookings";
 
 function toDateOnlyISO(isoString) {
-  // Tar f.eks. "2025-11-30T00:00:00.000Z" -> "2025-11-30"
+  // "2025-11-30T00:00:00.000Z" -> "2025-11-30"
   return new Date(isoString).toISOString().slice(0, 10);
 }
 
 function parseDateInput(value) {
-  // value er "YYYY-MM-DD"
-  // Lager en dato i UTC ved midnatt for stabil sammenligning
+  // value: "YYYY-MM-DD" -> lager dato i UTC ved midnatt
   return new Date(`${value}T00:00:00.000Z`);
 }
 
 /**
  * Overlap-regel:
- * Vi behandler intervaller som [start, end) (end er utsjekk-dag / ikke inkludert).
+ * Intervaller som [start, end) (end er utsjekk-dag / ikke inkludert)
  * Overlap hvis start < existingEnd && end > existingStart
  */
 function rangesOverlap(startA, endA, startB, endB) {
@@ -39,24 +38,27 @@ export default function Venue() {
   const [bookingError, setBookingError] = useState("");
   const [bookingLoading, setBookingLoading] = useState(false);
 
-  const token = localStorage.getItem("token"); // null hvis ikke logget inn
+  // les token i render så UI reagerer hvis token endrer seg
+  const token = localStorage.getItem("token");
 
   async function fetchVenue() {
     setError("");
     setIsLoading(true);
 
     try {
-      console.log("Loading venue id:", id);
-      const response = await getVenue(id);
-      console.log("Raw venue response:", response);
+      console.log("🟡 Loading venue id:", id);
+
+      // ✅ Viktig: henter venue MED bookings
+      const response = await getVenue(id, { withBookings: true });
+
+      console.log("🟢 Raw venue response:", response);
 
       setVenue(response.data);
 
-      // Debug: bookings finnes i response.data.bookings når _bookings=true
-      console.log("Existing bookings:", response.data?.bookings?.length || 0);
+      console.log("📅 Existing bookings:", response.data?.bookings?.length || 0);
       console.log("BOOKING EXAMPLE:", response.data?.bookings?.[0]);
     } catch (err) {
-      console.error("Venue error:", err);
+      console.error("❌ Venue error:", err);
       setError(err.message || "Failed to load venue");
     } finally {
       setIsLoading(false);
@@ -82,7 +84,7 @@ export default function Venue() {
       .sort((a, b) => a.fromDate - b.fromDate);
   }, [venue]);
 
-  // Validering av valgt dato-spenn før submit (og for disable-knapp)
+  // Validering av valgt dato-spenn før submit
   const dateValidation = useMemo(() => {
     if (!dateFrom || !dateTo) return { ok: true, message: "" };
 
@@ -121,7 +123,6 @@ export default function Venue() {
       return;
     }
 
-    // UI-validering før API-call
     if (!dateValidation.ok) {
       setBookingError(dateValidation.message);
       return;
@@ -137,23 +138,23 @@ export default function Venue() {
         venueId: id,
       };
 
-      console.log("BOOKING submit payload:", payload);
+      console.log("🔵 BOOKING submit payload:", payload);
 
       const res = await createBooking(payload);
-      console.log("Booking response:", res);
+      console.log("🟢 Booking response:", res);
 
-      setBookingMsg("Booking created!");
+      setBookingMsg("✅ Booking created!");
 
-      // Refresh venue så listen over opptatte perioder oppdateres
-      console.log("Refreshing venue after booking...");
+      // ✅ Refresh venue så bookings oppdateres
+      console.log("🟡 Refreshing venue after booking...");
       await fetchVenue();
 
-      // Reset felter (valgfritt)
+      // Reset felter
       setDateFrom("");
       setDateTo("");
       setGuests(1);
     } catch (err) {
-      console.error("Booking error:", err);
+      console.error("❌ Booking error:", err);
       setBookingError(err.message || "Booking failed");
     } finally {
       setBookingLoading(false);
@@ -163,6 +164,9 @@ export default function Venue() {
   if (isLoading) return <p style={{ padding: "1rem" }}>Loading venue...</p>;
   if (error) return <p style={{ padding: "1rem", color: "crimson" }}>{error}</p>;
   if (!venue) return <p style={{ padding: "1rem" }}>No venue found.</p>;
+
+  // UX: hindrer at user velger dato "i går"
+  const today = new Date().toISOString().slice(0, 10);
 
   return (
     <div style={{ padding: "1rem" }}>
@@ -179,7 +183,7 @@ export default function Venue() {
 
       <hr style={{ margin: "24px 0" }} />
 
-      {/* Unavailable dates (Best UX uten kalenderbibliotek) */}
+      {/* Unavailable dates */}
       <section style={{ marginBottom: 24 }}>
         <h2 style={{ marginBottom: 8 }}>Unavailable dates</h2>
 
@@ -190,6 +194,7 @@ export default function Venue() {
             <summary style={{ cursor: "pointer" }}>
               View booked periods ({bookedRanges.length})
             </summary>
+
             <ul style={{ marginTop: 10 }}>
               {bookedRanges.slice(0, 20).map((r) => (
                 <li key={r.id}>
@@ -197,10 +202,9 @@ export default function Venue() {
                 </li>
               ))}
             </ul>
+
             {bookedRanges.length > 20 && (
-              <p style={{ opacity: 0.8 }}>
-                Showing first 20. (Du kan lage paginering senere.)
-              </p>
+              <p style={{ opacity: 0.8 }}>Showing first 20.</p>
             )}
           </details>
         )}
@@ -222,6 +226,7 @@ export default function Venue() {
           <input
             type="date"
             value={dateFrom}
+            min={today}
             onChange={(e) => setDateFrom(e.target.value)}
             required
             style={{ width: "100%", padding: 8 }}
@@ -233,6 +238,7 @@ export default function Venue() {
           <input
             type="date"
             value={dateTo}
+            min={dateFrom || today}
             onChange={(e) => setDateTo(e.target.value)}
             required
             style={{ width: "100%", padding: 8 }}
@@ -255,7 +261,6 @@ export default function Venue() {
           </small>
         </div>
 
-        {/* Live validering */}
         {!dateValidation.ok && (
           <p style={{ color: "crimson", marginTop: 0 }}>
             {dateValidation.message}

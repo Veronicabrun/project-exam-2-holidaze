@@ -1,3 +1,5 @@
+
+
 // src/config/api.js
 export const API_BASE = "https://v2.api.noroff.dev";
 
@@ -11,11 +13,11 @@ export const HOLIDAZE_BASE = `${API_BASE}/holidaze`;
 // Profiles
 export const PROFILES = `${HOLIDAZE_BASE}/profiles`;
 export const profileByName = (name) => `${PROFILES}/${name}`;
+export const profileBookingsByName = (name) => `${PROFILES}/${name}/bookings`;
 
-// Venues (steder som kan bookes)
+// Venues
 export const VENUES = `${HOLIDAZE_BASE}/venues`;
-export const venueById = (id) => `${VENUES}/${id}?_bookings=true`;
+export const venueById = (id) => `${VENUES}/${id}`;
 
 // Bookings
 export const BOOKINGS = `${HOLIDAZE_BASE}/bookings`;
-
