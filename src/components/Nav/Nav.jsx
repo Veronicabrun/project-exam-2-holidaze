@@ -3,6 +3,16 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { getAuth, logout as doLogout } from "../../utils/auth";
 
+/**
+ * Slå av/på logging her.
+ * Sett til false når du vil rydde.
+ */
+const DEBUG_NAV = true;
+
+function log(...args) {
+  if (DEBUG_NAV) console.log(...args);
+}
+
 export default function Nav() {
   const navigate = useNavigate();
   const location = useLocation();
@@ -10,38 +20,57 @@ export default function Nav() {
   const [auth, setAuthState] = useState(getAuth());
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
-  // Oppdater auth når route endres (typisk etter login/logout navigate)
+  // Oppdater auth når route endres (nyttig etter navigate)
   useEffect(() => {
     const next = getAuth();
-    console.log("Nav.jsx:20 Nav: route changed -> updating auth", next);
-    setAuthState(next);
+    log("Nav: route change -> sync auth", {
+      path: location.pathname,
+      auth: next,
+    });
 
-    // Lukk meny ved route change
+    setAuthState(next);
     setIsMenuOpen(false);
   }, [location.pathname]);
 
+  // Lytt på authchange (når du endrer localStorage via setAuth)
+  useEffect(() => {
+    function onAuthChange() {
+      const next = getAuth();
+      log("Nav: authchange -> sync auth", next);
+      setAuthState(next);
+    }
+
+    window.addEventListener("authchange", onAuthChange);
+    return () => window.removeEventListener("authchange", onAuthChange);
+  }, []);
+
   function toggleMenu() {
     setIsMenuOpen((current) => {
-      console.log("Nav.jsx:42 Nav: toggle menu. current:", current);
+      log("Nav: toggle menu", { current, next: !current });
       return !current;
     });
   }
 
   function goToProfile() {
-    console.log("Nav.jsx:59 Nav: go to profile");
+    log("Nav: goToProfile");
     setIsMenuOpen(false);
     navigate("/profile");
   }
 
   function handleLogout() {
-    console.log("Nav.jsx:47 Nav: handleLogout clicked");
+    log("Nav: logout clicked");
     doLogout();
+
     const after = getAuth();
-    console.log("Nav.jsx:50 Nav: auth after logout:", after);
+    log("Nav: auth after logout", after);
 
     setIsMenuOpen(false);
     navigate("/login", { replace: true });
   }
+
+  // Avatar fallback (for nav)
+  const avatarUrl = auth.avatarUrl || null;
+  const avatarAlt = auth.avatarAlt || "User avatar";
 
   return (
     <nav style={{ display: "flex", gap: "16px", alignItems: "center" }}>
@@ -56,7 +85,6 @@ export default function Nav() {
           <Link to="/login">Login</Link>
         ) : (
           <div style={{ position: "relative" }}>
-            {/* Brukerikon-knapp */}
             <button
               type="button"
               onClick={toggleMenu}
@@ -64,16 +92,35 @@ export default function Nav() {
               aria-expanded={isMenuOpen}
               style={{
                 display: "flex",
-                gap: "8px",
+                gap: "10px",
                 alignItems: "center",
                 cursor: "pointer",
+                border: "1px solid #ddd",
+                padding: "6px 10px",
+                borderRadius: "999px",
+                background: "white",
               }}
             >
-              <span aria-hidden="true">👤</span>
-              {auth.name || "User"}
+              {/* Avatar i nav */}
+              {avatarUrl ? (
+                <img
+                  src={avatarUrl}
+                  alt={avatarAlt}
+                  width="28"
+                  height="28"
+                  style={{
+                    borderRadius: "999px",
+                    objectFit: "cover",
+                    display: "block",
+                  }}
+                />
+              ) : (
+                <span aria-hidden="true">👤</span>
+              )}
+
+              <span>{auth.name || "User"}</span>
             </button>
 
-            {/* Dropdown */}
             {isMenuOpen && (
               <div
                 role="menu"
@@ -88,6 +135,7 @@ export default function Nav() {
                   display: "grid",
                   gap: "8px",
                   zIndex: 10,
+                  borderRadius: 10,
                 }}
               >
                 <button type="button" onClick={goToProfile}>

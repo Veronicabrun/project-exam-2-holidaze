@@ -1,0 +1,98 @@
+/* src/components/AvatarEditor/AvatarEditor.module.scss */
+
+.avatarButton {
+  position: relative;
+  width: 120px;
+  height: 120px;
+  padding: 0;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+}
+
+.img {
+  width: 120px;
+  height: 120px;
+  object-fit: cover;
+  border-radius: 50%;
+  border: 1px solid #ddd;
+  display: block;
+}
+
+.pencil {
+  position: absolute;
+  right: 6px;
+  bottom: 6px;
+  width: 30px;
+  height: 30px;
+  border-radius: 999px;
+  background: white;
+  border: 1px solid #ddd;
+  display: grid;
+  place-items: center;
+  font-size: 14px;
+}
+
+/* Modal */
+.backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.35);
+  display: grid;
+  place-items: center;
+  padding: 16px;
+  z-index: 9999;
+}
+
+.modal {
+  width: 100%;
+  max-width: 520px; /* litt bredere enn før */
+  background: white;
+  border-radius: 12px;
+  padding: 24px; /* mer luft rundt innholdet */
+  border: 1px solid #eee;
+  box-sizing: border-box;
+}
+
+.title {
+  margin: 0 0 12px;
+}
+
+.form {
+  display: grid;
+  gap: 14px;
+}
+
+.label {
+  display: grid;
+  gap: 8px;
+  font-weight: 600;
+}
+
+.input {
+  width: 100%;
+  max-width: 100%;
+  padding: 12px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  font-weight: 400;
+  box-sizing: border-box; /* gjør at padding ikke “spiser” bredden */
+}
+
+.actions {
+  display: flex;
+  gap: 10px;
+  justify-content: flex-end;
+  margin-top: 6px;
+}
+
+.error {
+  color: crimson;
+  margin: 0;
+}
+
+.hint {
+  margin: 10px 0 0;
+  font-size: 12px;
+  opacity: 0.7;
+}
