@@ -1,10 +1,9 @@
-// src/pages/Login/Login.jsx
 import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { setAuth } from "../../utils/auth";
-
 import { loginUser } from "../../services/auth";
 import { getProfile } from "../../services/profile";
+import { isValidEmail, isValidPassword } from "../../utils/validators";
 
 export default function Login() {
   const navigate = useNavigate();
@@ -12,22 +11,51 @@ export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  const [error, setError] = useState("");
+  const [errors, setErrors] = useState({ email: "", password: "", form: "" });
+  const [submitted, setSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
+
+  function validateField(field, value) {
+    const v = String(value).trim();
+
+    if (field === "email") {
+      if (!v) return "Email is required.";
+      if (!isValidEmail(v)) return "Please enter a valid email address.";
+      return "";
+    }
+
+    if (field === "password") {
+      if (!value) return "Password is required.";
+      if (!isValidPassword(value)) return "Password must be at least 8 characters.";
+      return "";
+    }
+
+    return "";
+  }
+
+  function validateAll() {
+    const next = {
+      email: validateField("email", email),
+      password: validateField("password", password),
+      form: "",
+    };
+
+    setErrors(next);
+    return !next.email && !next.password;
+  }
 
   async function onSubmit(e) {
     e.preventDefault();
-    setError("");
+    setSubmitted(true);
+
+    if (!validateAll()) return;
+
     setLoading(true);
+    setErrors((p) => ({ ...p, form: "" }));
 
     try {
-      console.log("LOGIN submit:", { email });
-      console.log("Calling loginUser...");
-
       const loginResponse = await loginUser({ email, password });
-      console.log("Raw login response:", loginResponse);
 
-      // Tilpass om din respons er annerledes:
       const token =
         loginResponse?.data?.accessToken ||
         loginResponse?.data?.data?.accessToken ||
@@ -39,84 +67,114 @@ export default function Login() {
         loginResponse?.data?.user?.name ||
         loginResponse?.name;
 
-      console.log("Extracted token:", token);
-      console.log("Extracted name:", name);
-
       if (!token || !name) {
-        throw new Error("Mangler token eller name fra login-responsen.");
+        throw new Error("Missing token or username from login response.");
       }
 
-      // 1) lagre token + name
       setAuth({ token, name });
-      console.log("✅ Token saved:", token);
-      console.log("✅ Name saved:", name);
 
-      // 2) hent profil for å få venueManager riktig
-      console.log("Calling getProfile(name) after login...");
       const profileResponse = await getProfile(name);
-      console.log("Raw profile response (after login):", profileResponse);
-
       const profile =
         profileResponse?.data?.data || profileResponse?.data || profileResponse;
 
       const venueManager = Boolean(profile?.venueManager);
-      console.log("venueManager from profile:", venueManager);
 
-      // 3) lagre venueManager
-      setAuth({ venueManager });
-      console.log("✅ venueManager saved to localStorage:", venueManager);
+      setAuth({
+        venueManager,
+        avatarUrl: profile?.avatar?.url || null,
+        avatarAlt: profile?.avatar?.alt || "User avatar",
+      });
 
-      // 4) send til riktig sted
       const target = venueManager ? "/admin" : "/profile";
-      console.log("Navigating to:", target);
       navigate(target, { replace: true });
     } catch (err) {
-      console.error(err);
-      setError(err?.message || "Kunne ikke logge inn.");
+      setErrors((p) => ({
+        ...p,
+        form: err?.message || "Login failed. Please try again.",
+      }));
     } finally {
       setLoading(false);
     }
   }
+
+  const showEmailError = submitted && errors.email;
+  const showPasswordError = submitted && errors.password;
 
   return (
     <div style={{ padding: "1rem", maxWidth: 420 }}>
       <h1>Login</h1>
       <p>Log in to book venues or manage your venues.</p>
 
-      <form onSubmit={onSubmit}>
+      <form onSubmit={onSubmit} noValidate>
         <div style={{ marginBottom: 12 }}>
           <label htmlFor="email">Email</label>
           <input
             id="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
             type="email"
             required
             autoComplete="username"
+            value={email}
+            onChange={(e) => {
+              const val = e.target.value;
+              setEmail(val);
+
+              // After first submit: validate while typing
+              if (submitted) {
+                setErrors((p) => ({
+                  ...p,
+                  email: validateField("email", val),
+                  form: "",
+                }));
+              }
+            }}
             style={{ width: "100%", padding: 8 }}
+            aria-invalid={Boolean(showEmailError)}
           />
+          {showEmailError && (
+            <p role="alert" style={{ color: "crimson", marginTop: 6 }}>
+              {errors.email}
+            </p>
+          )}
         </div>
 
         <div style={{ marginBottom: 12 }}>
           <label htmlFor="password">Password</label>
           <input
             id="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
             type="password"
             required
+            minLength={8}
             autoComplete="current-password"
+            value={password}
+            onChange={(e) => {
+              const val = e.target.value;
+              setPassword(val);
+
+              if (submitted) {
+                setErrors((p) => ({
+                  ...p,
+                  password: validateField("password", val),
+                  form: "",
+                }));
+              }
+            }}
             style={{ width: "100%", padding: 8 }}
+            aria-invalid={Boolean(showPasswordError)}
           />
+          {showPasswordError && (
+            <p role="alert" style={{ color: "crimson", marginTop: 6 }}>
+              {errors.password}
+            </p>
+          )}
         </div>
 
         <button type="submit" disabled={loading}>
           {loading ? "Logging in..." : "Login"}
         </button>
 
-        {error && (
+        {errors.form && (
           <p role="alert" style={{ color: "crimson", marginTop: 12 }}>
-            {error}
+            {errors.form}
           </p>
         )}
       </form>

@@ -20,7 +20,10 @@ export default function Nav() {
   const [auth, setAuthState] = useState(getAuth());
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
-  // Oppdater auth når route endres (nyttig etter navigate)
+  // 👉 Dette er den VIKTIGE linja
+  const isLoggedIn = Boolean(auth?.token);
+
+  // Sync auth når route endres
   useEffect(() => {
     const next = getAuth();
     log("Nav: route change -> sync auth", {
@@ -32,7 +35,7 @@ export default function Nav() {
     setIsMenuOpen(false);
   }, [location.pathname]);
 
-  // Lytt på authchange (når du endrer localStorage via setAuth)
+  // Lytt på authchange-event (fra setAuth / logout)
   useEffect(() => {
     function onAuthChange() {
       const next = getAuth();
@@ -68,7 +71,6 @@ export default function Nav() {
     navigate("/login", { replace: true });
   }
 
-  // Avatar fallback (for nav)
   const avatarUrl = auth.avatarUrl || null;
   const avatarAlt = auth.avatarAlt || "User avatar";
 
@@ -78,10 +80,10 @@ export default function Nav() {
       <Link to="/venues">Venues</Link>
 
       {/* Kun venue manager */}
-      {auth.isLoggedIn && auth.venueManager && <Link to="/admin">Admin</Link>}
+      {isLoggedIn && auth.venueManager && <Link to="/admin">Admin</Link>}
 
       <div style={{ marginLeft: "auto", display: "flex", gap: "12px" }}>
-        {!auth.isLoggedIn ? (
+        {!isLoggedIn ? (
           <Link to="/login">Login</Link>
         ) : (
           <div style={{ position: "relative" }}>
@@ -101,7 +103,6 @@ export default function Nav() {
                 background: "white",
               }}
             >
-              {/* Avatar i nav */}
               {avatarUrl ? (
                 <img
                   src={avatarUrl}

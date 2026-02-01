@@ -1,70 +1,119 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { registerUser } from "../../services/auth";
+import {
+  isValidEmail,
+  isStudNoroffEmail,
+  isValidPassword,
+  isValidName,
+} from "../../utils/validators";
 
 export default function Register() {
+  const navigate = useNavigate();
+
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [venueManager, setVenueManager] = useState(false);
 
-  const [error, setError] = useState("");
+  const [errors, setErrors] = useState({ name: "", email: "", password: "", form: "" });
+  const [submitted, setSubmitted] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
-  const navigate = useNavigate();
+  function validateField(field, value) {
+    const v = String(value).trim();
 
-  function isStudNoroffEmail(value) {
-    return value.toLowerCase().endsWith("@stud.noroff.no");
+    if (field === "name") {
+      if (!v) return "Username is required.";
+      if (!isValidName(v)) return "Username must be at least 3 characters.";
+      return "";
+    }
+
+    if (field === "email") {
+      if (!v) return "Email is required.";
+      if (!isValidEmail(v)) return "Please enter a valid email address.";
+      if (!isStudNoroffEmail(v)) return "You must use a @stud.noroff.no email.";
+      return "";
+    }
+
+    if (field === "password") {
+      if (!value) return "Password is required.";
+      if (!isValidPassword(value)) return "Password must be at least 8 characters.";
+      return "";
+    }
+
+    return "";
+  }
+
+  function validateAll() {
+    const next = {
+      name: validateField("name", name),
+      email: validateField("email", email),
+      password: validateField("password", password),
+      form: "",
+    };
+
+    setErrors(next);
+    return !next.name && !next.email && !next.password;
   }
 
   async function handleSubmit(e) {
     e.preventDefault();
-    setError("");
+    setSubmitted(true);
 
-    console.log("REGISTER submit:", { name, email, password, venueManager });
-
-    if (!isStudNoroffEmail(email)) {
-      setError("Du må registrere deg med en @stud.noroff.no e-post.");
-      return;
-    }
+    if (!validateAll()) return;
 
     try {
       setIsLoading(true);
+      setErrors((p) => ({ ...p, form: "" }));
 
-      console.log("Calling registerUser...");
-      const response = await registerUser({ name, email, password, venueManager });
+      await registerUser({ name, email, password, venueManager });
 
-      console.log("Raw register response:", response);
-
-      // Noroff v2 returnerer ofte { data, meta }
-      const user = response.data;
-      console.log("Registered user:", user);
-
-      // Etter register: send til login
       navigate("/login");
     } catch (err) {
-      console.error("Register error:", err);
-      setError(err.message || "Register failed");
+      setErrors((p) => ({
+        ...p,
+        form: err?.message || "Registration failed. Please try again.",
+      }));
     } finally {
       setIsLoading(false);
     }
   }
+
+  const showNameError = submitted && errors.name;
+  const showEmailError = submitted && errors.email;
+  const showPasswordError = submitted && errors.password;
 
   return (
     <div style={{ padding: "1rem", maxWidth: 420 }}>
       <h1>Create an account</h1>
       <p>You must register with a @stud.noroff.no email.</p>
 
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={handleSubmit} noValidate>
         <div style={{ marginBottom: 12 }}>
           <label htmlFor="name">Username</label>
           <input
             id="name"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
             required
+            minLength={3}
+            value={name}
+            onChange={(e) => {
+              const val = e.target.value;
+              setName(val);
+
+              // After first submit: validate while typing
+              if (submitted) {
+                setErrors((p) => ({ ...p, name: validateField("name", val), form: "" }));
+              }
+            }}
             style={{ width: "100%", padding: 8 }}
+            aria-invalid={Boolean(showNameError)}
           />
+          {showNameError && (
+            <p role="alert" style={{ color: "crimson", marginTop: 6 }}>
+              {errors.name}
+            </p>
+          )}
         </div>
 
         <div style={{ marginBottom: 12 }}>
@@ -72,12 +121,25 @@ export default function Register() {
           <input
             id="email"
             type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
             required
+            value={email}
+            onChange={(e) => {
+              const val = e.target.value;
+              setEmail(val);
+
+              if (submitted) {
+                setErrors((p) => ({ ...p, email: validateField("email", val), form: "" }));
+              }
+            }}
             placeholder="name@stud.noroff.no"
             style={{ width: "100%", padding: 8 }}
+            aria-invalid={Boolean(showEmailError)}
           />
+          {showEmailError && (
+            <p role="alert" style={{ color: "crimson", marginTop: 6 }}>
+              {errors.email}
+            </p>
+          )}
         </div>
 
         <div style={{ marginBottom: 12 }}>
@@ -85,11 +147,25 @@ export default function Register() {
           <input
             id="password"
             type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
             required
+            minLength={8}
+            value={password}
+            onChange={(e) => {
+              const val = e.target.value;
+              setPassword(val);
+
+              if (submitted) {
+                setErrors((p) => ({ ...p, password: validateField("password", val), form: "" }));
+              }
+            }}
             style={{ width: "100%", padding: 8 }}
+            aria-invalid={Boolean(showPasswordError)}
           />
+          {showPasswordError && (
+            <p role="alert" style={{ color: "crimson", marginTop: 6 }}>
+              {errors.password}
+            </p>
+          )}
         </div>
 
         <div style={{ marginBottom: 12 }}>
@@ -107,7 +183,11 @@ export default function Register() {
           {isLoading ? "Creating..." : "Sign up"}
         </button>
 
-        {error && <p style={{ color: "crimson", marginTop: 12 }}>{error}</p>}
+        {errors.form && (
+          <p role="alert" style={{ color: "crimson", marginTop: 12 }}>
+            {errors.form}
+          </p>
+        )}
       </form>
 
       <p style={{ marginTop: 12 }}>
@@ -116,4 +196,3 @@ export default function Register() {
     </div>
   );
 }
-
