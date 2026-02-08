@@ -14,11 +14,13 @@ export default function Profile() {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
 
-  useEffect(() => {
-    const name = localStorage.getItem("name");
+  // ✅ Les auth én gang per render
+  const auth = getAuth();
+  const username = auth?.name || "";
 
-    if (!name) {
-      setError("No user found in localStorage.");
+  useEffect(() => {
+    if (!username) {
+      setError("You must be logged in to view profile.");
       return;
     }
 
@@ -27,8 +29,7 @@ export default function Profile() {
         setIsLoading(true);
         setError("");
 
-        // ✅ Nå returnerer getProfile selve profilen
-        const profileData = await getProfile(name);
+        const profileData = await getProfile(username);
         setProfile(profileData);
 
         setAuth({
@@ -37,8 +38,7 @@ export default function Profile() {
           avatarAlt: profileData?.avatar?.alt || "User avatar",
         });
 
-        // ✅ Nå returnerer getMyBookings selve arrayet
-        const bookingsData = await getMyBookings(name);
+        const bookingsData = await getMyBookings(username);
         setBookings(bookingsData || []);
       } catch (err) {
         setError(err?.message || "Could not load profile");
@@ -48,7 +48,7 @@ export default function Profile() {
     }
 
     loadProfile();
-  }, []);
+  }, [username]);
 
   function handleAvatarUpdated(newAvatar) {
     setProfile((prev) => {
@@ -65,9 +65,7 @@ export default function Profile() {
   if (isLoading) return <p style={{ padding: "1rem" }}>Loading profile...</p>;
   if (error) return <p style={{ padding: "1rem", color: "crimson" }}>{error}</p>;
 
-  const username = profile?.name || localStorage.getItem("name");
-  const auth = getAuth();
-  const isVenueManager = Boolean(auth?.venueManager);
+  const isVenueManager = Boolean(getAuth()?.venueManager);
 
   return (
     <section style={{ padding: "1rem" }}>
@@ -161,3 +159,4 @@ export default function Profile() {
     </section>
   );
 }
+
