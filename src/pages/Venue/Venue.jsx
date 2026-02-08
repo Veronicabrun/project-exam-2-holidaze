@@ -2,19 +2,17 @@ import { useEffect, useMemo, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { getVenue } from "../../services/venues";
 import { createBooking } from "../../services/bookings";
+import { getAuth } from "../../utils/auth";
 
 function toDateOnlyISO(isoString) {
-  // "2025-11-30T00:00:00.000Z" -> "2025-11-30"
   return new Date(isoString).toISOString().slice(0, 10);
 }
 
 function parseDateInput(value) {
-  // value: "YYYY-MM-DD" -> lager dato i UTC ved midnatt
   return new Date(`${value}T00:00:00.000Z`);
 }
 
 /**
- * Overlap-regel:
  * Intervaller som [start, end) (end er utsjekk-dag / ikke inkludert)
  * Overlap hvis start < existingEnd && end > existingStart
  */
@@ -38,8 +36,29 @@ export default function Venue() {
   const [bookingError, setBookingError] = useState("");
   const [bookingLoading, setBookingLoading] = useState(false);
 
-  // les token i render så UI reagerer hvis token endrer seg
-  const token = localStorage.getItem("token");
+  // ✅ Auth state (så UI reagerer ved login/logout)
+  const [token, setToken] = useState(() => getAuth()?.token || null);
+
+  useEffect(() => {
+    function syncAuth() {
+      const auth = getAuth();
+      setToken(auth?.token || null);
+    }
+
+    // 1) Din app logger "authchange", så vi lytter på den
+    window.addEventListener("authchange", syncAuth);
+
+    // 2) Fallback: hvis token endres i en annen tab / eller noe skriver til localStorage
+    window.addEventListener("storage", syncAuth);
+
+    // Sync ved mount
+    syncAuth();
+
+    return () => {
+      window.removeEventListener("authchange", syncAuth);
+      window.removeEventListener("storage", syncAuth);
+    };
+  }, []);
 
   async function fetchVenue() {
     setError("");
@@ -48,15 +67,14 @@ export default function Venue() {
     try {
       console.log("🟡 Loading venue id:", id);
 
-      // ✅ Viktig: henter venue MED bookings
-      const response = await getVenue(id, { withBookings: true });
+      // ✅ request() normaliserer, så getVenue returnerer selve venue-objektet
+      const venueData = await getVenue(id, { withBookings: true });
+      console.log("🟢 Venue data:", venueData);
 
-      console.log("🟢 Raw venue response:", response);
+      setVenue(venueData);
 
-      setVenue(response.data);
-
-      console.log("📅 Existing bookings:", response.data?.bookings?.length || 0);
-      console.log("BOOKING EXAMPLE:", response.data?.bookings?.[0]);
+      console.log("📅 Existing bookings:", venueData?.bookings?.length || 0);
+      console.log("BOOKING EXAMPLE:", venueData?.bookings?.[0]);
     } catch (err) {
       console.error("❌ Venue error:", err);
       setError(err.message || "Failed to load venue");
@@ -70,7 +88,6 @@ export default function Venue() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id]);
 
-  // Gjør bookings lettere å vise i UI
   const bookedRanges = useMemo(() => {
     const list = venue?.bookings || [];
     return list
@@ -84,7 +101,6 @@ export default function Venue() {
       .sort((a, b) => a.fromDate - b.fromDate);
   }, [venue]);
 
-  // Validering av valgt dato-spenn før submit
   const dateValidation = useMemo(() => {
     if (!dateFrom || !dateTo) return { ok: true, message: "" };
 
@@ -145,11 +161,9 @@ export default function Venue() {
 
       setBookingMsg("✅ Booking created!");
 
-      // ✅ Refresh venue så bookings oppdateres
       console.log("🟡 Refreshing venue after booking...");
       await fetchVenue();
 
-      // Reset felter
       setDateFrom("");
       setDateTo("");
       setGuests(1);
@@ -165,7 +179,6 @@ export default function Venue() {
   if (error) return <p style={{ padding: "1rem", color: "crimson" }}>{error}</p>;
   if (!venue) return <p style={{ padding: "1rem" }}>No venue found.</p>;
 
-  // UX: hindrer at user velger dato "i går"
   const today = new Date().toISOString().slice(0, 10);
 
   return (
@@ -183,7 +196,6 @@ export default function Venue() {
 
       <hr style={{ margin: "24px 0" }} />
 
-      {/* Unavailable dates */}
       <section style={{ marginBottom: 24 }}>
         <h2 style={{ marginBottom: 8 }}>Unavailable dates</h2>
 
@@ -280,3 +292,4 @@ export default function Venue() {
     </div>
   );
 }
+

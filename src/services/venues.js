@@ -8,9 +8,7 @@ export async function getVenues() {
 export async function getVenue(id, options = {}) {
   const { withBookings = false } = options;
 
-  const url = withBookings
-    ? `${venueById(id)}?_bookings=true`
-    : venueById(id);
+  const url = withBookings ? `${venueById(id)}?_bookings=true` : venueById(id);
 
   return request(url);
 }

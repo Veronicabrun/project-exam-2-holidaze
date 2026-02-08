@@ -54,18 +54,11 @@ export default function Login() {
     setErrors((p) => ({ ...p, form: "" }));
 
     try {
+      // ✅ request() returnerer allerede "data"
       const loginResponse = await loginUser({ email, password });
 
-      const token =
-        loginResponse?.data?.accessToken ||
-        loginResponse?.data?.data?.accessToken ||
-        loginResponse?.accessToken;
-
-      const name =
-        loginResponse?.data?.name ||
-        loginResponse?.data?.data?.name ||
-        loginResponse?.data?.user?.name ||
-        loginResponse?.name;
+      const token = loginResponse?.accessToken;
+      const name = loginResponse?.name;
 
       if (!token || !name) {
         throw new Error("Missing token or username from login response.");
@@ -74,10 +67,8 @@ export default function Login() {
       // 1) Lagre token+name først
       setAuth({ token, name });
 
-      // 2) Hent profil for å få venueManager + avatar
-      const profileResponse = await getProfile(name);
-      const profile =
-        profileResponse?.data?.data || profileResponse?.data || profileResponse;
+      // 2) Hent profil (request() returnerer også data her)
+      const profile = await getProfile(name);
 
       const venueManager = Boolean(profile?.venueManager);
 

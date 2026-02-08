@@ -27,23 +27,19 @@ export default function Profile() {
         setIsLoading(true);
         setError("");
 
-        // 1) Hent profil
-        const profileRes = await getProfile(name);
-        const profileData = profileRes?.data?.data || profileRes?.data || profileRes;
-
+        // ✅ Nå returnerer getProfile selve profilen
+        const profileData = await getProfile(name);
         setProfile(profileData);
 
-        // ✅ Synk auth: avatar + venueManager (viktig!)
         setAuth({
           venueManager: Boolean(profileData?.venueManager),
           avatarUrl: profileData?.avatar?.url || "",
           avatarAlt: profileData?.avatar?.alt || "User avatar",
         });
 
-        // 2) Hent bookings
-        const bookingsRes = await getMyBookings(name);
-        const bookingsData = bookingsRes?.data?.data || bookingsRes?.data || [];
-        setBookings(bookingsData);
+        // ✅ Nå returnerer getMyBookings selve arrayet
+        const bookingsData = await getMyBookings(name);
+        setBookings(bookingsData || []);
       } catch (err) {
         setError(err?.message || "Could not load profile");
       } finally {
@@ -101,7 +97,6 @@ export default function Profile() {
 
           <hr style={{ margin: "24px 0" }} />
 
-          {/* ✅ VENUE MANAGER LAYOUT */}
           {isVenueManager ? (
             <>
               <div style={{ display: "flex", gap: 24, justifyContent: "center" }}>
@@ -135,7 +130,6 @@ export default function Profile() {
               )}
             </>
           ) : (
-            /* ✅ NORMAL USER LAYOUT */
             <>
               <h2 style={{ margin: 0 }}>My bookings</h2>
 

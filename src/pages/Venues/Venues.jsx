@@ -15,11 +15,10 @@ export default function Venues() {
         setIsLoading(true);
 
         console.log("Loading venues...");
-        const response = await getVenues();
-        console.log("Raw venues response:", response);
+        const venuesData = await getVenues();
+        console.log("Venues data:", venuesData);
 
-        // Noroff v2: liste ligger i response.data
-        setVenues(response.data || []);
+        setVenues(venuesData || []);
       } catch (err) {
         console.error("Venues error:", err);
         setError(err.message || "Failed to load venues");
@@ -45,7 +44,6 @@ export default function Venues() {
     <div style={{ padding: "1rem" }}>
       <h1>Venues</h1>
 
-      {/* Search */}
       <input
         value={query}
         onChange={(e) => setQuery(e.target.value)}
@@ -60,7 +58,6 @@ export default function Venues() {
         }}
       />
 
-      {/* Result info */}
       <p style={{ marginTop: 0, opacity: 0.8 }}>
         Showing {filteredVenues.length} of {venues.length}
       </p>
