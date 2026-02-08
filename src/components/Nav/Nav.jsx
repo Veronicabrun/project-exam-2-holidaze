@@ -1,14 +1,8 @@
-// src/components/Nav/Nav.jsx
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { getAuth, logout as doLogout } from "../../utils/auth";
 
-/**
- * Slå av/på logging her.
- * Sett til false når du vil rydde.
- */
 const DEBUG_NAV = true;
-
 function log(...args) {
   if (DEBUG_NAV) console.log(...args);
 }
@@ -20,22 +14,15 @@ export default function Nav() {
   const [auth, setAuthState] = useState(getAuth());
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
-  // 👉 Dette er den VIKTIGE linja
   const isLoggedIn = Boolean(auth?.token);
 
-  // Sync auth når route endres
   useEffect(() => {
     const next = getAuth();
-    log("Nav: route change -> sync auth", {
-      path: location.pathname,
-      auth: next,
-    });
-
+    log("Nav: route change -> sync auth", { path: location.pathname, auth: next });
     setAuthState(next);
     setIsMenuOpen(false);
   }, [location.pathname]);
 
-  // Lytt på authchange-event (fra setAuth / logout)
   useEffect(() => {
     function onAuthChange() {
       const next = getAuth();
@@ -48,39 +35,27 @@ export default function Nav() {
   }, []);
 
   function toggleMenu() {
-    setIsMenuOpen((current) => {
-      log("Nav: toggle menu", { current, next: !current });
-      return !current;
-    });
+    setIsMenuOpen((current) => !current);
   }
 
   function goToProfile() {
-    log("Nav: goToProfile");
     setIsMenuOpen(false);
     navigate("/profile");
   }
 
   function handleLogout() {
-    log("Nav: logout clicked");
     doLogout();
-
-    const after = getAuth();
-    log("Nav: auth after logout", after);
-
     setIsMenuOpen(false);
     navigate("/login", { replace: true });
   }
 
-  const avatarUrl = auth.avatarUrl || null;
-  const avatarAlt = auth.avatarAlt || "User avatar";
+  const avatarUrl = auth?.avatarUrl || null;
+  const avatarAlt = auth?.avatarAlt || "User avatar";
 
   return (
     <nav style={{ display: "flex", gap: "16px", alignItems: "center" }}>
       <Link to="/">Home</Link>
       <Link to="/venues">Venues</Link>
-
-      {/* Kun venue manager */}
-      {isLoggedIn && auth.venueManager && <Link to="/admin">Admin</Link>}
 
       <div style={{ marginLeft: "auto", display: "flex", gap: "12px" }}>
         {!isLoggedIn ? (
@@ -109,17 +84,13 @@ export default function Nav() {
                   alt={avatarAlt}
                   width="28"
                   height="28"
-                  style={{
-                    borderRadius: "999px",
-                    objectFit: "cover",
-                    display: "block",
-                  }}
+                  style={{ borderRadius: "999px", objectFit: "cover", display: "block" }}
                 />
               ) : (
                 <span aria-hidden="true">👤</span>
               )}
 
-              <span>{auth.name || "User"}</span>
+              <span>{auth?.name || "User"}</span>
             </button>
 
             {isMenuOpen && (
@@ -140,7 +111,7 @@ export default function Nav() {
                 }}
               >
                 <button type="button" onClick={goToProfile}>
-                  Profile
+                  {auth?.venueManager ? "Admin" : "Profile"}
                 </button>
 
                 <button type="button" onClick={handleLogout}>

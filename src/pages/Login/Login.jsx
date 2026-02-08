@@ -71,22 +71,25 @@ export default function Login() {
         throw new Error("Missing token or username from login response.");
       }
 
+      // 1) Lagre token+name først
       setAuth({ token, name });
 
+      // 2) Hent profil for å få venueManager + avatar
       const profileResponse = await getProfile(name);
       const profile =
         profileResponse?.data?.data || profileResponse?.data || profileResponse;
 
       const venueManager = Boolean(profile?.venueManager);
 
+      // 3) Oppdater auth med rolle + avatar
       setAuth({
         venueManager,
-        avatarUrl: profile?.avatar?.url || null,
+        avatarUrl: profile?.avatar?.url || "",
         avatarAlt: profile?.avatar?.alt || "User avatar",
       });
 
-      const target = venueManager ? "/admin" : "/profile";
-      navigate(target, { replace: true });
+      // ✅ ALLTID til /profile
+      navigate("/profile", { replace: true });
     } catch (err) {
       setErrors((p) => ({
         ...p,
@@ -118,7 +121,6 @@ export default function Login() {
               const val = e.target.value;
               setEmail(val);
 
-              // After first submit: validate while typing
               if (submitted) {
                 setErrors((p) => ({
                   ...p,
