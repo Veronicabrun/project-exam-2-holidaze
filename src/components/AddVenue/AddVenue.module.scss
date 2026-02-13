@@ -1,0 +1,87 @@
+/* src/components/AddVenue/AddVenue.module.scss */
+
+.container {
+  max-width: 720px;
+}
+
+.header {
+  display: grid;
+  gap: 6px;
+  margin-bottom: 12px;
+}
+
+.title {
+  margin: 0;
+}
+
+.subtitle {
+  margin: 0;
+  opacity: 0.8;
+}
+
+.form {
+  display: grid;
+  gap: 16px; /* litt mer luft enn 12 */
+}
+
+.field {
+  display: grid;
+  gap: 6px;
+}
+
+.label {
+  font-weight: 500;
+}
+
+.input,
+.textarea {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #cfcfcf;
+  border-radius: 8px;
+  outline: none;
+
+  /* ✅ dette fikser “overlap/overflow” med padding i grid */
+  box-sizing: border-box;
+}
+
+.input:focus,
+.textarea:focus {
+  border-color: #222;
+}
+
+.twoCol {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px; /* mer mellomrom så de ikke føles “klistret” */
+}
+
+@media (max-width: 640px) {
+  .twoCol {
+    grid-template-columns: 1fr;
+  }
+}
+
+.fieldError {
+  margin: 0;
+  color: crimson;
+  font-size: 0.95rem;
+}
+
+.inputError {
+  border-color: crimson;
+}
+
+.button {
+  padding: 10px 14px;
+  border-radius: 10px;
+  border: 1px solid #111;
+  background: #111;
+  color: #fff;
+  cursor: pointer;
+}
+
+.button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
