@@ -1,0 +1,158 @@
+/* src/components/MyVenues/MyVenues.module.scss */
+
+.wrapper {
+  display: grid;
+  gap: 12px;
+}
+
+.header {
+  display: grid;
+  gap: 6px;
+}
+
+.title {
+  margin: 0;
+}
+
+.subtitle {
+  margin: 0;
+  opacity: 0.8;
+}
+
+.empty {
+  margin: 0;
+  opacity: 0.85;
+}
+
+.grid {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  gap: 14px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+@media (max-width: 900px) {
+  .grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.card {
+  border: 1px solid #ddd;
+  border-radius: 14px;
+  overflow: hidden;
+  background: #fff;
+}
+
+.cardTop {
+  display: grid;
+  grid-template-columns: 260px 1fr;
+}
+
+@media (max-width: 900px) {
+  .cardTop {
+    grid-template-columns: 1fr;
+  }
+}
+
+.mediaWrap {
+  background: #f6f6f6;
+}
+
+.media {
+  width: 100%;
+  height: 100%;
+  max-height: 200px;
+  object-fit: cover;
+  display: block;
+}
+
+.cardBody {
+  padding: 14px;
+  display: grid;
+  gap: 10px;
+}
+
+.cardTitle {
+  margin: 0;
+}
+
+.cardDesc {
+  margin: 0;
+  opacity: 0.9;
+  line-height: 1.35;
+}
+
+.meta {
+  display: grid;
+  gap: 6px;
+  opacity: 0.95;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.btn {
+  padding: 10px 12px;
+  border-radius: 10px;
+  border: 1px solid #111;
+  background: #111;
+  color: #fff;
+  cursor: pointer;
+}
+
+.btnDanger {
+  padding: 10px 12px;
+  border-radius: 10px;
+  border: 1px solid #a30000;
+  background: #a30000;
+  color: #fff;
+  cursor: pointer;
+}
+
+.btnGhost {
+  padding: 10px 12px;
+  border-radius: 10px;
+  border: 1px solid #ddd;
+  background: #fff;
+  cursor: pointer;
+}
+
+.bookings {
+  border-top: 1px solid #eee;
+  padding: 14px;
+  display: grid;
+  gap: 10px;
+}
+
+.bookingsTitle {
+  margin: 0;
+}
+
+.bookingsEmpty {
+  margin: 0;
+  opacity: 0.85;
+}
+
+.bookingList {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  gap: 10px;
+}
+
+.bookingItem {
+  border: 1px solid #eee;
+  border-radius: 10px;
+  padding: 12px;
+}
+
+.bookingMeta {
+  opacity: 0.9;
+}

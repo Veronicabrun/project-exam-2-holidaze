@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { getProfile, getMyBookings } from "../../services/profile";
 import AvatarEditor from "../../components/AvatarEditor/AvatarEditor";
 import AddVenue from "../../components/AddVenue/AddVenue";
+import MyVenues from "../../components/MyVenues/MyVenues";
 import { setAuth, getAuth } from "../../utils/auth";
 
 import Loading from "../../components/ui/Loading/Loading";
@@ -93,7 +94,7 @@ export default function Profile() {
     showToast({ variant: "success", message: "Avatar updated!" });
   }
 
-  // ✅ Bytt tab med en gang – toast lever videre fordi Profile eier den
+  // ✅ Etter venue opprettes: bytt tab til "My venues"
   function handleVenueCreated() {
     setActiveTab("venues");
   }
@@ -214,10 +215,7 @@ export default function Profile() {
               <div style={{ marginTop: 12, maxWidth: 900 }}>
                 {activeTab === "venues" && (
                   <div style={{ border: "1px solid #ddd", borderRadius: 12, padding: 16 }}>
-                    <h2 style={{ marginTop: 0 }}>My venues</h2>
-                    <p style={{ opacity: 0.8 }}>
-                      (Neste steg) Her viser vi venues du eier + Edit/Delete + se bookings per venue.
-                    </p>
+                    <MyVenues username={username} onToast={showToast} />
                   </div>
                 )}
 

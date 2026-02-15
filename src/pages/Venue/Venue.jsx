@@ -37,21 +37,16 @@ export default function Venue() {
   const [bookingLoading, setBookingLoading] = useState(false);
 
   // ✅ Auth state (så UI reagerer ved login/logout)
-  const [token, setToken] = useState(() => getAuth()?.token || null);
+  const [auth, setAuth] = useState(() => getAuth() || null);
 
   useEffect(() => {
     function syncAuth() {
-      const auth = getAuth();
-      setToken(auth?.token || null);
+      setAuth(getAuth() || null);
     }
 
-    // 1) Din app logger "authchange", så vi lytter på den
     window.addEventListener("authchange", syncAuth);
-
-    // 2) Fallback: hvis token endres i en annen tab / eller noe skriver til localStorage
     window.addEventListener("storage", syncAuth);
 
-    // Sync ved mount
     syncAuth();
 
     return () => {
@@ -67,14 +62,19 @@ export default function Venue() {
     try {
       console.log("🟡 Loading venue id:", id);
 
-      // ✅ request() normaliserer, så getVenue returnerer selve venue-objektet
-      const venueData = await getVenue(id, { withBookings: true });
+      // ✅ Hent både bookings og owner
+      const venueData = await getVenue(id, { withBookings: true, withOwner: true });
       console.log("🟢 Venue data:", venueData);
 
       setVenue(venueData);
 
       console.log("📅 Existing bookings:", venueData?.bookings?.length || 0);
       console.log("BOOKING EXAMPLE:", venueData?.bookings?.[0]);
+
+      // Debug: sjekk at owner faktisk kommer med
+      console.log("AUTH NAME:", auth?.name);
+      console.log("VENUE OWNER:", venueData?.owner);
+      console.log("OWNER NAME:", venueData?.owner?.name);
     } catch (err) {
       console.error("❌ Venue error:", err);
       setError(err.message || "Failed to load venue");
@@ -87,6 +87,14 @@ export default function Venue() {
     fetchVenue();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id]);
+
+  // ✅ Er dette venue eid av innlogget bruker?
+  const isOwner = useMemo(() => {
+    const myName = auth?.name;
+    const ownerName = venue?.owner?.name;
+    if (!myName || !ownerName) return false;
+    return myName === ownerName;
+  }, [auth?.name, venue?.owner?.name]);
 
   const bookedRanges = useMemo(() => {
     const list = venue?.bookings || [];
@@ -134,8 +142,14 @@ export default function Venue() {
     setBookingMsg("");
     setBookingError("");
 
-    if (!token) {
+    if (!auth?.token) {
       setBookingError("You must be logged in to book.");
+      return;
+    }
+
+    // ✅ BLOCK: eier kan ikke booke eget venue
+    if (isOwner) {
+      setBookingError("You cannot book your own venue.");
       return;
     }
 
@@ -226,9 +240,16 @@ export default function Venue() {
 
       <h2>Book this venue</h2>
 
-      {!token && (
+      {!auth?.token && (
         <p style={{ background: "#fff3cd", padding: 12, borderRadius: 8 }}>
           You must be logged in to book. <Link to="/login">Go to login</Link>
+        </p>
+      )}
+
+      {/* ✅ Info til venue owner */}
+      {auth?.token && isOwner && (
+        <p style={{ background: "#e7f3ff", padding: 12, borderRadius: 8 }}>
+          You manage this venue, so you can’t book it yourself.
         </p>
       )}
 
@@ -242,6 +263,7 @@ export default function Venue() {
             onChange={(e) => setDateFrom(e.target.value)}
             required
             style={{ width: "100%", padding: 8 }}
+            disabled={!auth?.token || isOwner}
           />
         </div>
 
@@ -254,6 +276,7 @@ export default function Venue() {
             onChange={(e) => setDateTo(e.target.value)}
             required
             style={{ width: "100%", padding: 8 }}
+            disabled={!auth?.token || isOwner}
           />
         </div>
 
@@ -267,6 +290,7 @@ export default function Venue() {
             onChange={(e) => setGuests(e.target.value)}
             required
             style={{ width: "100%", padding: 8 }}
+            disabled={!auth?.token || isOwner}
           />
           <small style={{ opacity: 0.8 }}>
             Max guests for this venue: {venue.maxGuests}
@@ -281,7 +305,7 @@ export default function Venue() {
 
         <button
           type="submit"
-          disabled={!token || bookingLoading || !dateValidation.ok}
+          disabled={!auth?.token || isOwner || bookingLoading || !dateValidation.ok}
         >
           {bookingLoading ? "Booking..." : "Book now"}
         </button>
