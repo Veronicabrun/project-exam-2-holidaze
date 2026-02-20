@@ -1,0 +1,65 @@
+.section {
+  padding: 28px 16px 50px;
+}
+
+.inner {
+  width: min(1100px, 100%);
+  margin: 0 auto;
+}
+
+.header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 14px;
+}
+
+.title {
+  margin: 0;
+  font-size: 18px;
+  color: #0c0d07;
+}
+
+.query {
+  color: #0f6f73;
+}
+
+.clear {
+  border: none;
+  background: transparent;
+  color: #0f6f73;
+  cursor: pointer;
+  font-weight: 600;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.empty {
+  margin: 0;
+  opacity: 0.75;
+}
+
+.grid {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+
+  display: grid;
+  gap: 16px;
+
+  /* 4 kort på desktop (som eksempelet ditt) */
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+@media (max-width: 980px) {
+  .grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 560px) {
+  .grid {
+    grid-template-columns: 1fr;
+  }
+}

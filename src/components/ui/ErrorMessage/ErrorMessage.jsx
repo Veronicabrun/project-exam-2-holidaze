@@ -1,4 +1,4 @@
-// src/components/ui/ErrorMessage.jsx
+// src/components/ui/ErrorMessage/ErrorMessage.jsx
 export default function ErrorMessage({ message, style }) {
   if (!message) return null;
 
