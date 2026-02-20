@@ -1,8 +1,9 @@
-import { Link, useLocation, useNavigate } from "react-router-dom";
-import { useEffect, useState } from "react";
+import { Link, NavLink, useLocation, useNavigate } from "react-router-dom";
+import { useEffect, useRef, useState } from "react";
 import { getAuth, logout as doLogout } from "../../utils/auth";
+import styles from "./Nav.module.scss";
 
-const DEBUG_NAV = true;
+const DEBUG_NAV = false;
 function log(...args) {
   if (DEBUG_NAV) console.log(...args);
 }
@@ -14,8 +15,13 @@ export default function Nav() {
   const [auth, setAuthState] = useState(getAuth());
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
-  const isLoggedIn = Boolean(auth?.token);
+  const menuRef = useRef(null);
 
+  const isLoggedIn = Boolean(auth?.token);
+  const avatarUrl = auth?.avatarUrl || "";
+  const avatarAlt = auth?.avatarAlt || "User avatar";
+
+  // Sync auth on route change
   useEffect(() => {
     const next = getAuth();
     log("Nav: route change -> sync auth", { path: location.pathname, auth: next });
@@ -23,6 +29,7 @@ export default function Nav() {
     setIsMenuOpen(false);
   }, [location.pathname]);
 
+  // Listen for auth changes
   useEffect(() => {
     function onAuthChange() {
       const next = getAuth();
@@ -34,8 +41,29 @@ export default function Nav() {
     return () => window.removeEventListener("authchange", onAuthChange);
   }, []);
 
+  // Close menu on outside click / ESC
+  useEffect(() => {
+    if (!isMenuOpen) return;
+
+    function onMouseDown(e) {
+      if (!menuRef.current) return;
+      if (!menuRef.current.contains(e.target)) setIsMenuOpen(false);
+    }
+
+    function onKeyDown(e) {
+      if (e.key === "Escape") setIsMenuOpen(false);
+    }
+
+    window.addEventListener("mousedown", onMouseDown);
+    window.addEventListener("keydown", onKeyDown);
+    return () => {
+      window.removeEventListener("mousedown", onMouseDown);
+      window.removeEventListener("keydown", onKeyDown);
+    };
+  }, [isMenuOpen]);
+
   function toggleMenu() {
-    setIsMenuOpen((current) => !current);
+    setIsMenuOpen((prev) => !prev);
   }
 
   function goToProfile() {
@@ -49,79 +77,78 @@ export default function Nav() {
     navigate("/login", { replace: true });
   }
 
-  const avatarUrl = auth?.avatarUrl || null;
-  const avatarAlt = auth?.avatarAlt || "User avatar";
-
   return (
-    <nav style={{ display: "flex", gap: "16px", alignItems: "center" }}>
-      <Link to="/">Home</Link>
-      <Link to="/venues">Venues</Link>
+    <header className={styles.header}>
+      <div className={styles.inner}>
+        <Link to="/" className={styles.brand} aria-label="Holidaze home">
+          <span className={styles.logo}>Holidaze</span>
+        </Link>
 
-      <div style={{ marginLeft: "auto", display: "flex", gap: "12px" }}>
-        {!isLoggedIn ? (
-          <Link to="/login">Login</Link>
-        ) : (
-          <div style={{ position: "relative" }}>
-            <button
-              type="button"
-              onClick={toggleMenu}
-              aria-haspopup="menu"
-              aria-expanded={isMenuOpen}
-              style={{
-                display: "flex",
-                gap: "10px",
-                alignItems: "center",
-                cursor: "pointer",
-                border: "1px solid #ddd",
-                padding: "6px 10px",
-                borderRadius: "999px",
-                background: "white",
-              }}
+        <nav className={styles.navLinks} aria-label="Primary">
+          <NavLink
+            to="/"
+            end
+            className={({ isActive }) => `${styles.link} ${isActive ? styles.active : ""}`}
+          >
+            Home
+          </NavLink>
+
+          <NavLink
+            to="/venues"
+            className={({ isActive }) => `${styles.link} ${isActive ? styles.active : ""}`}
+          >
+            Explore
+          </NavLink>
+
+          {!isLoggedIn ? (
+            <NavLink
+              to="/login"
+              className={({ isActive }) =>
+                `${styles.link} ${styles.loginLink} ${isActive ? styles.activeLogin : ""}`
+              }
             >
-              {avatarUrl ? (
-                <img
-                  src={avatarUrl}
-                  alt={avatarAlt}
-                  width="28"
-                  height="28"
-                  style={{ borderRadius: "999px", objectFit: "cover", display: "block" }}
-                />
-              ) : (
-                <span aria-hidden="true">👤</span>
-              )}
-
-              <span>{auth?.name || "User"}</span>
-            </button>
-
-            {isMenuOpen && (
-              <div
-                role="menu"
-                style={{
-                  position: "absolute",
-                  right: 0,
-                  top: "calc(100% + 8px)",
-                  border: "1px solid #ddd",
-                  background: "white",
-                  padding: "8px",
-                  minWidth: "160px",
-                  display: "grid",
-                  gap: "8px",
-                  zIndex: 10,
-                  borderRadius: 10,
-                }}
+              Login
+            </NavLink>
+          ) : (
+            <div className={styles.userMenu} ref={menuRef}>
+              <button
+                type="button"
+                onClick={toggleMenu}
+                className={styles.userButton}
+                aria-haspopup="menu"
+                aria-expanded={isMenuOpen}
+                aria-label="Open user menu"
               >
-                <button type="button" onClick={goToProfile}>
-                  {auth?.venueManager ? "Admin" : "Profile"}
-                </button>
+                {avatarUrl ? (
+                  <img className={styles.avatar} src={avatarUrl} alt={avatarAlt} />
+                ) : (
+                  <span className={styles.avatarFallback} aria-hidden="true">
+                    👤
+                  </span>
+                )}
+              </button>
 
-                <button type="button" onClick={handleLogout}>
-                  Logout
-                </button>
-              </div>
-            )}
-          </div>
-        )}
+              {isMenuOpen && (
+                <div className={styles.dropdown} role="menu">
+                  <button type="button" className={styles.dropdownItem} onClick={goToProfile}>
+                    My profile
+                  </button>
+
+                  <div className={styles.divider} />
+
+                  <button
+                    type="button"
+                    className={`${styles.dropdownItem} ${styles.danger}`}
+                    onClick={handleLogout}
+                  >
+                    Logout
+                  </button>
+                </div>
+              )}
+            </div>
+          )}
+        </nav>
       </div>
-    </nav>
+    </header>
   );
 }

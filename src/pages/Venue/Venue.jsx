@@ -3,21 +3,10 @@ import { Link, useParams } from "react-router-dom";
 import { getVenue } from "../../services/venues";
 import { createBooking } from "../../services/bookings";
 import { getAuth } from "../../utils/auth";
+import { isDateRangeAvailable, toDateOnly, rangesOverlap } from "../../services/availability";
 
 function toDateOnlyISO(isoString) {
   return new Date(isoString).toISOString().slice(0, 10);
-}
-
-function parseDateInput(value) {
-  return new Date(`${value}T00:00:00.000Z`);
-}
-
-/**
- * Intervaller som [start, end) (end er utsjekk-dag / ikke inkludert)
- * Overlap hvis start < existingEnd && end > existingStart
- */
-function rangesOverlap(startA, endA, startB, endB) {
-  return startA < endB && endA > startB;
 }
 
 export default function Venue() {
@@ -71,7 +60,6 @@ export default function Venue() {
       console.log("📅 Existing bookings:", venueData?.bookings?.length || 0);
       console.log("BOOKING EXAMPLE:", venueData?.bookings?.[0]);
 
-      // Debug: sjekk at owner faktisk kommer med
       console.log("AUTH NAME:", auth?.name);
       console.log("VENUE OWNER:", venueData?.owner);
       console.log("OWNER NAME:", venueData?.owner?.name);
@@ -96,6 +84,7 @@ export default function Venue() {
     return myName === ownerName;
   }, [auth?.name, venue?.owner?.name]);
 
+  // Kun til visning i UI (liste over bookede perioder)
   const bookedRanges = useMemo(() => {
     const list = venue?.bookings || [];
     return list
@@ -103,17 +92,16 @@ export default function Venue() {
         id: b.id,
         fromISO: toDateOnlyISO(b.dateFrom),
         toISO: toDateOnlyISO(b.dateTo),
-        fromDate: parseDateInput(toDateOnlyISO(b.dateFrom)),
-        toDate: parseDateInput(toDateOnlyISO(b.dateTo)),
       }))
-      .sort((a, b) => a.fromDate - b.fromDate);
+      .sort((a, b) => new Date(a.fromISO) - new Date(b.fromISO));
   }, [venue]);
 
   const dateValidation = useMemo(() => {
     if (!dateFrom || !dateTo) return { ok: true, message: "" };
 
-    const start = parseDateInput(dateFrom);
-    const end = parseDateInput(dateTo);
+    // 1) grunnvalidering (samme dag/baklengs)
+    const start = toDateOnly(dateFrom);
+    const end = toDateOnly(dateTo);
 
     if (Number.isNaN(start.getTime()) || Number.isNaN(end.getTime())) {
       return { ok: false, message: "Invalid date selection." };
@@ -123,19 +111,35 @@ export default function Venue() {
       return { ok: false, message: "Date to must be after date from." };
     }
 
-    const overlap = bookedRanges.find((r) =>
-      rangesOverlap(start, end, r.fromDate, r.toDate)
-    );
+    // 2) availability-check (felles logikk)
+    const available = isDateRangeAvailable({
+      dateFrom,
+      dateTo,
+      bookings: venue?.bookings || [],
+    });
 
-    if (overlap) {
-      return {
-        ok: false,
-        message: `Those dates are unavailable (overlaps ${overlap.fromISO} → ${overlap.toISO}).`,
-      };
+    if (!available) {
+      // Bonus: finn hvilken booking som overlapper (for en fin melding)
+      const overlap = (venue?.bookings || []).find((b) => {
+        const bStart = toDateOnly(b.dateFrom);
+        const bEnd = toDateOnly(b.dateTo);
+        return rangesOverlap(start, end, bStart, bEnd);
+      });
+
+      if (overlap) {
+        const fromISO = toDateOnlyISO(overlap.dateFrom);
+        const toISO = toDateOnlyISO(overlap.dateTo);
+        return {
+          ok: false,
+          message: `Those dates are unavailable (overlaps ${fromISO} → ${toISO}).`,
+        };
+      }
+
+      return { ok: false, message: "Those dates are unavailable (overlaps an existing booking)." };
     }
 
     return { ok: true, message: "" };
-  }, [dateFrom, dateTo, bookedRanges]);
+  }, [dateFrom, dateTo, venue?.bookings]);
 
   async function handleBookingSubmit(e) {
     e.preventDefault();
@@ -229,9 +233,7 @@ export default function Venue() {
               ))}
             </ul>
 
-            {bookedRanges.length > 20 && (
-              <p style={{ opacity: 0.8 }}>Showing first 20.</p>
-            )}
+            {bookedRanges.length > 20 && <p style={{ opacity: 0.8 }}>Showing first 20.</p>}
           </details>
         )}
       </section>
@@ -246,7 +248,6 @@ export default function Venue() {
         </p>
       )}
 
-      {/* ✅ Info til venue owner */}
       {auth?.token && isOwner && (
         <p style={{ background: "#e7f3ff", padding: 12, borderRadius: 8 }}>
           You manage this venue, so you can’t book it yourself.
@@ -292,15 +293,11 @@ export default function Venue() {
             style={{ width: "100%", padding: 8 }}
             disabled={!auth?.token || isOwner}
           />
-          <small style={{ opacity: 0.8 }}>
-            Max guests for this venue: {venue.maxGuests}
-          </small>
+          <small style={{ opacity: 0.8 }}>Max guests for this venue: {venue.maxGuests}</small>
         </div>
 
         {!dateValidation.ok && (
-          <p style={{ color: "crimson", marginTop: 0 }}>
-            {dateValidation.message}
-          </p>
+          <p style={{ color: "crimson", marginTop: 0 }}>{dateValidation.message}</p>
         )}
 
         <button

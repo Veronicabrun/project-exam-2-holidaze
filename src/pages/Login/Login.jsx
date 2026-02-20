@@ -1,9 +1,10 @@
 import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { setAuth } from "../../utils/auth";
-import { loginUser } from "../../services/auth";
+import { loginUser } from "../../services/authService";
 import { getProfile } from "../../services/profile";
 import { isValidEmail, isValidPassword } from "../../utils/validators";
+import styles from "./Login.module.scss";
 
 export default function Login() {
   const navigate = useNavigate();
@@ -54,32 +55,24 @@ export default function Login() {
     setErrors((p) => ({ ...p, form: "" }));
 
     try {
-      // ✅ request() returnerer allerede "data"
       const loginResponse = await loginUser({ email, password });
 
       const token = loginResponse?.accessToken;
       const name = loginResponse?.name;
 
-      if (!token || !name) {
-        throw new Error("Missing token or username from login response.");
-      }
+      if (!token || !name) throw new Error("Missing token or username from login response.");
 
-      // 1) Lagre token+name først
       setAuth({ token, name });
 
-      // 2) Hent profil (request() returnerer også data her)
       const profile = await getProfile(name);
-
       const venueManager = Boolean(profile?.venueManager);
 
-      // 3) Oppdater auth med rolle + avatar
       setAuth({
         venueManager,
         avatarUrl: profile?.avatar?.url || "",
         avatarAlt: profile?.avatar?.alt || "User avatar",
       });
 
-      // ✅ ALLTID til /profile
       navigate("/profile", { replace: true });
     } catch (err) {
       setErrors((p) => ({
@@ -95,86 +88,92 @@ export default function Login() {
   const showPasswordError = submitted && errors.password;
 
   return (
-    <div style={{ padding: "1rem", maxWidth: 420 }}>
-      <h1>Login</h1>
-      <p>Log in to book venues or manage your venues.</p>
+    <div className={styles.page}>
+      <div className={styles.card}>
+        <h1 className={styles.title}>Login</h1>
+        <p className={styles.subtitle}>Log in to book venues or manage your venues.</p>
 
-      <form onSubmit={onSubmit} noValidate>
-        <div style={{ marginBottom: 12 }}>
-          <label htmlFor="email">Email</label>
-          <input
-            id="email"
-            type="email"
-            required
-            autoComplete="username"
-            value={email}
-            onChange={(e) => {
-              const val = e.target.value;
-              setEmail(val);
+        <form onSubmit={onSubmit} noValidate className={styles.form}>
+          <div className={styles.field}>
+            <label className={styles.label} htmlFor="email">
+              Email
+            </label>
+            <input
+              id="email"
+              type="email"
+              required
+              autoComplete="username"
+              value={email}
+              onChange={(e) => {
+                const val = e.target.value;
+                setEmail(val);
 
-              if (submitted) {
-                setErrors((p) => ({
-                  ...p,
-                  email: validateField("email", val),
-                  form: "",
-                }));
-              }
-            }}
-            style={{ width: "100%", padding: 8 }}
-            aria-invalid={Boolean(showEmailError)}
-          />
-          {showEmailError && (
-            <p role="alert" style={{ color: "crimson", marginTop: 6 }}>
-              {errors.email}
+                if (submitted) {
+                  setErrors((p) => ({
+                    ...p,
+                    email: validateField("email", val),
+                    form: "",
+                  }));
+                }
+              }}
+              className={`${styles.input} ${showEmailError ? styles.inputError : ""}`}
+              aria-invalid={Boolean(showEmailError)}
+            />
+            {showEmailError && (
+              <p role="alert" className={styles.errorText}>
+                {errors.email}
+              </p>
+            )}
+          </div>
+
+          <div className={styles.field}>
+            <label className={styles.label} htmlFor="password">
+              Password
+            </label>
+            <input
+              id="password"
+              type="password"
+              required
+              minLength={8}
+              autoComplete="current-password"
+              value={password}
+              onChange={(e) => {
+                const val = e.target.value;
+                setPassword(val);
+
+                if (submitted) {
+                  setErrors((p) => ({
+                    ...p,
+                    password: validateField("password", val),
+                    form: "",
+                  }));
+                }
+              }}
+              className={`${styles.input} ${showPasswordError ? styles.inputError : ""}`}
+              aria-invalid={Boolean(showPasswordError)}
+            />
+            {showPasswordError && (
+              <p role="alert" className={styles.errorText}>
+                {errors.password}
+              </p>
+            )}
+          </div>
+
+          <button type="submit" className={styles.button} disabled={loading}>
+            {loading ? "Logging in..." : "Login"}
+          </button>
+
+          {errors.form && (
+            <p role="alert" className={styles.formError}>
+              {errors.form}
             </p>
           )}
-        </div>
+        </form>
 
-        <div style={{ marginBottom: 12 }}>
-          <label htmlFor="password">Password</label>
-          <input
-            id="password"
-            type="password"
-            required
-            minLength={8}
-            autoComplete="current-password"
-            value={password}
-            onChange={(e) => {
-              const val = e.target.value;
-              setPassword(val);
-
-              if (submitted) {
-                setErrors((p) => ({
-                  ...p,
-                  password: validateField("password", val),
-                  form: "",
-                }));
-              }
-            }}
-            style={{ width: "100%", padding: 8 }}
-            aria-invalid={Boolean(showPasswordError)}
-          />
-          {showPasswordError && (
-            <p role="alert" style={{ color: "crimson", marginTop: 6 }}>
-              {errors.password}
-            </p>
-          )}
-        </div>
-
-        <button type="submit" disabled={loading}>
-          {loading ? "Logging in..." : "Login"}
-        </button>
-
-        {errors.form && (
-          <p role="alert" style={{ color: "crimson", marginTop: 12 }}>
-            {errors.form}
-          </p>
-        )}
-      </form>
-
-      <p style={{ marginTop: 12 }}>
-        Don&apos;t have an account? <Link to="/register">Register here</Link>
-      </p>
+        <p className={styles.footerText}>
+          Don&apos;t have an account? <Link className={styles.inlineLink} to="/register">Register here</Link>
+        </p>
+      </div>
     </div>
   );
 }

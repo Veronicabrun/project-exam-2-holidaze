@@ -3,8 +3,8 @@ import { Routes, Route } from "react-router-dom";
 
 import ProtectedRoute from "./components/ProtectedRoute/ProtectedRoute";
 import VenueManagerRoute from "./components/VenueManagerRoute/VenueManagerRoute";
+import Layout from "./layout/Layout";
 
-import Layout from "./layout/Layout/Layout";
 
 import Home from "./pages/Home/Home";
 import Venues from "./pages/Venues/Venues";
@@ -40,7 +40,8 @@ export default function App() {
           }
         />
 
-        {/* Venue Manager only */}
+        {/* Venue Manag
+        er only */}
         <Route
           path="admin"
           element={
@@ -55,3 +56,11 @@ export default function App() {
     </Routes>
   );
 }
+
+
+
+
+     
+
+
+

@@ -1,12 +1,13 @@
+// src/services/availability.js
+
 export function toDateOnly(value) {
-  // value kan være "2026-01-30" eller ISO string fra API
-  const d = new Date(value);
-  d.setHours(0, 0, 0, 0);
-  return d;
+  // støtter både "YYYY-MM-DD" og ISO string fra API
+  const datePart = String(value).slice(0, 10); // f.eks. "2026-05-15"
+  return new Date(`${datePart}T00:00:00.000Z`);
 }
 
 export function rangesOverlap(startA, endA, startB, endB) {
-  // Vi bruker [start, end) (end er eksklusiv) som er vanlig i booking
+  // [start, end) (end eksklusiv)
   return startA < endB && startB < endA;
 }
 
@@ -27,5 +28,6 @@ export function isDateRangeAvailable({ dateFrom, dateTo, bookings = [] }) {
       return false;
     }
   }
+
   return true;
 }

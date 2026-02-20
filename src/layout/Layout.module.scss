@@ -1,0 +1,10 @@
+/* src/layout/Layout.module.scss */
+
+.shell {
+  min-height: 100vh;
+}
+
+.main {
+  /* Nav er 72px høy */
+  min-height: calc(100vh - 72px);
+}
