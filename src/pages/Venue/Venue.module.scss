@@ -1,0 +1,78 @@
+/* src/pages/Venue/Venue.module.scss */
+
+.page {
+  padding: 18px 16px 40px;
+  width: min(1100px, 100%);
+  margin: 0 auto;
+}
+
+.breadcrumb {
+  margin-bottom: 12px;
+}
+
+.back {
+  color: #0f6f73;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  font-weight: 600;
+}
+
+.grid {
+  margin-top: 16px;
+  display: grid;
+  gap: 18px;
+  grid-template-columns: 1fr 360px;
+  align-items: start;
+}
+
+@media (max-width: 980px) {
+  .grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.left {
+  display: grid;
+  gap: 14px;
+}
+
+.right {
+  position: sticky;
+  top: 92px; /* nav er sticky og ca 72px høy */
+  align-self: start;
+}
+
+@media (max-width: 980px) {
+  .right {
+    position: static;
+  }
+}
+
+.card {
+  background: #fff;
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  border-radius: 16px;
+  box-shadow: 0 14px 35px rgba(0, 0, 0, 0.06);
+  padding: 16px;
+}
+
+.h2 {
+  margin: 0 0 8px;
+  font-size: 16px;
+}
+
+.text {
+  margin: 0;
+  line-height: 1.55;
+  opacity: 0.92;
+}
+
+.status {
+  padding: 12px;
+  opacity: 0.8;
+}
+
+.error {
+  padding: 12px;
+  color: crimson;
+}

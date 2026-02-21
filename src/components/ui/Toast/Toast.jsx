@@ -1,6 +1,14 @@
+// src/components/ui/Toast/Toast.jsx
 import { useEffect } from "react";
+import styles from "./Toast.module.scss";
 
-export default function Toast({ message, variant = "success", open, onClose, duration = 3000 }) {
+export default function Toast({
+  message,
+  variant = "success",
+  open,
+  onClose,
+  duration = 3000,
+}) {
   useEffect(() => {
     if (!open) return;
 
@@ -13,54 +21,34 @@ export default function Toast({ message, variant = "success", open, onClose, dur
 
   if (!open) return null;
 
-  const styles = {
-    position: "fixed",
-    top: 16,
-    right: 16,
-    zIndex: 9999,
-    minWidth: 260,
-    maxWidth: 360,
-    padding: "12px 14px",
-    borderRadius: 12,
-    border: "1px solid",
-    boxShadow: "0 10px 25px rgba(0,0,0,0.12)",
-    background: "white",
-    display: "flex",
-    gap: 10,
-    alignItems: "flex-start",
-  };
+  const icon =
+    variant === "success" ? "✅" :
+    variant === "error" ? "❌" :
+    "ℹ️";
 
-  const variants = {
-    success: { borderColor: "#b7e1c1" },
-    error: { borderColor: "#f5c2c2" },
-    info: { borderColor: "#cfe2ff" },
-  };
+  const title =
+    variant === "success" ? "Success" :
+    variant === "error" ? "Error" :
+    "Info";
 
   return (
-    <div role="status" aria-live="polite" style={{ ...styles, ...variants[variant] }}>
-      <div style={{ fontSize: 18, lineHeight: 1 }}>
-        {variant === "success" ? "✅" : variant === "error" ? "❌" : "ℹ️"}
-      </div>
+    <div
+      role="status"
+      aria-live="polite"
+      className={`${styles.toast} ${styles[variant]}`}
+    >
+      <div className={styles.icon}>{icon}</div>
 
-      <div style={{ flex: 1 }}>
-        <div style={{ fontWeight: 600, marginBottom: 2 }}>
-          {variant === "success" ? "Success" : variant === "error" ? "Error" : "Info"}
-        </div>
-        <div style={{ opacity: 0.9 }}>{message}</div>
+      <div className={styles.content}>
+        <div className={styles.title}>{title}</div>
+        <div className={styles.message}>{message}</div>
       </div>
 
       <button
         type="button"
         onClick={onClose}
         aria-label="Close notification"
-        style={{
-          border: "none",
-          background: "transparent",
-          cursor: "pointer",
-          fontSize: 16,
-          lineHeight: 1,
-          opacity: 0.7,
-        }}
+        className={styles.close}
       >
         ✕
       </button>

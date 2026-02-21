@@ -1,20 +1,11 @@
 // src/components/ui/ErrorMessage/ErrorMessage.jsx
-export default function ErrorMessage({ message, style }) {
+import styles from "./ErrorMessage.module.scss";
+
+export default function ErrorMessage({ message }) {
   if (!message) return null;
 
   return (
-    <p
-      role="alert"
-      style={{
-        color: "crimson",
-        background: "#fdecec",
-        border: "1px solid #f5c2c2",
-        padding: 12,
-        borderRadius: 8,
-        margin: "12px 0",
-        ...style,
-      }}
-    >
+    <p role="alert" className={styles.error}>
       {message}
     </p>
   );

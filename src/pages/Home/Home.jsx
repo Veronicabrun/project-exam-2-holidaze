@@ -7,7 +7,7 @@ import ErrorMessage from "../../components/ui/ErrorMessage/ErrorMessage";
 import styles from "./Home.module.scss";
 
 
-const NEWEST_LIMIT = 8;
+const NEWEST_LIMIT = 6;
 const SEARCH_PAGE_SIZE = 20;
 const MAX_SEARCH_PAGES = 15; // sikkerhet, så vi ikke henter “uendelig”
 

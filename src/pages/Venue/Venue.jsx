@@ -1,9 +1,18 @@
+// src/pages/Venue/Venue.jsx
 import { useEffect, useMemo, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { getVenue } from "../../services/venues";
 import { createBooking } from "../../services/bookings";
 import { getAuth } from "../../utils/auth";
 import { isDateRangeAvailable, toDateOnly, rangesOverlap } from "../../services/availability";
+
+import VenueHeader from "../../components/VenueDetails/VenueHeader/VenueHeader";
+import BookingCard from "../../components/VenueDetails/BookingCard/BookingCard";
+import BookedDates from "../../components/VenueDetails/BookedDates/BookedDates";
+import UpcomingBookings from "../../components/VenueDetails/UpcomingBookings/UpcomingBookings";
+
+import Toast from "../../components/ui/Toast/Toast";
+import styles from "./Venue.module.scss";
 
 function toDateOnlyISO(isoString) {
   return new Date(isoString).toISOString().slice(0, 10);
@@ -21,21 +30,41 @@ export default function Venue() {
   const [dateTo, setDateTo] = useState("");
   const [guests, setGuests] = useState(1);
 
-  const [bookingMsg, setBookingMsg] = useState("");
+  // ❌ bookingMsg fjernes (suksess -> toast)
   const [bookingError, setBookingError] = useState("");
   const [bookingLoading, setBookingLoading] = useState(false);
 
-  // ✅ Auth state (så UI reagerer ved login/logout)
-  const [auth, setAuth] = useState(() => getAuth() || null);
+  // ✅ Toast state (bruker din eksisterende Toast.jsx)
+  const [toast, setToast] = useState({
+    open: false,
+    message: "",
+    variant: "success",
+    id: 0,
+  });
+
+  function showToast({ message, variant = "success" }) {
+    setToast((t) => ({
+      id: t.id + 1,
+      open: true,
+      message,
+      variant,
+    }));
+  }
+
+  function closeToast() {
+    setToast((t) => ({ ...t, open: false }));
+  }
+
+  // Auth state (så UI reagerer på login/logout)
+  const [auth, setAuthState] = useState(() => getAuth() || null);
 
   useEffect(() => {
     function syncAuth() {
-      setAuth(getAuth() || null);
+      setAuthState(getAuth() || null);
     }
 
     window.addEventListener("authchange", syncAuth);
     window.addEventListener("storage", syncAuth);
-
     syncAuth();
 
     return () => {
@@ -49,23 +78,10 @@ export default function Venue() {
     setIsLoading(true);
 
     try {
-      console.log("🟡 Loading venue id:", id);
-
-      // ✅ Hent både bookings og owner
       const venueData = await getVenue(id, { withBookings: true, withOwner: true });
-      console.log("🟢 Venue data:", venueData);
-
       setVenue(venueData);
-
-      console.log("📅 Existing bookings:", venueData?.bookings?.length || 0);
-      console.log("BOOKING EXAMPLE:", venueData?.bookings?.[0]);
-
-      console.log("AUTH NAME:", auth?.name);
-      console.log("VENUE OWNER:", venueData?.owner);
-      console.log("OWNER NAME:", venueData?.owner?.name);
     } catch (err) {
-      console.error("❌ Venue error:", err);
-      setError(err.message || "Failed to load venue");
+      setError(err?.message || "Failed to load venue.");
     } finally {
       setIsLoading(false);
     }
@@ -76,7 +92,8 @@ export default function Venue() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id]);
 
-  // ✅ Er dette venue eid av innlogget bruker?
+  const isLoggedIn = Boolean(auth?.token);
+
   const isOwner = useMemo(() => {
     const myName = auth?.name;
     const ownerName = venue?.owner?.name;
@@ -84,7 +101,6 @@ export default function Venue() {
     return myName === ownerName;
   }, [auth?.name, venue?.owner?.name]);
 
-  // Kun til visning i UI (liste over bookede perioder)
   const bookedRanges = useMemo(() => {
     const list = venue?.bookings || [];
     return list
@@ -99,7 +115,6 @@ export default function Venue() {
   const dateValidation = useMemo(() => {
     if (!dateFrom || !dateTo) return { ok: true, message: "" };
 
-    // 1) grunnvalidering (samme dag/baklengs)
     const start = toDateOnly(dateFrom);
     const end = toDateOnly(dateTo);
 
@@ -108,10 +123,9 @@ export default function Venue() {
     }
 
     if (end <= start) {
-      return { ok: false, message: "Date to must be after date from." };
+      return { ok: false, message: "Check-out must be after check-in." };
     }
 
-    // 2) availability-check (felles logikk)
     const available = isDateRangeAvailable({
       dateFrom,
       dateTo,
@@ -119,7 +133,6 @@ export default function Venue() {
     });
 
     if (!available) {
-      // Bonus: finn hvilken booking som overlapper (for en fin melding)
       const overlap = (venue?.bookings || []).find((b) => {
         const bStart = toDateOnly(b.dateFrom);
         const bEnd = toDateOnly(b.dateTo);
@@ -143,22 +156,27 @@ export default function Venue() {
 
   async function handleBookingSubmit(e) {
     e.preventDefault();
-    setBookingMsg("");
+
+    // ❌ ikke lenger bookingMsg
     setBookingError("");
 
-    if (!auth?.token) {
+    if (!isLoggedIn) {
       setBookingError("You must be logged in to book.");
+      showToast({ variant: "error", message: "You must be logged in to book." });
       return;
     }
 
-    // ✅ BLOCK: eier kan ikke booke eget venue
     if (isOwner) {
       setBookingError("You cannot book your own venue.");
+      showToast({ variant: "error", message: "You cannot book your own venue." });
       return;
     }
 
     if (!dateValidation.ok) {
       setBookingError(dateValidation.message);
+      // Her holder det ofte å vise inline under feltene,
+      // men du kan også vise toast hvis du vil:
+      // showToast({ variant: "error", message: dateValidation.message });
       return;
     }
 
@@ -172,145 +190,103 @@ export default function Venue() {
         venueId: id,
       };
 
-      console.log("🔵 BOOKING submit payload:", payload);
+      await createBooking(payload);
 
-      const res = await createBooking(payload);
-      console.log("🟢 Booking response:", res);
+      // ✅ Toast på suksess
+      showToast({ variant: "success", message: "Booking confirmed!" });
 
-      setBookingMsg("✅ Booking created!");
-
-      console.log("🟡 Refreshing venue after booking...");
       await fetchVenue();
 
       setDateFrom("");
       setDateTo("");
       setGuests(1);
     } catch (err) {
-      console.error("❌ Booking error:", err);
-      setBookingError(err.message || "Booking failed");
+      const msg = err?.message || "Booking failed.";
+      setBookingError(msg);
+      showToast({ variant: "error", message: msg });
     } finally {
       setBookingLoading(false);
     }
   }
 
-  if (isLoading) return <p style={{ padding: "1rem" }}>Loading venue...</p>;
-  if (error) return <p style={{ padding: "1rem", color: "crimson" }}>{error}</p>;
-  if (!venue) return <p style={{ padding: "1rem" }}>No venue found.</p>;
+  if (isLoading) {
+    return (
+      <div className={styles.page}>
+        <p className={styles.status}>Loading venue...</p>
+      </div>
+    );
+  }
 
-  const today = new Date().toISOString().slice(0, 10);
+  if (error) {
+    return (
+      <div className={styles.page}>
+        <p className={styles.error}>{error}</p>
+      </div>
+    );
+  }
+
+  if (!venue) {
+    return (
+      <div className={styles.page}>
+        <p className={styles.status}>No venue found.</p>
+      </div>
+    );
+  }
 
   return (
-    <div style={{ padding: "1rem" }}>
-      <p style={{ marginTop: 0 }}>
-        <Link to="/venues">← Back to venues</Link>
-      </p>
+    <div className={styles.page}>
+      {/* ✅ Toast øverst høyre (fixed i Toast.jsx) */}
+      <Toast
+        key={toast.id}
+        open={toast.open}
+        message={toast.message}
+        variant={toast.variant}
+        duration={2500}
+        onClose={closeToast}
+      />
 
-      <h1 style={{ marginBottom: 6 }}>{venue.name}</h1>
-      <p style={{ marginTop: 0, opacity: 0.8 }}>
-        Price: {venue.price} · Max guests: {venue.maxGuests}
-      </p>
+      <div className={styles.breadcrumb}>
+        <Link to="/venues" className={styles.back}>
+          ← Back to venues
+        </Link>
+      </div>
 
-      {venue.description && <p>{venue.description}</p>}
+      <VenueHeader venue={venue} />
 
-      <hr style={{ margin: "24px 0" }} />
+      <div className={styles.grid}>
+        {/* Left column */}
+        <div className={styles.left}>
+          <section className={styles.card}>
+            <h2 className={styles.h2}>About</h2>
+            <p className={styles.text}>{venue.description || "No description provided."}</p>
+          </section>
 
-      <section style={{ marginBottom: 24 }}>
-        <h2 style={{ marginBottom: 8 }}>Unavailable dates</h2>
+          <BookedDates ranges={bookedRanges} />
 
-        {bookedRanges.length === 0 ? (
-          <p style={{ opacity: 0.8 }}>No bookings yet — looks available.</p>
-        ) : (
-          <details>
-            <summary style={{ cursor: "pointer" }}>
-              View booked periods ({bookedRanges.length})
-            </summary>
-
-            <ul style={{ marginTop: 10 }}>
-              {bookedRanges.slice(0, 20).map((r) => (
-                <li key={r.id}>
-                  {r.fromISO} → {r.toISO}
-                </li>
-              ))}
-            </ul>
-
-            {bookedRanges.length > 20 && <p style={{ opacity: 0.8 }}>Showing first 20.</p>}
-          </details>
-        )}
-      </section>
-
-      <hr style={{ margin: "24px 0" }} />
-
-      <h2>Book this venue</h2>
-
-      {!auth?.token && (
-        <p style={{ background: "#fff3cd", padding: 12, borderRadius: 8 }}>
-          You must be logged in to book. <Link to="/login">Go to login</Link>
-        </p>
-      )}
-
-      {auth?.token && isOwner && (
-        <p style={{ background: "#e7f3ff", padding: 12, borderRadius: 8 }}>
-          You manage this venue, so you can’t book it yourself.
-        </p>
-      )}
-
-      <form onSubmit={handleBookingSubmit} style={{ maxWidth: 420 }}>
-        <div style={{ marginBottom: 12 }}>
-          <label>From</label>
-          <input
-            type="date"
-            value={dateFrom}
-            min={today}
-            onChange={(e) => setDateFrom(e.target.value)}
-            required
-            style={{ width: "100%", padding: 8 }}
-            disabled={!auth?.token || isOwner}
-          />
+          {/* Kun eier får “Upcoming bookings” */}
+          {isLoggedIn && isOwner && <UpcomingBookings bookings={venue.bookings || []} />}
         </div>
 
-        <div style={{ marginBottom: 12 }}>
-          <label>To</label>
-          <input
-            type="date"
-            value={dateTo}
-            min={dateFrom || today}
-            onChange={(e) => setDateTo(e.target.value)}
-            required
-            style={{ width: "100%", padding: 8 }}
-            disabled={!auth?.token || isOwner}
+        {/* Right column */}
+        <aside className={styles.right}>
+          <BookingCard
+            price={venue.price}
+            maxGuests={venue.maxGuests}
+            isLoggedIn={isLoggedIn}
+            isOwner={isOwner}
+            dateFrom={dateFrom}
+            dateTo={dateTo}
+            guests={guests}
+            onDateFromChange={setDateFrom}
+            onDateToChange={setDateTo}
+            onGuestsChange={setGuests}
+            dateValidation={dateValidation}
+            bookingLoading={bookingLoading}
+            bookingError={bookingError}
+            onSubmit={handleBookingSubmit}
           />
-        </div>
-
-        <div style={{ marginBottom: 12 }}>
-          <label>Guests</label>
-          <input
-            type="number"
-            min="1"
-            max={venue.maxGuests}
-            value={guests}
-            onChange={(e) => setGuests(e.target.value)}
-            required
-            style={{ width: "100%", padding: 8 }}
-            disabled={!auth?.token || isOwner}
-          />
-          <small style={{ opacity: 0.8 }}>Max guests for this venue: {venue.maxGuests}</small>
-        </div>
-
-        {!dateValidation.ok && (
-          <p style={{ color: "crimson", marginTop: 0 }}>{dateValidation.message}</p>
-        )}
-
-        <button
-          type="submit"
-          disabled={!auth?.token || isOwner || bookingLoading || !dateValidation.ok}
-        >
-          {bookingLoading ? "Booking..." : "Book now"}
-        </button>
-
-        {bookingMsg && <p style={{ color: "green" }}>{bookingMsg}</p>}
-        {bookingError && <p style={{ color: "crimson" }}>{bookingError}</p>}
-      </form>
+        </aside>
+      </div>
     </div>
   );
 }
-

@@ -46,10 +46,10 @@
   margin: 0;
 
   display: grid;
-  gap: 16px;
+  gap: 20px;
 
-  /* 4 kort på desktop (som eksempelet ditt) */
-  grid-template-columns: repeat(4, minmax(0, 1fr));
+  /* 3 kort på desktop */
+  grid-template-columns: repeat(3, minmax(0, 1fr));
 }
 
 @media (max-width: 980px) {

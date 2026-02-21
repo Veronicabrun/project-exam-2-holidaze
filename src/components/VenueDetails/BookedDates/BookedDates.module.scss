@@ -1,0 +1,40 @@
+/* src/components/VenueDetails/BookedDates.module.scss */
+
+.card {
+  background: #fff;
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  border-radius: 16px;
+  box-shadow: 0 14px 35px rgba(0, 0, 0, 0.06);
+  padding: 16px;
+}
+
+.h2 {
+  margin: 0 0 8px;
+  font-size: 16px;
+}
+
+.muted {
+  margin: 0;
+  opacity: 0.8;
+}
+
+.details {
+  margin-top: 4px;
+}
+
+.summary {
+  cursor: pointer;
+  font-weight: 700;
+  opacity: 0.9;
+}
+
+.list {
+  margin: 10px 0 0;
+  padding-left: 18px;
+  display: grid;
+  gap: 6px;
+}
+
+.item {
+  opacity: 0.9;
+}
