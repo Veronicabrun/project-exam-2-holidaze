@@ -1,45 +1,26 @@
+// src/components/Nav/Nav.jsx
 import { Link, NavLink, useLocation, useNavigate } from "react-router-dom";
 import { useEffect, useRef, useState } from "react";
-import { getAuth, logout as doLogout } from "../../utils/auth";
+import { logout as doLogout } from "../../utils/auth";
+import useAuth from "../../hooks/useAuth";
 import styles from "./Nav.module.scss";
-
-const DEBUG_NAV = false;
-function log(...args) {
-  if (DEBUG_NAV) console.log(...args);
-}
 
 export default function Nav() {
   const navigate = useNavigate();
   const location = useLocation();
-
-  const [auth, setAuthState] = useState(getAuth());
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
-
   const menuRef = useRef(null);
 
+  const auth = useAuth();
   const isLoggedIn = Boolean(auth?.token);
   const avatarUrl = auth?.avatarUrl || "";
   const avatarAlt = auth?.avatarAlt || "User avatar";
 
-  // Sync auth on route change
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+
+  // Close menu on route change
   useEffect(() => {
-    const next = getAuth();
-    log("Nav: route change -> sync auth", { path: location.pathname, auth: next });
-    setAuthState(next);
     setIsMenuOpen(false);
   }, [location.pathname]);
-
-  // Listen for auth changes
-  useEffect(() => {
-    function onAuthChange() {
-      const next = getAuth();
-      log("Nav: authchange -> sync auth", next);
-      setAuthState(next);
-    }
-
-    window.addEventListener("authchange", onAuthChange);
-    return () => window.removeEventListener("authchange", onAuthChange);
-  }, []);
 
   // Close menu on outside click / ESC
   useEffect(() => {

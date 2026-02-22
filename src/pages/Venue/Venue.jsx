@@ -3,8 +3,9 @@ import { useEffect, useMemo, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { getVenue } from "../../services/venues";
 import { createBooking } from "../../services/bookings";
-import { getAuth } from "../../utils/auth";
 import { isDateRangeAvailable, toDateOnly, rangesOverlap } from "../../services/availability";
+
+import useAuth from "../../hooks/useAuth";
 
 import VenueHeader from "../../components/VenueDetails/VenueHeader/VenueHeader";
 import BookingCard from "../../components/VenueDetails/BookingCard/BookingCard";
@@ -21,6 +22,9 @@ function toDateOnlyISO(isoString) {
 export default function Venue() {
   const { id } = useParams();
 
+  const auth = useAuth();
+  const isLoggedIn = Boolean(auth?.token);
+
   const [venue, setVenue] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
@@ -30,11 +34,10 @@ export default function Venue() {
   const [dateTo, setDateTo] = useState("");
   const [guests, setGuests] = useState(1);
 
-  // ❌ bookingMsg fjernes (suksess -> toast)
   const [bookingError, setBookingError] = useState("");
   const [bookingLoading, setBookingLoading] = useState(false);
 
-  // ✅ Toast state (bruker din eksisterende Toast.jsx)
+  // Toast state
   const [toast, setToast] = useState({
     open: false,
     message: "",
@@ -55,24 +58,6 @@ export default function Venue() {
     setToast((t) => ({ ...t, open: false }));
   }
 
-  // Auth state (så UI reagerer på login/logout)
-  const [auth, setAuthState] = useState(() => getAuth() || null);
-
-  useEffect(() => {
-    function syncAuth() {
-      setAuthState(getAuth() || null);
-    }
-
-    window.addEventListener("authchange", syncAuth);
-    window.addEventListener("storage", syncAuth);
-    syncAuth();
-
-    return () => {
-      window.removeEventListener("authchange", syncAuth);
-      window.removeEventListener("storage", syncAuth);
-    };
-  }, []);
-
   async function fetchVenue() {
     setError("");
     setIsLoading(true);
@@ -91,8 +76,6 @@ export default function Venue() {
     fetchVenue();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id]);
-
-  const isLoggedIn = Boolean(auth?.token);
 
   const isOwner = useMemo(() => {
     const myName = auth?.name;
@@ -156,43 +139,37 @@ export default function Venue() {
 
   async function handleBookingSubmit(e) {
     e.preventDefault();
-
-    // ❌ ikke lenger bookingMsg
     setBookingError("");
 
     if (!isLoggedIn) {
-      setBookingError("You must be logged in to book.");
-      showToast({ variant: "error", message: "You must be logged in to book." });
+      const msg = "You must be logged in to book.";
+      setBookingError(msg);
+      showToast({ variant: "error", message: msg });
       return;
     }
 
     if (isOwner) {
-      setBookingError("You cannot book your own venue.");
-      showToast({ variant: "error", message: "You cannot book your own venue." });
+      const msg = "You cannot book your own venue.";
+      setBookingError(msg);
+      showToast({ variant: "error", message: msg });
       return;
     }
 
     if (!dateValidation.ok) {
       setBookingError(dateValidation.message);
-      // Her holder det ofte å vise inline under feltene,
-      // men du kan også vise toast hvis du vil:
-      // showToast({ variant: "error", message: dateValidation.message });
       return;
     }
 
     try {
       setBookingLoading(true);
 
-      const payload = {
+      await createBooking({
         dateFrom,
         dateTo,
         guests: Number(guests),
         venueId: id,
-      };
+      });
 
-      await createBooking(payload);
-
-      // ✅ Toast på suksess
       showToast({ variant: "success", message: "Booking confirmed!" });
 
       await fetchVenue();
@@ -235,7 +212,6 @@ export default function Venue() {
 
   return (
     <div className={styles.page}>
-      {/* ✅ Toast øverst høyre (fixed i Toast.jsx) */}
       <Toast
         key={toast.id}
         open={toast.open}
@@ -254,7 +230,6 @@ export default function Venue() {
       <VenueHeader venue={venue} />
 
       <div className={styles.grid}>
-        {/* Left column */}
         <div className={styles.left}>
           <section className={styles.card}>
             <h2 className={styles.h2}>About</h2>
@@ -263,11 +238,9 @@ export default function Venue() {
 
           <BookedDates ranges={bookedRanges} />
 
-          {/* Kun eier får “Upcoming bookings” */}
           {isLoggedIn && isOwner && <UpcomingBookings bookings={venue.bookings || []} />}
         </div>
 
-        {/* Right column */}
         <aside className={styles.right}>
           <BookingCard
             price={venue.price}
