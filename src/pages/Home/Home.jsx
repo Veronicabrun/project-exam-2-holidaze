@@ -1,59 +1,32 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+// src/pages/Home/Home.jsx
+import { useEffect, useMemo, useState } from "react";
 import Hero from "../../components/Hero/Hero";
 import VenueCard from "../../components/VenueCard/VenueCard";
 import { getVenues } from "../../services/venues";
 import Loading from "../../components/ui/Loading/Loading";
 import ErrorMessage from "../../components/ui/ErrorMessage/ErrorMessage";
+import useVenuesSearch from "../../hooks/useVenuesSearch";
 import styles from "./Home.module.scss";
 
-
 const NEWEST_LIMIT = 6;
-const SEARCH_PAGE_SIZE = 20;
-const MAX_SEARCH_PAGES = 15; // sikkerhet, så vi ikke henter “uendelig”
-
-function normalize(value) {
-  return String(value || "").trim().toLowerCase();
-}
-
-function matchesQuery(venue, q) {
-  const hay = [
-    venue?.name,
-    venue?.description,
-    venue?.location?.address,
-    venue?.location?.city,
-    venue?.location?.zip,
-    venue?.location?.country,
-    venue?.location?.continent,
-  ]
-    .filter(Boolean)
-    .join(" ")
-    .toLowerCase();
-
-  return hay.includes(q);
-}
 
 export default function Home() {
-  const [query, setQuery] = useState("");
+  // ✅ Live search flyttet hit:
+  const { query, setQuery, q, results, isSearching, error: searchError, clear } = useVenuesSearch();
 
-  // Nyeste (8)
+  // Nyeste
   const [newest, setNewest] = useState([]);
+  const [isLoadingNewest, setIsLoadingNewest] = useState(false);
+  const [newestError, setNewestError] = useState("");
 
-  // Search results (kan være mange)
-  const [searchVenues, setSearchVenues] = useState([]);
-
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState("");
-
-  const requestIdRef = useRef(0);
-
-  // 1) Hent 8 nyeste (kun én gang / ved refresh)
+  // 1) Hent nyeste (kun én gang)
   useEffect(() => {
     let alive = true;
 
     async function loadNewest() {
       try {
-        setError("");
-        setIsLoading(true);
+        setNewestError("");
+        setIsLoadingNewest(true);
 
         const data = await getVenues({
           page: 1,
@@ -66,10 +39,10 @@ export default function Home() {
         setNewest(Array.isArray(data) ? data : []);
       } catch (e) {
         if (!alive) return;
-        setError(e?.message || "Could not load newest venues.");
+        setNewestError(e?.message || "Could not load newest venues.");
       } finally {
         if (!alive) return;
-        setIsLoading(false);
+        setIsLoadingNewest(false);
       }
     }
 
@@ -79,78 +52,21 @@ export default function Home() {
     };
   }, []);
 
-  // 2) “Live search” med debounce: når query endres, hent flere sider ved behov
-  useEffect(() => {
-    const q = normalize(query);
-
-    // Hvis tomt søk: vis bare 8 nyeste (og nullstill search state)
-    if (!q) {
-      setSearchVenues([]);
-      setError("");
-      return;
-    }
-
-    const myRequestId = ++requestIdRef.current;
-    const timer = setTimeout(() => {
-      (async () => {
-        try {
-          setError("");
-          setIsLoading(true);
-          setSearchVenues([]);
-
-          const all = [];
-          let page = 1;
-          let hasMore = true;
-
-          while (hasMore && page <= MAX_SEARCH_PAGES) {
-            // Hvis en nyere request har startet, avbryt denne
-            if (requestIdRef.current !== myRequestId) return;
-
-            const data = await getVenues({
-              page,
-              limit: SEARCH_PAGE_SIZE,
-              sort: "created",
-              sortOrder: "desc",
-            });
-
-            const next = Array.isArray(data) ? data : [];
-            all.push(...next);
-
-            // Filter på alt vi har hentet så langt
-            const filtered = all.filter((v) => matchesQuery(v, q));
-            setSearchVenues(filtered);
-
-            // Ferdig når færre enn page-size returneres
-            hasMore = next.length === SEARCH_PAGE_SIZE;
-            page += 1;
-
-            // Hvis vi allerede har treff, kan vi stoppe tidlig (UX: raskere)
-            if (filtered.length > 0) break;
-          }
-
-          // Hvis vi stoppet tidlig uten treff, men fortsatt kan finnes langt ned:
-          // du kan fjerne “break” over hvis du vil søke absolutt ALT alltid.
-        } catch (e) {
-          if (requestIdRef.current !== myRequestId) return;
-          setError(e?.message || "Search failed.");
-        } finally {
-          if (requestIdRef.current !== myRequestId) return;
-          setIsLoading(false);
-        }
-      })();
-    }, 300); // debounce
-
-    return () => clearTimeout(timer);
-  }, [query]);
-
-  const q = normalize(query);
+  // 2) Hva vises i grid?
   const listToShow = useMemo(() => {
     if (!q) return newest;
-    return searchVenues;
-  }, [q, newest, searchVenues]);
+    return results;
+  }, [q, newest, results]);
+
+  // 3) Hvilken “loading” skal vises?
+  const isLoading = q ? isSearching : isLoadingNewest;
+
+  // 4) Hvilken error skal vises?
+  const error = q ? searchError : newestError;
 
   return (
     <>
+      {/* Hero unchanged */}
       <Hero query={query} onQueryChange={setQuery} />
 
       <section className={styles.section} aria-labelledby="results-title">
@@ -168,7 +84,7 @@ export default function Home() {
             </h2>
 
             {q && (
-              <button type="button" className={styles.clear} onClick={() => setQuery("")}>
+              <button type="button" className={styles.clear} onClick={clear}>
                 Clear search
               </button>
             )}

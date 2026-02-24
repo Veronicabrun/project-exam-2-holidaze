@@ -28,6 +28,14 @@
   padding: 16px;
 }
 
+/* ✅ NY: brukes kun på "My bookings" panelet */
+.panelPlain {
+  background: transparent;
+  border: 0;
+  box-shadow: none;
+  padding: 0;
+}
+
 .h2 {
   margin: 0 0 12px;
   font-size: 20px;

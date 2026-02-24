@@ -1,0 +1,149 @@
+/* src/pages/Venues/Venues.module.scss */
+
+.page {
+  padding: 18px 16px 50px;
+}
+
+.container {
+  width: min(1100px, 100%);
+  margin: 0 auto;
+  display: grid;
+  gap: 14px;
+}
+
+.header {
+  display: grid;
+  gap: 6px;
+}
+
+.title {
+  margin: 0;
+  font-size: 34px;
+  line-height: 1.1;
+}
+
+.subtitle {
+  margin: 0;
+  opacity: 0.8;
+}
+
+.controls {
+  background: #fff;
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  border-radius: 16px;
+  box-shadow: 0 14px 35px rgba(0, 0, 0, 0.08);
+  padding: 14px;
+  display: grid;
+  gap: 10px;
+}
+
+.search {
+  width: 100%;
+  max-width: 560px;
+  padding: 12px 14px;
+  border-radius: 12px;
+  border: 1px solid rgba(0, 0, 0, 0.12);
+  outline: none;
+}
+
+.search:focus {
+  border-color: rgba(15, 111, 115, 0.9);
+  box-shadow: 0 0 0 4px rgba(15, 111, 115, 0.18);
+}
+
+.statusRow {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.count {
+  margin: 0;
+  opacity: 0.85;
+}
+
+.query {
+  color: #0f6f73;
+  font-weight: 700;
+}
+
+.clear {
+  border: none;
+  background: transparent;
+  color: #0f6f73;
+  cursor: pointer;
+  font-weight: 600;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.empty {
+  margin: 0;
+  opacity: 0.75;
+}
+
+.grid {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+
+  display: grid;
+  gap: 20px;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+@media (max-width: 980px) {
+  .grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 560px) {
+  .grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.footer {
+  display: flex;
+  justify-content: center;
+  margin-top: 6px;
+}
+
+.loadMore {
+  padding: 12px 14px;
+  border-radius: 12px;
+  border: 1px solid rgba(15, 111, 115, 0.9);
+  background: rgba(15, 111, 115, 0.1);
+  color: #0c0d07;
+  cursor: pointer;
+  font-weight: 800;
+  transition: transform 120ms ease, background 160ms ease;
+}
+
+.loadMore:hover {
+  background: rgba(15, 111, 115, 0.18);
+}
+
+.loadMore:active {
+  transform: scale(0.99);
+}
+
+.loadMore:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* A11y */
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  border: 0;
+}

@@ -1,23 +1,30 @@
+// src/pages/Venues/Venues.jsx
 import { useEffect, useMemo, useState } from "react";
-import { Link } from "react-router-dom";
+import VenueCard from "../../components/VenueCard/VenueCard";
+import Loading from "../../components/ui/Loading/Loading";
+import ErrorMessage from "../../components/ui/ErrorMessage/ErrorMessage";
 import { getVenues } from "../../services/venues";
+import useVenuesSearch from "../../hooks/useVenuesSearch";
+import styles from "./Venues.module.scss";
 
 const PAGE_SIZE = 20;
 
 export default function Venues() {
-  const [venues, setVenues] = useState([]);
-  const [query, setQuery] = useState("");
+  // ✅ Live search (samme som Home)
+  const { query, setQuery, q, results, isSearching, error: searchError, clear } = useVenuesSearch();
 
+  // ✅ Browse-list (når query er tom)
+  const [venues, setVenues] = useState([]);
   const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(true);
 
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState("");
+  const [isLoadingBrowse, setIsLoadingBrowse] = useState(false);
+  const [browseError, setBrowseError] = useState("");
 
   async function load(pageToLoad) {
     try {
-      setError("");
-      setIsLoading(true);
+      setBrowseError("");
+      setIsLoadingBrowse(true);
 
       const data = await getVenues({
         page: pageToLoad,
@@ -28,92 +35,114 @@ export default function Venues() {
 
       const next = Array.isArray(data) ? data : [];
 
-      // Append + de-dupe (viktig når man paginerer)
+      // Append + de-dupe
       setVenues((prev) => {
         const map = new Map(prev.map((v) => [v.id, v]));
         next.forEach((v) => map.set(v.id, v));
         return Array.from(map.values());
       });
 
-      // Hvis vi fikk færre enn PAGE_SIZE -> ingen flere sider
       setHasMore(next.length === PAGE_SIZE);
       setPage(pageToLoad);
     } catch (err) {
-      setError(err?.message || "Failed to load venues");
+      setBrowseError(err?.message || "Failed to load venues.");
     } finally {
-      setIsLoading(false);
+      setIsLoadingBrowse(false);
     }
   }
 
+  // initial load for browse
   useEffect(() => {
-    // start på nytt (page 1)
     setVenues([]);
     setHasMore(true);
     load(1);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const filteredVenues = useMemo(() => {
-    const q = query.trim().toLowerCase();
-    if (!q) return venues;
-    return venues.filter((v) => v.name?.toLowerCase().includes(q));
-  }, [venues, query]);
+  // Hvilken liste viser vi?
+  const listToShow = useMemo(() => {
+    if (q) return results;     // live search mode
+    return venues;             // browse mode
+  }, [q, results, venues]);
+
+  // Hvilken error / loading gjelder?
+  const error = q ? searchError : browseError;
+  const isLoading = q ? isSearching : isLoadingBrowse;
+
+  const canLoadMore = !q && hasMore && !isLoadingBrowse;
 
   return (
-    <div style={{ padding: "1rem" }}>
-      <h1>Venues</h1>
+    <div className={styles.page}>
+      <div className={styles.container}>
+        <header className={styles.header}>
+          <h1 className={styles.title}>Explore venues</h1>
+          <p className={styles.subtitle}>Browse venues and click a card to view details and book.</p>
+        </header>
 
-      <input
-        value={query}
-        onChange={(e) => setQuery(e.target.value)}
-        placeholder="Search venues..."
-        style={{
-          width: "100%",
-          maxWidth: 520,
-          padding: 10,
-          margin: "12px 0",
-          border: "1px solid #ddd",
-          borderRadius: 6,
-        }}
-      />
+        <div className={styles.controls}>
+          <label className={styles.srOnly} htmlFor="venues-search">
+            Search venues
+          </label>
 
-      {error && <p style={{ padding: "0.5rem 0", color: "crimson" }}>{error}</p>}
+          <input
+            id="venues-search"
+            className={styles.search}
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+            placeholder="Search by name, city, country..."
+            type="search"
+            autoComplete="off"
+          />
 
-      <p style={{ marginTop: 0, opacity: 0.8 }}>
-        Showing {filteredVenues.length} loaded
-      </p>
+          <div className={styles.statusRow}>
+            <p className={styles.count}>
+              Showing <strong>{listToShow.length}</strong>{" "}
+              {q ? (
+                <>
+                  results · Filter: <span className={styles.query}>&quot;{query.trim()}&quot;</span>
+                </>
+              ) : (
+                <>loaded</>
+              )}
+            </p>
 
-      {filteredVenues.length === 0 && !isLoading ? (
-        <p>No venues found.</p>
-      ) : (
-        <ul style={{ display: "grid", gap: 12, padding: 0, listStyle: "none" }}>
-          {filteredVenues.map((v) => (
-            <li key={v.id} style={{ border: "1px solid #ddd", padding: 12 }}>
-              <h3 style={{ margin: 0 }}>{v.name}</h3>
-              <p style={{ margin: "6px 0" }}>Price: {v.price}</p>
-              <p style={{ margin: "6px 0" }}>Max guests: {v.maxGuests}</p>
-              <Link to={`/venue/${v.id}`}>View venue</Link>
-            </li>
-          ))}
-        </ul>
-      )}
+            {q && (
+              <button type="button" className={styles.clear} onClick={clear}>
+                Clear
+              </button>
+            )}
+          </div>
+        </div>
 
-      <div style={{ marginTop: 16 }}>
-        <button
-          type="button"
-          onClick={() => load(page + 1)}
-          disabled={isLoading || !hasMore}
-          style={{
-            padding: "10px 14px",
-            borderRadius: 10,
-            border: "1px solid #111",
-            background: isLoading || !hasMore ? "#ddd" : "#111",
-            color: isLoading || !hasMore ? "#333" : "#fff",
-            cursor: isLoading || !hasMore ? "not-allowed" : "pointer",
-          }}
-        >
-          {isLoading ? "Loading..." : hasMore ? "Load more" : "No more venues"}
-        </button>
+        <ErrorMessage message={error} />
+
+        {isLoading && listToShow.length === 0 ? (
+          <Loading text={q ? "Searching venues..." : "Loading venues..."} />
+        ) : listToShow.length === 0 ? (
+          <p className={styles.empty}>{q ? "No venues match your search." : "No venues found."}</p>
+        ) : (
+          <ul className={styles.grid} aria-label="Venues list">
+            {listToShow.map((v) => (
+              <li key={v.id}>
+                <VenueCard venue={v} />
+              </li>
+            ))}
+          </ul>
+        )}
+
+        {/* Load more kun i browse-mode */}
+        {!q && (
+          <div className={styles.footer}>
+            <button
+              type="button"
+              className={styles.loadMore}
+              onClick={() => load(page + 1)}
+              disabled={!canLoadMore}
+            >
+              {isLoadingBrowse ? "Loading..." : hasMore ? "Load more" : "No more venues"}
+            </button>
+          </div>
+        )}
       </div>
     </div>
   );

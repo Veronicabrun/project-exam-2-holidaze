@@ -36,7 +36,9 @@ export default function BookingItem({ booking }) {
       <div className={styles.body}>
         <div className={styles.titleRow}>
           <h3 className={styles.title}>{venueName}</h3>
-          <span className={styles.badge}>{booking?.guests || 1} guest{booking?.guests === 1 ? "" : "s"}</span>
+          <span className={styles.badge}>
+            {booking?.guests || 1} guest{booking?.guests === 1 ? "" : "s"}
+          </span>
         </div>
 
         <p className={styles.dates}>
@@ -48,8 +50,6 @@ export default function BookingItem({ booking }) {
             "Dates unavailable"
           )}
         </p>
-
-        <p className={styles.hint}>Click to view venue details</p>
       </div>
     </Link>
   );

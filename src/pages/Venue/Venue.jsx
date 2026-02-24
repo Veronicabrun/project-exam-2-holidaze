@@ -3,7 +3,11 @@ import { useEffect, useMemo, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { getVenue } from "../../services/venues";
 import { createBooking } from "../../services/bookings";
-import { isDateRangeAvailable, toDateOnly, rangesOverlap } from "../../services/availability";
+import {
+  isDateRangeAvailable,
+  toDateOnly,
+  rangesOverlap,
+} from "../../services/availability";
 
 import useAuth from "../../hooks/useAuth";
 
@@ -13,6 +17,8 @@ import BookedDates from "../../components/VenueDetails/BookedDates/BookedDates";
 import UpcomingBookings from "../../components/VenueDetails/UpcomingBookings/UpcomingBookings";
 
 import Toast from "../../components/ui/Toast/Toast";
+import Loading from "../../components/ui/Loading/Loading";
+import ErrorMessage from "../../components/ui/ErrorMessage/ErrorMessage"; // ✅ NY
 import styles from "./Venue.module.scss";
 
 function toDateOnlyISO(isoString) {
@@ -63,7 +69,10 @@ export default function Venue() {
     setIsLoading(true);
 
     try {
-      const venueData = await getVenue(id, { withBookings: true, withOwner: true });
+      const venueData = await getVenue(id, {
+        withBookings: true,
+        withOwner: true,
+      });
       setVenue(venueData);
     } catch (err) {
       setError(err?.message || "Failed to load venue.");
@@ -131,7 +140,10 @@ export default function Venue() {
         };
       }
 
-      return { ok: false, message: "Those dates are unavailable (overlaps an existing booking)." };
+      return {
+        ok: false,
+        message: "Those dates are unavailable (overlaps an existing booking).",
+      };
     }
 
     return { ok: true, message: "" };
@@ -187,17 +199,14 @@ export default function Venue() {
   }
 
   if (isLoading) {
-    return (
-      <div className={styles.page}>
-        <p className={styles.status}>Loading venue...</p>
-      </div>
-    );
+    return <Loading text="Loading venue..." fullScreen />;
   }
 
+  // ✅ Kun endring her: bruk ErrorMessage-komponenten
   if (error) {
     return (
       <div className={styles.page}>
-        <p className={styles.error}>{error}</p>
+        <ErrorMessage message={error} />
       </div>
     );
   }
@@ -233,12 +242,16 @@ export default function Venue() {
         <div className={styles.left}>
           <section className={styles.card}>
             <h2 className={styles.h2}>About</h2>
-            <p className={styles.text}>{venue.description || "No description provided."}</p>
+            <p className={styles.text}>
+              {venue.description || "No description provided."}
+            </p>
           </section>
 
           <BookedDates ranges={bookedRanges} />
 
-          {isLoggedIn && isOwner && <UpcomingBookings bookings={venue.bookings || []} />}
+          {isLoggedIn && isOwner && (
+            <UpcomingBookings bookings={venue.bookings || []} />
+          )}
         </div>
 
         <aside className={styles.right}>

@@ -65,7 +65,6 @@ export default function Profile() {
         const profileData = await getProfile(username);
         setProfile(profileData);
 
-        // hold localStorage i sync (Nav + andre steder bruker dette)
         setAuth({
           venueManager: Boolean(profileData?.venueManager),
           avatarUrl: profileData?.avatar?.url || "",
@@ -153,14 +152,14 @@ export default function Profile() {
                 )}
 
                 {activeTab === "bookings" && (
-                  <section className={styles.panel}>
+                  <section className={`${styles.panel} ${styles.panelPlain}`}>
                     <h2 className={styles.h2}>My bookings</h2>
                     <BookingsList bookings={bookings} emptyText="You have no bookings yet." />
                   </section>
                 )}
               </>
             ) : (
-              <section className={styles.panel}>
+              <section className={`${styles.panel} ${styles.panelPlain}`}>
                 <h2 className={styles.h2}>My bookings</h2>
                 <BookingsList bookings={bookings} emptyText="You have no bookings yet." />
               </section>
