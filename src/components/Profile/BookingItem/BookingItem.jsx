@@ -3,7 +3,9 @@ import { Link } from "react-router-dom";
 import styles from "./BookingItem.module.scss";
 
 function dateOnly(iso) {
-  return new Date(iso).toISOString().slice(0, 10);
+  if (!iso) return "";
+  // Tar bare YYYY-MM-DD direkte (tryggere enn new Date().toISOString() pga timezone)
+  return String(iso).slice(0, 10);
 }
 
 function getVenueImage(venue) {
@@ -22,8 +24,8 @@ export default function BookingItem({ booking }) {
 
   const img = getVenueImage(venue);
 
-  const from = booking?.dateFrom ? dateOnly(booking.dateFrom) : "";
-  const to = booking?.dateTo ? dateOnly(booking.dateTo) : "";
+  const from = dateOnly(booking?.dateFrom);
+  const to = dateOnly(booking?.dateTo);
 
   const href = venueId ? `/venue/${venueId}` : "/venues";
 
@@ -42,13 +44,7 @@ export default function BookingItem({ booking }) {
         </div>
 
         <p className={styles.dates}>
-          {from && to ? (
-            <>
-              {from} → {to}
-            </>
-          ) : (
-            "Dates unavailable"
-          )}
+          {from && to ? `${from} → ${to}` : "Dates unavailable"}
         </p>
       </div>
     </Link>
