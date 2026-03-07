@@ -22,7 +22,9 @@ function validate(values) {
 
   const price = Number(values.price);
   if (!values.price) errors.price = "Price is required.";
-  else if (Number.isNaN(price) || price < 1) errors.price = "Price must be a number (min 1).";
+  else if (Number.isNaN(price) || price < 1) {
+    errors.price = "Price must be a number (min 1).";
+  }
 
   const maxGuests = Number(values.maxGuests);
   if (!values.maxGuests) errors.maxGuests = "Max guests is required.";
@@ -138,7 +140,11 @@ export default function AddVenue({ onCreated, onToast }) {
         <h2 id="add-venue-title" className={styles.title}>
           Add venue
         </h2>
-        <p className={styles.subtitle}>Create a new venue (venue manager only).</p>
+
+        {/* ✅ Endret tekst her */}
+        <p className={styles.subtitle}>
+          Fill in the details below to publish a new venue.
+        </p>
       </header>
 
       {/* API/submit error (ikke feltfeil) */}

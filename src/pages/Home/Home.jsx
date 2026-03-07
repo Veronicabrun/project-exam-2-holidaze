@@ -1,7 +1,8 @@
-// src/pages/Home/Home.jsx
 import { useEffect, useMemo, useState } from "react";
 import Hero from "../../components/Hero/Hero";
 import VenueCard from "../../components/VenueCard/VenueCard";
+import HomeBanner from "../../components/HomeBanner/HomeBanner";
+import HomeCategories from "../../components/HomeCategories/HomeCategories";
 import { getVenues } from "../../services/venues";
 import Loading from "../../components/ui/Loading/Loading";
 import ErrorMessage from "../../components/ui/ErrorMessage/ErrorMessage";
@@ -11,15 +12,15 @@ import styles from "./Home.module.scss";
 const NEWEST_LIMIT = 6;
 
 export default function Home() {
-  // ✅ Live search flyttet hit:
-  const { query, setQuery, q, results, isSearching, error: searchError, clear } = useVenuesSearch();
+  // Live search
+  const { query, setQuery, q, results, isSearching, error: searchError, clear } =
+    useVenuesSearch();
 
-  // Nyeste
+  // Nyeste venues
   const [newest, setNewest] = useState([]);
   const [isLoadingNewest, setIsLoadingNewest] = useState(false);
   const [newestError, setNewestError] = useState("");
 
-  // 1) Hent nyeste (kun én gang)
   useEffect(() => {
     let alive = true;
 
@@ -47,28 +48,33 @@ export default function Home() {
     }
 
     loadNewest();
+
     return () => {
       alive = false;
     };
   }, []);
 
-  // 2) Hva vises i grid?
+  // Hvilke venues vises
   const listToShow = useMemo(() => {
     if (!q) return newest;
     return results;
   }, [q, newest, results]);
 
-  // 3) Hvilken “loading” skal vises?
+  // Loading state
   const isLoading = q ? isSearching : isLoadingNewest;
 
-  // 4) Hvilken error skal vises?
+  // Error state
   const error = q ? searchError : newestError;
+
+  // Banner + categories vises kun når man ikke søker
+  const showExtras = !q;
 
   return (
     <>
-      {/* Hero unchanged */}
+      {/* Hero */}
       <Hero query={query} onQueryChange={setQuery} />
 
+      {/* Venue cards */}
       <section className={styles.section} aria-labelledby="results-title">
         <div className={styles.inner}>
           <div className={styles.header}>
@@ -76,7 +82,9 @@ export default function Home() {
               {q ? (
                 <>
                   Search results for{" "}
-                  <span className={styles.query}>&quot;{query.trim()}&quot;</span>
+                  <span className={styles.query}>
+                    &quot;{query.trim()}&quot;
+                  </span>
                 </>
               ) : (
                 "Newest venues"
@@ -84,7 +92,11 @@ export default function Home() {
             </h2>
 
             {q && (
-              <button type="button" className={styles.clear} onClick={clear}>
+              <button
+                type="button"
+                className={styles.clear}
+                onClick={clear}
+              >
                 Clear search
               </button>
             )}
@@ -93,11 +105,17 @@ export default function Home() {
           {error && <ErrorMessage message={error} />}
 
           {isLoading ? (
-            <Loading text={q ? "Searching venues..." : "Loading venues..."} />
+            <Loading
+              text={q ? "Searching venues..." : "Loading venues..."}
+            />
           ) : listToShow.length === 0 ? (
-            <p className={styles.empty}>{q ? "No venues match your search." : "No venues yet."}</p>
+            <p className={styles.empty}>
+              {q
+                ? "No venues match your search."
+                : "No venues yet."}
+            </p>
           ) : (
-            <ul className={styles.grid}>
+            <ul className={styles.grid} aria-label="Venues">
               {listToShow.map((v) => (
                 <li key={v.id}>
                   <VenueCard venue={v} />
@@ -107,6 +125,12 @@ export default function Home() {
           )}
         </div>
       </section>
+
+      {/* Banner */}
+      {showExtras && <HomeBanner />}
+
+      {/* Destination cards */}
+      {showExtras && <HomeCategories />}
     </>
   );
 }

@@ -1,5 +1,5 @@
-// src/pages/Venues/Venues.jsx
 import { useEffect, useMemo, useState } from "react";
+import { useSearchParams } from "react-router-dom";
 import VenueCard from "../../components/VenueCard/VenueCard";
 import Loading from "../../components/ui/Loading/Loading";
 import ErrorMessage from "../../components/ui/ErrorMessage/ErrorMessage";
@@ -9,11 +9,17 @@ import styles from "./Venues.module.scss";
 
 const PAGE_SIZE = 20;
 
-export default function Venues() {
-  // ✅ Live search (samme som Home)
-  const { query, setQuery, q, results, isSearching, error: searchError, clear } = useVenuesSearch();
+function normalize(value) {
+  return String(value || "").trim().toLowerCase();
+}
 
-  // ✅ Browse-list (når query er tom)
+export default function Venues() {
+  const [searchParams] = useSearchParams();
+  const selectedCountry = searchParams.get("country") || "";
+
+  const { query, setQuery, q, results, isSearching, error: searchError, clear } =
+    useVenuesSearch();
+
   const [venues, setVenues] = useState([]);
   const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(true);
@@ -35,7 +41,6 @@ export default function Venues() {
 
       const next = Array.isArray(data) ? data : [];
 
-      // Append + de-dupe
       setVenues((prev) => {
         const map = new Map(prev.map((v) => [v.id, v]));
         next.forEach((v) => map.set(v.id, v));
@@ -51,21 +56,26 @@ export default function Venues() {
     }
   }
 
-  // initial load for browse
   useEffect(() => {
     setVenues([]);
     setHasMore(true);
     load(1);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // Hvilken liste viser vi?
-  const listToShow = useMemo(() => {
-    if (q) return results;     // live search mode
-    return venues;             // browse mode
+  const baseList = useMemo(() => {
+    if (q) return results;
+    return venues;
   }, [q, results, venues]);
 
-  // Hvilken error / loading gjelder?
+  const filteredList = useMemo(() => {
+    if (!selectedCountry) return baseList;
+
+    return baseList.filter((venue) => {
+      const country = venue?.location?.country || "";
+      return normalize(country) === normalize(selectedCountry);
+    });
+  }, [baseList, selectedCountry]);
+
   const error = q ? searchError : browseError;
   const isLoading = q ? isSearching : isLoadingBrowse;
 
@@ -75,8 +85,14 @@ export default function Venues() {
     <div className={styles.page}>
       <div className={styles.container}>
         <header className={styles.header}>
-          <h1 className={styles.title}>Explore venues</h1>
-          <p className={styles.subtitle}>Browse venues and click a card to view details and book.</p>
+          <h1 className={styles.title}>
+            {selectedCountry ? `Venues in ${selectedCountry}` : "Explore venues"}
+          </h1>
+          <p className={styles.subtitle}>
+            {selectedCountry
+              ? `Browse venues filtered by ${selectedCountry}.`
+              : "Browse venues and click a card to view details and book."}
+          </p>
         </header>
 
         <div className={styles.controls}>
@@ -96,33 +112,53 @@ export default function Venues() {
 
           <div className={styles.statusRow}>
             <p className={styles.count}>
-              Showing <strong>{listToShow.length}</strong>{" "}
+              Showing <strong>{filteredList.length}</strong>{" "}
               {q ? (
                 <>
                   results · Filter: <span className={styles.query}>&quot;{query.trim()}&quot;</span>
+                </>
+              ) : selectedCountry ? (
+                <>
+                  venues in <span className={styles.query}>{selectedCountry}</span>
                 </>
               ) : (
                 <>loaded</>
               )}
             </p>
 
-            {q && (
-              <button type="button" className={styles.clear} onClick={clear}>
-                Clear
-              </button>
+            {(q || selectedCountry) && (
+              <div className={styles.actions}>
+                {q && (
+                  <button type="button" className={styles.clear} onClick={clear}>
+                    Clear search
+                  </button>
+                )}
+
+                {selectedCountry && (
+                  <a href="/venues" className={styles.clear}>
+                    Clear country
+                  </a>
+                )}
+              </div>
             )}
           </div>
         </div>
 
         <ErrorMessage message={error} />
 
-        {isLoading && listToShow.length === 0 ? (
+        {isLoading && filteredList.length === 0 ? (
           <Loading text={q ? "Searching venues..." : "Loading venues..."} />
-        ) : listToShow.length === 0 ? (
-          <p className={styles.empty}>{q ? "No venues match your search." : "No venues found."}</p>
+        ) : filteredList.length === 0 ? (
+          <p className={styles.empty}>
+            {selectedCountry
+              ? `No venues found in ${selectedCountry}.`
+              : q
+              ? "No venues match your search."
+              : "No venues found."}
+          </p>
         ) : (
           <ul className={styles.grid} aria-label="Venues list">
-            {listToShow.map((v) => (
+            {filteredList.map((v) => (
               <li key={v.id}>
                 <VenueCard venue={v} />
               </li>
@@ -130,8 +166,7 @@ export default function Venues() {
           </ul>
         )}
 
-        {/* Load more kun i browse-mode */}
-        {!q && (
+        {!q && !selectedCountry && (
           <div className={styles.footer}>
             <button
               type="button"

@@ -1,7 +1,8 @@
 /* src/components/AddVenue/AddVenue.module.scss */
 
 .container {
-  max-width: 720px;
+  /* gjør at den ikke blir for bred inni panelet */
+  max-width: 760px;
 }
 
 .header {
@@ -19,9 +20,14 @@
   opacity: 0.8;
 }
 
+/* Form i en egen "card" så det ser mer komplett ut */
 .form {
+  background: #fff;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  border-radius: 16px;
+  padding: 16px;
   display: grid;
-  gap: 16px; /* litt mer luft enn 12 */
+  gap: 16px;
 }
 
 .field {
@@ -30,30 +36,30 @@
 }
 
 .label {
-  font-weight: 500;
+  font-weight: 700;
+  font-size: 13px;
 }
 
 .input,
 .textarea {
   width: 100%;
-  padding: 10px;
-  border: 1px solid #cfcfcf;
-  border-radius: 8px;
+  padding: 12px;
+  border-radius: 12px;
+  border: 1px solid rgba(0, 0, 0, 0.12);
   outline: none;
-
-  /* ✅ dette fikser “overlap/overflow” med padding i grid */
   box-sizing: border-box;
 }
 
 .input:focus,
 .textarea:focus {
-  border-color: #222;
+  border-color: rgba(15, 111, 115, 0.9);
+  box-shadow: 0 0 0 4px rgba(15, 111, 115, 0.18);
 }
 
 .twoCol {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 16px; /* mer mellomrom så de ikke føles “klistret” */
+  gap: 16px;
 }
 
 @media (max-width: 640px) {
@@ -65,7 +71,7 @@
 .fieldError {
   margin: 0;
   color: crimson;
-  font-size: 0.95rem;
+  font-size: 14px;
 }
 
 .inputError {
@@ -73,11 +79,13 @@
 }
 
 .button {
-  padding: 10px 14px;
-  border-radius: 10px;
-  border: 1px solid #111;
-  background: #111;
+  width: 100%;
+  padding: 12px 14px;
+  border-radius: 12px;
+  border: 1px solid rgba(15, 111, 115, 0.9);
+  background: #0f6f73;
   color: #fff;
+  font-weight: 800;
   cursor: pointer;
 }
 
