@@ -1,4 +1,4 @@
-// src/components/VenueDetails/VenueHeader.jsx
+import { GuestsIcon, LocationIcon } from "../../ui/Icons/Icons";
 import styles from "./VenueHeader.module.scss";
 
 function safeText(value, fallback = "") {
@@ -13,6 +13,10 @@ export default function VenueHeader({ venue }) {
   const country = safeText(venue?.location?.country);
   const location = [city, country].filter(Boolean).join(", ");
 
+  const ownerName = venue?.owner?.name || "";
+  const ownerAvatarUrl = venue?.owner?.avatar?.url || "";
+  const ownerAvatarAlt = venue?.owner?.avatar?.alt || ownerName || "Host avatar";
+
   return (
     <header className={styles.header}>
       <div className={styles.mediaWrap}>
@@ -22,6 +26,7 @@ export default function VenueHeader({ venue }) {
       <div className={styles.info}>
         <div className={styles.topRow}>
           <h1 className={styles.title}>{venue.name}</h1>
+
           <div className={styles.price}>
             <span className={styles.amount}>${venue.price}</span>
             <span className={styles.per}>/ night</span>
@@ -29,9 +34,35 @@ export default function VenueHeader({ venue }) {
         </div>
 
         <div className={styles.meta}>
-          <span className={styles.pill}>👤 {venue.maxGuests} guests</span>
-          {location ? <span className={styles.pill}>📍 {location}</span> : null}
-          {venue?.owner?.name ? <span className={styles.pill}>🧑 Host: {venue.owner.name}</span> : null}
+          <span className={styles.pill}>
+            <GuestsIcon className={styles.icon} />
+            <span>{venue.maxGuests} guests</span>
+          </span>
+
+          {location ? (
+            <span className={styles.pill}>
+              <LocationIcon className={styles.icon} />
+              <span>{location}</span>
+            </span>
+          ) : null}
+
+          {ownerName ? (
+            <span className={styles.pill}>
+              {ownerAvatarUrl ? (
+                <img
+                  className={styles.hostAvatar}
+                  src={ownerAvatarUrl}
+                  alt={ownerAvatarAlt}
+                />
+              ) : (
+                <span className={styles.hostFallback} aria-hidden="true">
+                  {ownerName.charAt(0).toUpperCase()}
+                </span>
+              )}
+
+              <span>{ownerName}</span>
+            </span>
+          ) : null}
         </div>
       </div>
     </header>

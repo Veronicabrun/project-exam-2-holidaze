@@ -44,6 +44,9 @@
   margin: 0;
   font-size: 13px;
   opacity: 0.75;
+  display: flex;
+  align-items: center;
+  gap: 6px;
 }
 
 .footer {
@@ -57,6 +60,15 @@
 .small {
   font-size: 13px;
   opacity: 0.75;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.icon {
+  width: 14px;
+  height: 14px;
+  flex: 0 0 14px;
 }
 
 .price {

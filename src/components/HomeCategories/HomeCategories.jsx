@@ -9,7 +9,7 @@ import japanImg from "../../assets/images/japan.jpg";
 const categories = [
   {
     title: "Bali",
-    country: "Indonesia",
+    country: "Bali",
     image: baliImg,
   },
   {
@@ -37,9 +37,6 @@ export default function HomeCategories() {
           <h2 id="home-categories-title" className={styles.title}>
             Explore by destination
           </h2>
-          <p className={styles.subtitle}>
-            Jump straight to venues in popular destinations.
-          </p>
         </div>
 
         <ul className={styles.grid} aria-label="Destination categories">

@@ -1,4 +1,6 @@
+// src/components/VenueCard/VenueCard.jsx
 import { Link } from "react-router-dom";
+import { GuestsIcon, LocationIcon } from "../ui/Icons/Icons";
 import styles from "./VenueCard.module.scss";
 
 function safeText(value, fallback = "") {
@@ -21,10 +23,18 @@ export default function VenueCard({ venue }) {
 
       <div className={styles.body}>
         <h3 className={styles.title}>{venue.name}</h3>
-        <p className={styles.meta}>{location || "Somewhere in the world"}</p>
+
+        <p className={styles.meta}>
+          <LocationIcon className={styles.icon} />
+          <span>{location || "Somewhere in the world"}</span>
+        </p>
 
         <div className={styles.footer}>
-          <span className={styles.small}>👤 {venue.maxGuests} guests</span>
+          <span className={styles.small}>
+            <GuestsIcon className={styles.icon} />
+            <span>{venue.maxGuests} guests</span>
+          </span>
+
           <span className={styles.price}>${venue.price} / night</span>
         </div>
       </div>
