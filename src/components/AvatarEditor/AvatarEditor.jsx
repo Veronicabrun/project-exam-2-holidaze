@@ -1,6 +1,6 @@
-// src/components/AvatarEditor/AvatarEditor.jsx
 import { useEffect, useState } from "react";
 import { updateAvatar } from "../../services/profile";
+import { EditIcon } from "../ui/Icons/Icons";
 import styles from "./AvatarEditor.module.scss";
 
 export default function AvatarEditor({
@@ -54,7 +54,10 @@ export default function AvatarEditor({
       setLoading(true);
       console.log("AvatarEditor: saving avatar ->", { username, url, alt });
 
-      const res = await updateAvatar(username, { url: url.trim(), alt: alt.trim() });
+      const res = await updateAvatar(username, {
+        url: url.trim(),
+        alt: alt.trim(),
+      });
       console.log("AvatarEditor: updateAvatar response ->", res);
 
       const updatedProfile = res?.data || res;
@@ -89,10 +92,11 @@ export default function AvatarEditor({
           src={displayUrl}
           alt={avatarAlt || "Avatar"}
           className={styles.img}
+          loading="lazy"
         />
 
         <span className={styles.pencil} aria-hidden="true">
-          ✏️
+          <EditIcon className={styles.pencilIcon} />
         </span>
       </button>
 
@@ -138,19 +142,24 @@ export default function AvatarEditor({
               {error && <p className={styles.error}>{error}</p>}
 
               <div className={styles.actions}>
-                <button type="button" onClick={closeModal} disabled={loading}>
+                <button
+                  type="button"
+                  onClick={closeModal}
+                  disabled={loading}
+                  className={styles.btnGhost}
+                >
                   Cancel
                 </button>
 
-                <button type="submit" disabled={loading}>
+                <button
+                  type="submit"
+                  disabled={loading}
+                  className={styles.btn}
+                >
                   {loading ? "Saving..." : "Save"}
                 </button>
               </div>
             </form>
-
-            <p className={styles.hint}>
-              (Console logs are enabled so you can see exactly what happens.)
-            </p>
           </div>
         </div>
       )}

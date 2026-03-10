@@ -1,13 +1,9 @@
 import styles from "./Hero.module.scss";
-import heroImage from "../../assets/images/hero.jpg";
+import { SearchIcon } from "../ui/Icons/Icons";
 
 export default function Hero({ query, onQueryChange }) {
   return (
-    <section
-      className={styles.hero}
-      aria-label="Holidaze hero"
-      style={{ backgroundImage: `url(${heroImage})` }}
-    >
+    <section className={styles.hero} aria-label="Holidaze hero">
       <div className={styles.overlay} />
 
       <div className={styles.content}>
@@ -20,6 +16,8 @@ export default function Hero({ query, onQueryChange }) {
           </label>
 
           <div className={styles.searchBar}>
+            <SearchIcon className={styles.searchIcon} />
+
             <input
               id="hero-search"
               value={query}
@@ -29,10 +27,6 @@ export default function Hero({ query, onQueryChange }) {
               type="search"
               autoComplete="off"
             />
-
-            <button type="button" className={styles.button} aria-label="Search">
-              Search
-            </button>
           </div>
         </div>
       </div>
