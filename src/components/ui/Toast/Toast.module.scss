@@ -1,38 +1,33 @@
-/* src/components/ui/Toast/Toast.module.scss */
+@use "../../../styles/variables" as *;
 
 .toast {
   position: fixed;
   top: 16px;
   right: 16px;
   z-index: 9999;
-
   min-width: 260px;
   max-width: 360px;
-
   padding: 12px 14px;
   border-radius: 14px;
   border: 1px solid;
-
-  background: #ffffff;
+  background: $color-white;
   box-shadow: 0 12px 30px rgba(0, 0, 0, 0.12);
-
   display: flex;
   gap: 10px;
   align-items: flex-start;
-
   animation: fadeIn 160ms ease;
 }
 
 .success {
-  border-color: #b7e1c1;
+  border-color: $color-primary-28;
 }
 
 .error {
-  border-color: #f5c2c2;
+  border-color: $color-danger-border;
 }
 
 .info {
-  border-color: #cfe2ff;
+  border-color: $color-primary-18;
 }
 
 .icon {
@@ -73,6 +68,7 @@
     transform: translateY(-6px);
     opacity: 0;
   }
+
   to {
     transform: translateY(0);
     opacity: 1;

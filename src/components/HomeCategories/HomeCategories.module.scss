@@ -1,3 +1,5 @@
+@use "../../styles/variables" as *;
+
 .section {
   padding: 10px 16px 40px;
 }
@@ -16,7 +18,7 @@
 .title {
   margin: 0;
   font-size: 18px;
-  color: #0c0d07;
+  color: $color-black;
 }
 
 .subtitle {
@@ -28,7 +30,6 @@
   list-style: none;
   padding: 0;
   margin: 0;
-
   display: grid;
   gap: 20px;
   grid-template-columns: repeat(4, minmax(0, 1fr));
@@ -53,7 +54,7 @@
 
 .mediaWrap {
   height: 260px;
-  background: #f3f3f3;
+  background: $color-surface-muted;
   overflow: hidden;
 }
 
@@ -87,14 +88,14 @@
 
 .cardTitle {
   margin: 0;
-  color: white;
+  color: $color-white;
   font-size: 24px;
   font-weight: 800;
 }
 
 .cardLink {
   width: fit-content;
-  color: white;
+  color: $color-white;
   font-size: 14px;
   font-weight: 700;
   opacity: 0.92;

@@ -1,12 +1,15 @@
+@use "../../styles/variables" as *;
+
+/* ===============================
+   HEADER
+================================ */
+
 .header {
   position: sticky;
   top: 0;
   z-index: 50;
-
-  background: rgba(255, 255, 255, 0.85);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+  background: $color-primary;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .inner {
@@ -18,31 +21,29 @@
 }
 
 .brand {
-  display: inline-flex;
-  align-items: center;
   text-decoration: none;
+  color: inherit;
 }
 
 .logo {
+  color: $color-white;
   font-weight: 700;
-  letter-spacing: 0.2px;
-  color: #0F6F73;
   font-size: 18px;
 }
 
-.navLinks {
+/* ===============================
+   DESKTOP NAV
+================================ */
+
+.navDesktop {
   display: flex;
   align-items: center;
   gap: 22px;
 }
 
-/* ===============================
-   STANDARD LINKS (Home / Explore)
-   =============================== */
-
 .link {
   position: relative;
-  color: #0F6F73;
+  color: $color-white;
   text-decoration: none;
   font-size: 15px;
   padding: 10px 0;
@@ -53,7 +54,6 @@
   opacity: 0.85;
 }
 
-/* Underline animation */
 .link::after {
   content: "";
   position: absolute;
@@ -66,76 +66,55 @@
   transition: width 180ms ease;
 }
 
-/* Hover underline */
 .link:hover::after {
   width: 100%;
 }
 
-/* Active underline */
 .active::after {
   width: 100%;
 }
 
 /* ===============================
-   LOGIN BUTTON (more rectangular)
-   =============================== */
+   LOGIN BUTTON
+================================ */
 
 .loginLink {
   padding: 10px 18px;
-  border-radius: 12px; /* ← ikke rund */
-  border: 1px solid rgba(164, 224, 212, 0.65);
-  background: rgba(164, 224, 212, 0.12);
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  background: rgba(255, 255, 255, 0.12);
+  color: $color-white;
   font-weight: 500;
-  transition: background 160ms ease, transform 120ms ease;
 }
 
-/* Remove underline effect from login */
 .loginLink::after {
   display: none;
 }
 
-.loginLink:hover {
-  background: rgba(164, 224, 212, 0.25);
-  opacity: 1;
-}
-
-.loginLink:active {
-  transform: scale(0.98);
-}
-
-.activeLogin {
-  background: rgba(164, 224, 212, 0.22);
-}
-
 /* ===============================
    USER MENU
-   =============================== */
+================================ */
 
 .userMenu {
   position: relative;
+  display: flex;
+  align-items: center;
 }
 
 .userButton {
+  width: 40px;
+  height: 40px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  background: rgba(255, 255, 255, 0.12);
+  cursor: pointer;
+
   display: inline-flex;
   align-items: center;
   justify-content: center;
 
-  width: 40px;
-  height: 40px;
-  border-radius: 999px;
-  border: 1px solid rgba(164, 224, 212, 0.5);
-  background: rgba(164, 224, 212, 0.1);
-  cursor: pointer;
-
-  transition: transform 120ms ease, background 120ms ease;
-}
-
-.userButton:hover {
-  background: rgba(164, 224, 212, 0.2);
-}
-
-.userButton:active {
-  transform: scale(0.98);
+  padding: 0;
+  overflow: hidden;
 }
 
 .avatar {
@@ -144,29 +123,35 @@
   border-radius: 999px;
   object-fit: cover;
   display: block;
+  flex: 0 0 34px;
 }
 
 .avatarFallback {
+  color: $color-white;
   font-size: 18px;
   line-height: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
 }
 
 /* ===============================
    DROPDOWN
-   =============================== */
+================================ */
 
 .dropdown {
   position: absolute;
   right: 0;
-  top: calc(100% + 10px);
-  min-width: 180px;
+  top: calc(100% + 12px);
 
-  background: #ffffff;
-  border: 1px solid rgba(0, 0, 0, 0.08);
+  min-width: 160px;
+  padding: 12px;
+
+  background: $color-white;
   border-radius: 14px;
 
-  padding: 10px;
-  display: grid;
+  display: flex;
+  flex-direction: column;
   gap: 6px;
 
   box-shadow: 0 20px 40px rgba(0, 0, 0, 0.12);
@@ -176,48 +161,202 @@
   width: 100%;
   text-align: left;
 
-  background: transparent;
-  border: 0;
-  color: #0c0d07;
-  font-size: 14px;
-
-  padding: 10px;
+  padding: 10px 12px;
   border-radius: 10px;
-  cursor: pointer;
 
-  transition: background 140ms ease;
+  cursor: pointer;
+  background: transparent;
+  border: none;
+  color: $color-black;
+
+  white-space: nowrap;
 }
 
 .dropdownItem:hover {
-  background: rgba(164, 224, 212, 0.2);
+  background: $color-secondary;
 }
 
 .divider {
   height: 1px;
-  background: rgba(0, 0, 0, 0.06);
-  margin: 4px 0;
+  background: $color-border;
 }
 
 .danger {
-  color: #d9534f;
+  color: $color-accent;
 }
 
-.danger:hover {
-  background: rgba(255, 80, 80, 0.12);
+/* ===============================
+   HAMBURGER
+================================ */
+
+.mobileToggle {
+  display: none;
+  width: 44px;
+  height: 44px;
+  background: transparent;
+  border: none;
+  position: relative;
+  cursor: pointer;
+}
+
+.hamburgerTop,
+.hamburgerMiddle,
+.hamburgerBottom {
+  position: absolute;
+  right: 10px;
+  height: 2px;
+  background: $color-white;
+  border-radius: 999px;
+}
+
+.hamburgerTop {
+  top: 14px;
+  width: 22px;
+}
+
+.hamburgerMiddle {
+  top: 21px;
+  width: 14px;
+}
+
+.hamburgerBottom {
+  top: 28px;
+  width: 22px;
+}
+
+/* ===============================
+   OVERLAY
+================================ */
+
+.mobileOverlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.36);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 220ms ease;
+  z-index: 80;
+}
+
+.mobileOverlayOpen {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* ===============================
+   FULLSCREEN MENU
+================================ */
+
+.mobilePanel {
+  position: fixed;
+  top: 0;
+  right: 0;
+  width: 100vw;
+  height: 100vh;
+  background: $color-white;
+
+  transform: translateX(100%);
+  transition: transform 260ms ease;
+
+  z-index: 90;
+
+  display: flex;
+  flex-direction: column;
+}
+
+.mobilePanelOpen {
+  transform: translateX(0);
+}
+
+/* ===============================
+   PANEL HEADER
+================================ */
+
+.mobilePanelHeader {
+  height: 72px;
+  background: $color-primary;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 16px;
+}
+
+.mobileBrand {
+  text-decoration: none;
+  color: inherit;
+}
+
+.mobileBrand:hover {
+  text-decoration: none;
+}
+
+.mobileLogo {
+  color: $color-white;
+  font-size: 22px;
+  font-weight: 700;
+}
+
+.mobileClose {
+  font-size: 32px;
+  background: none;
+  border: none;
+  color: $color-white;
+  cursor: pointer;
+}
+
+/* ===============================
+   MOBILE NAV
+================================ */
+
+.mobileNav {
+  display: grid;
+  gap: 16px;
+  padding: 32px 24px;
+}
+
+.mobileLink,
+.mobileButton {
+  width: 100%;
+  text-align: left;
+  background: transparent;
+  border: none;
+  padding: 14px 6px;
+  font-size: 18px;
+  font-weight: 500;
+  cursor: pointer;
+  text-decoration: none;
+  color: $color-black;
+  transition: color 140ms ease;
+}
+
+.mobileLink:hover,
+.mobileButton:hover {
+  color: $color-primary;
+}
+
+.mobileActive {
+  color: $color-primary;
+  font-weight: 700;
+}
+
+.mobileDanger {
+  color: $color-accent;
 }
 
 /* ===============================
    RESPONSIVE
-   =============================== */
+================================ */
 
-@media (max-width: 520px) {
+@media (max-width: 768px) {
+  .navDesktop {
+    display: none;
+  }
+
+  .mobileToggle {
+    display: block;
+  }
+
   .inner {
     padding: 0 12px;
   }
-
-  .navLinks {
-    gap: 14px;
-  }
 }
-
-

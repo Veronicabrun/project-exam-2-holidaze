@@ -1,4 +1,3 @@
-// src/components/Profile/BookingsList/BookingsList.jsx
 import BookingItem from "../BookingItem/BookingItem";
 import styles from "./BookingsList.module.scss";
 
@@ -29,7 +28,7 @@ export default function BookingsList({
   return (
     <div className={styles.wrapper}>
       {upcoming.length > 0 && (
-        <section>
+        <section className={styles.section}>
           <h3 className={styles.heading}>Upcoming bookings</h3>
           <ul className={styles.grid} aria-label="Upcoming bookings">
             {upcoming.map((b) => (
@@ -42,7 +41,7 @@ export default function BookingsList({
       )}
 
       {past.length > 0 && (
-        <section className={styles.pastSection}>
+        <section className={`${styles.section} ${styles.pastSection}`}>
           <h3 className={styles.heading}>Past bookings</h3>
           <ul className={styles.grid} aria-label="Past bookings">
             {past.map((b) => (

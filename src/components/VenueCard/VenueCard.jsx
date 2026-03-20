@@ -1,4 +1,3 @@
-// src/components/VenueCard/VenueCard.jsx
 import { Link } from "react-router-dom";
 import { GuestsIcon, LocationIcon } from "../ui/Icons/Icons";
 import styles from "./VenueCard.module.scss";
@@ -8,7 +7,8 @@ function safeText(value, fallback = "") {
 }
 
 export default function VenueCard({ venue }) {
-  const imageUrl = venue?.media?.[0]?.url || "https://placehold.co/900x600?text=Venue";
+  const imageUrl =
+    venue?.media?.[0]?.url || "https://placehold.co/900x600?text=Venue";
   const imageAlt = venue?.media?.[0]?.alt || venue?.name || "Venue";
 
   const city = safeText(venue?.location?.city);
@@ -16,9 +16,18 @@ export default function VenueCard({ venue }) {
   const location = [city, country].filter(Boolean).join(", ");
 
   return (
-    <Link to={`/venue/${venue.id}`} className={styles.card} aria-label={`View ${venue.name}`}>
+    <Link
+      to={`/venue/${venue.id}`}
+      className={styles.card}
+      aria-label={`View ${venue.name}`}
+    >
       <div className={styles.mediaWrap}>
-        <img className={styles.media} src={imageUrl} alt={imageAlt} loading="lazy" />
+        <img
+          className={styles.media}
+          src={imageUrl}
+          alt={imageAlt}
+          loading="lazy"
+        />
       </div>
 
       <div className={styles.body}>
@@ -35,7 +44,10 @@ export default function VenueCard({ venue }) {
             <span>{venue.maxGuests} guests</span>
           </span>
 
-          <span className={styles.price}>${venue.price} / night</span>
+          <span className={styles.price}>
+            <span className={styles.priceValue}>${venue.price}</span>{" "}
+            <span className={styles.priceSuffix}>/ night</span>
+          </span>
         </div>
       </div>
     </Link>

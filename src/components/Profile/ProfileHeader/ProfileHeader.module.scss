@@ -1,8 +1,8 @@
-/* src/components/Profile/ProfileHeader/ProfileHeader.module.scss */
+@use "../../../styles/variables" as *;
 
 .card {
-  background: #fff;
-  border: 1px solid rgba(0, 0, 0, 0.06);
+  background: $color-white;
+  border: 1px solid $color-border;
   border-radius: 16px;
   box-shadow: 0 14px 35px rgba(0, 0, 0, 0.08);
   padding: 20px;
@@ -13,12 +13,6 @@
   grid-template-columns: 200px 1fr;
   gap: 32px;
   align-items: center;
-}
-
-@media (max-width: 720px) {
-  .layout {
-    grid-template-columns: 1fr;
-  }
 }
 
 .avatarColumn {
@@ -36,18 +30,22 @@
   gap: 4px;
 }
 
-/* Strong labels */
 .label {
   font-size: 12px;
   font-weight: 700;
   letter-spacing: 0.02em;
   text-transform: uppercase;
-  color: #0c0d07;
+  color: $color-black;
 }
 
-/* Softer values */
 .value {
   font-size: 16px;
   font-weight: 500;
   color: rgba(12, 13, 7, 0.65);
+}
+
+@media (max-width: 720px) {
+  .layout {
+    grid-template-columns: 1fr;
+  }
 }

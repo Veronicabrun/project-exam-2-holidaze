@@ -1,0 +1,28 @@
+@use "../../styles/variables" as *;
+
+.button {
+  position: fixed;
+  right: 22px;
+  bottom: 22px;
+  width: 44px;
+  height: 44px;
+  border-radius: 999px;
+  border: none;
+  background: $color-accent;
+  color: $color-white;
+  font-size: 18px;
+  font-weight: bold;
+  cursor: pointer;
+  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.18);
+  transition: transform 0.15s ease, background 0.15s ease;
+  z-index: 200;
+}
+
+.button:hover {
+  background: $color-accent-hover;
+  transform: translateY(-2px);
+}
+
+.button:active {
+  transform: scale(0.96);
+}

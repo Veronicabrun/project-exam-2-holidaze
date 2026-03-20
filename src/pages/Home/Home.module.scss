@@ -1,3 +1,5 @@
+@use "../../styles/variables" as *;
+
 .section {
   padding: 28px 16px 50px;
 }
@@ -18,17 +20,17 @@
 .title {
   margin: 0;
   font-size: 18px;
-  color: #0c0d07;
+  color: $color-black;
 }
 
 .query {
-  color: #0f6f73;
+  color: $color-primary;
 }
 
 .clear {
   border: none;
   background: transparent;
-  color: #0f6f73;
+  color: $color-primary;
   cursor: pointer;
   font-weight: 600;
   text-decoration: underline;
@@ -44,11 +46,8 @@
   list-style: none;
   padding: 0;
   margin: 0;
-
   display: grid;
   gap: 20px;
-
-  /* 3 kort på desktop */
   grid-template-columns: repeat(3, minmax(0, 1fr));
 }
 

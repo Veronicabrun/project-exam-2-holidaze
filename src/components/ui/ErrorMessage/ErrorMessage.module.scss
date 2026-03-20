@@ -1,8 +1,9 @@
-/* src/components/ui/ErrorMessage/ErrorMessage.module.scss */
+@use "../../../styles/variables" as *;
+
 .error {
-  color: crimson;
-  background: #fdecec;
-  border: 1px solid #f5c2c2;
+  color: $color-danger-text;
+  background: $color-danger-soft;
+  border: 1px solid $color-danger-border;
   padding: 12px;
   border-radius: 10px;
   margin: 12px 0;

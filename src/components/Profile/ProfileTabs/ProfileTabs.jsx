@@ -1,4 +1,3 @@
-// src/components/Profile/ProfileTabs/ProfileTabs.jsx
 import styles from "./ProfileTabs.module.scss";
 
 export default function ProfileTabs({ activeTab, onChange }) {
@@ -31,7 +30,7 @@ export default function ProfileTabs({ activeTab, onChange }) {
         role="tab"
         aria-selected={activeTab === "bookings"}
       >
-        My bookings (as guest)
+        My bookings
       </button>
     </div>
   );

@@ -1,16 +1,18 @@
-/* src/components/Profile/BookingItem/BookingItem.module.scss */
+@use "../../../styles/variables" as *;
 
 .card {
   text-decoration: none;
   color: inherit;
-  background: #fff;
+  background: $color-white;
   border-radius: 16px;
   overflow: hidden;
-  border: 1px solid rgba(0, 0, 0, 0.06);
+  border: 1px solid $color-border;
   box-shadow: 0 14px 35px rgba(0, 0, 0, 0.08);
   display: grid;
-  grid-template-columns: 160px 1fr;
+  grid-template-columns: 160px minmax(0, 1fr);
   min-height: 110px;
+  width: 100%;
+  min-width: 0;
   transition: transform 140ms ease, box-shadow 140ms ease;
 }
 
@@ -19,22 +21,10 @@
   box-shadow: 0 18px 45px rgba(0, 0, 0, 0.12);
 }
 
-@media (max-width: 520px) {
-  .card {
-    grid-template-columns: 1fr;
-  }
-}
-
-/* ✅ Fast bildeområde */
 .mediaWrap {
-  background: #f3f3f3;
-  height: 110px; /* stabil høyde på desktop */
-}
-
-@media (max-width: 520px) {
-  .mediaWrap {
-    height: 180px; /* litt høyere når det blir “stacked” */
-  }
+  background: $color-surface-muted;
+  height: 110px;
+  min-width: 0;
 }
 
 .media {
@@ -49,6 +39,7 @@
   display: grid;
   gap: 6px;
   align-content: start;
+  min-width: 0;
 }
 
 .titleRow {
@@ -56,6 +47,7 @@
   align-items: center;
   justify-content: space-between;
   gap: 10px;
+  min-width: 0;
 }
 
 .title {
@@ -63,8 +55,7 @@
   font-size: 16px;
   font-weight: 800;
   line-height: 1.2;
-
-  /* ✅ hindrer at lang tittel sprenger layout */
+  min-width: 0;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -75,13 +66,41 @@
   font-weight: 800;
   padding: 6px 10px;
   border-radius: 999px;
-  border: 1px solid rgba(0, 0, 0, 0.08);
-  background: rgba(0, 0, 0, 0.03);
+  border: 1px solid $color-border;
+  background: $color-secondary;
+  color: $color-primary;
   white-space: nowrap;
+  flex: 0 0 auto;
 }
 
 .dates {
   margin: 0;
   font-size: 13px;
   opacity: 0.85;
+}
+
+@media (max-width: 520px) {
+  .card {
+    grid-template-columns: 1fr;
+  }
+
+  .mediaWrap {
+    height: 170px;
+  }
+
+  .body {
+    padding: 12px;
+  }
+
+  .titleRow {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .title {
+    white-space: normal;
+    overflow: visible;
+    text-overflow: unset;
+  }
 }

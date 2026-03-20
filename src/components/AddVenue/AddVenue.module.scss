@@ -1,7 +1,6 @@
-/* src/components/AddVenue/AddVenue.module.scss */
+@use "../../styles/variables" as *;
 
 .container {
-  /* gjør at den ikke blir for bred inni panelet */
   max-width: 760px;
 }
 
@@ -20,9 +19,8 @@
   opacity: 0.8;
 }
 
-/* Form i en egen "card" så det ser mer komplett ut */
 .form {
-  background: #fff;
+  background: $color-white;
   border: 1px solid rgba(0, 0, 0, 0.08);
   border-radius: 16px;
   padding: 16px;
@@ -45,15 +43,15 @@
   width: 100%;
   padding: 12px;
   border-radius: 12px;
-  border: 1px solid rgba(0, 0, 0, 0.12);
+  border: 1px solid $color-border-light;
   outline: none;
   box-sizing: border-box;
 }
 
 .input:focus,
 .textarea:focus {
-  border-color: rgba(15, 111, 115, 0.9);
-  box-shadow: 0 0 0 4px rgba(15, 111, 115, 0.18);
+  border-color: $color-primary-90;
+  box-shadow: 0 0 0 4px $color-primary-18;
 }
 
 .twoCol {
@@ -62,29 +60,23 @@
   gap: 16px;
 }
 
-@media (max-width: 640px) {
-  .twoCol {
-    grid-template-columns: 1fr;
-  }
-}
-
 .fieldError {
   margin: 0;
-  color: crimson;
+  color: $color-danger-text;
   font-size: 14px;
 }
 
 .inputError {
-  border-color: crimson;
+  border-color: $color-danger-text;
 }
 
 .button {
   width: 100%;
   padding: 12px 14px;
   border-radius: 12px;
-  border: 1px solid rgba(15, 111, 115, 0.9);
-  background: #0f6f73;
-  color: #fff;
+  border: 1px solid $color-primary-90;
+  background: $color-primary;
+  color: $color-white;
   font-weight: 800;
   cursor: pointer;
 }
@@ -92,4 +84,10 @@
 .button:disabled {
   opacity: 0.6;
   cursor: not-allowed;
+}
+
+@media (max-width: 640px) {
+  .twoCol {
+    grid-template-columns: 1fr;
+  }
 }

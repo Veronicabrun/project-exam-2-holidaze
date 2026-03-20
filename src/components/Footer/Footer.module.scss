@@ -1,0 +1,93 @@
+@use "../../styles/variables" as *;
+
+.footer {
+  margin-top: 60px;
+  background: $color-primary;
+  color: $color-white;
+  padding: 40px 16px 24px;
+}
+
+.inner {
+  width: min(1100px, 100%);
+  margin: 0 auto;
+  display: grid;
+  gap: 24px;
+}
+
+.top {
+  display: flex;
+  justify-content: space-between;
+  align-items: start;
+  gap: 24px;
+  flex-wrap: wrap;
+}
+
+.brand {
+  max-width: 420px;
+  display: grid;
+  gap: 8px;
+}
+
+.logo {
+  margin: 0;
+  font-size: 24px;
+  font-weight: 800;
+  letter-spacing: 0.2px;
+}
+
+.tagline {
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.5;
+  color: rgba(255, 255, 255, 0.85);
+}
+
+.links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px 20px;
+  align-items: center;
+}
+
+.links a {
+  color: $color-white;
+  text-decoration: none;
+  font-weight: 600;
+  opacity: 0.95;
+}
+
+.links a:hover {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.bottom {
+  padding-top: 16px;
+  border-top: 1px solid rgba(255, 255, 255, 0.16);
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.78);
+}
+
+.bottom p {
+  margin: 0;
+}
+
+@media (max-width: 700px) {
+  .top {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .links {
+    gap: 12px 16px;
+  }
+
+  .bottom {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}

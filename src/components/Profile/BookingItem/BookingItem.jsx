@@ -1,10 +1,8 @@
-// src/components/Profile/BookingItem/BookingItem.jsx
 import { Link } from "react-router-dom";
 import styles from "./BookingItem.module.scss";
 
 function dateOnly(iso) {
   if (!iso) return "";
-  // Tar bare YYYY-MM-DD direkte (tryggere enn new Date().toISOString() pga timezone)
   return String(iso).slice(0, 10);
 }
 
@@ -30,9 +28,18 @@ export default function BookingItem({ booking }) {
   const href = venueId ? `/venue/${venueId}` : "/venues";
 
   return (
-    <Link to={href} className={styles.card} aria-label={`View booking for ${venueName}`}>
+    <Link
+      to={href}
+      className={styles.card}
+      aria-label={`View booking for ${venueName}`}
+    >
       <div className={styles.mediaWrap}>
-        <img className={styles.media} src={img.url} alt={img.alt} loading="lazy" />
+        <img
+          className={styles.media}
+          src={img.url}
+          alt={img.alt}
+          loading="lazy"
+        />
       </div>
 
       <div className={styles.body}>
