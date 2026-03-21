@@ -146,7 +146,8 @@ export default function MyVenues({ username, onToast }) {
 
       {!error && !hasVenues && (
         <p className={styles.empty}>
-          You don’t have any venues yet. Go to <strong>Add venue</strong> to create one.
+          You don’t have any venues yet. Go to <strong>Add venue</strong> to
+          create one.
         </p>
       )}
 
@@ -162,7 +163,10 @@ export default function MyVenues({ username, onToast }) {
               <div className={styles.mediaWrap}>
                 <img
                   className={styles.media}
-                  src={v.media?.[0]?.url || "https://placehold.co/600x400?text=Venue"}
+                  src={
+                    v.media?.[0]?.url ||
+                    "https://placehold.co/600x400?text=Venue"
+                  }
                   alt={v.media?.[0]?.alt || v.name || "Venue"}
                   loading="lazy"
                 />
@@ -176,12 +180,16 @@ export default function MyVenues({ username, onToast }) {
                 </p>
 
                 <div className={styles.meta}>
-                  <span>
-                    <strong>Price:</strong> ${v.price}
+                  <span className={styles.price}>
+                    <strong>Price:</strong>{" "}
+                    <span className={styles.priceValue}>${v.price}</span>{" "}
+                    <span className={styles.priceSuffix}>/ night</span>
                   </span>
+
                   <span>
                     <strong>Guests:</strong> {v.maxGuests}
                   </span>
+
                   <span>
                     <strong>Country:</strong> {v.location?.country || "-"}
                   </span>

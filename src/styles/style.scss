@@ -1,0 +1,70 @@
+@use "./variables" as *;
+
+/* ===============================
+   RESET
+================================ */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+/* ===============================
+   GLOBAL BODY
+================================ */
+
+body {
+  font-family: $font-base;
+
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+
+  max-width: 100%;
+  overflow-x: hidden;
+
+  background: $color-white;
+  color: $color-black;
+}
+
+/* ===============================
+   ROOT
+================================ */
+
+#root {
+  min-height: 100vh;
+}
+
+/* ===============================
+   IMAGES
+================================ */
+
+img {
+  max-width: 100%;
+  display: block;
+}
+
+/* ===============================
+   TYPOGRAPHY (valgfri finpuss)
+================================ */
+
+h1,
+h2,
+h3 {
+  font-weight: 700;
+}
+
+/* ===============================
+   CODE
+================================ */
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New", monospace;
+}

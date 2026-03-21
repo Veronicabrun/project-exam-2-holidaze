@@ -91,6 +91,19 @@
   font-size: 14px;
 }
 
+.price {
+  font-weight: 800;
+}
+
+.priceValue {
+  color: $color-accent;
+}
+
+.priceSuffix {
+  color: $color-text-muted;
+  font-weight: 600;
+}
+
 .actions {
   display: flex;
   gap: 10px;
