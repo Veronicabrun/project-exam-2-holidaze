@@ -8,6 +8,7 @@ import useVenuesSearch from "../../hooks/useVenuesSearch";
 import styles from "./Venues.module.scss";
 
 const PAGE_SIZE = 20;
+const MAX_COUNTRY_PAGES = 15;
 
 function normalize(value) {
   return String(value || "").trim().toLowerCase();
@@ -17,8 +18,15 @@ export default function Venues() {
   const [searchParams] = useSearchParams();
   const selectedCountry = searchParams.get("country") || "";
 
-  const { query, setQuery, q, results, isSearching, error: searchError, clear } =
-    useVenuesSearch();
+  const {
+    query,
+    setQuery,
+    q,
+    results,
+    isSearching,
+    error: searchError,
+    clear,
+  } = useVenuesSearch();
 
   const [venues, setVenues] = useState([]);
   const [page, setPage] = useState(1);
@@ -27,26 +35,31 @@ export default function Venues() {
   const [isLoadingBrowse, setIsLoadingBrowse] = useState(false);
   const [browseError, setBrowseError] = useState("");
 
+  async function fetchPage(pageToLoad) {
+    const data = await getVenues({
+      page: pageToLoad,
+      limit: PAGE_SIZE,
+      sort: "created",
+      sortOrder: "desc",
+    });
+
+    return Array.isArray(data) ? data : [];
+  }
+
+  function mergeVenues(prev, next) {
+    const map = new Map(prev.map((v) => [v.id, v]));
+    next.forEach((v) => map.set(v.id, v));
+    return Array.from(map.values());
+  }
+
   async function load(pageToLoad) {
     try {
       setBrowseError("");
       setIsLoadingBrowse(true);
 
-      const data = await getVenues({
-        page: pageToLoad,
-        limit: PAGE_SIZE,
-        sort: "created",
-        sortOrder: "desc",
-      });
+      const next = await fetchPage(pageToLoad);
 
-      const next = Array.isArray(data) ? data : [];
-
-      setVenues((prev) => {
-        const map = new Map(prev.map((v) => [v.id, v]));
-        next.forEach((v) => map.set(v.id, v));
-        return Array.from(map.values());
-      });
-
+      setVenues((prev) => mergeVenues(prev, next));
       setHasMore(next.length === PAGE_SIZE);
       setPage(pageToLoad);
     } catch (err) {
@@ -57,10 +70,60 @@ export default function Venues() {
   }
 
   useEffect(() => {
-    setVenues([]);
-    setHasMore(true);
-    load(1);
-  }, []);
+    let cancelled = false;
+
+    async function loadBrowseData() {
+      try {
+        setBrowseError("");
+        setIsLoadingBrowse(true);
+        setVenues([]);
+        setHasMore(true);
+        setPage(1);
+
+        // Normal explore page: load first page only
+        if (!selectedCountry) {
+          const firstPage = await fetchPage(1);
+
+          if (cancelled) return;
+
+          setVenues(firstPage);
+          setHasMore(firstPage.length === PAGE_SIZE);
+          setPage(1);
+          return;
+        }
+
+        // Country page: load multiple pages to collect more matches
+        let allVenues = [];
+        let currentPage = 1;
+        let morePages = true;
+
+        while (morePages && currentPage <= MAX_COUNTRY_PAGES) {
+          const next = await fetchPage(currentPage);
+
+          if (cancelled) return;
+
+          allVenues = mergeVenues(allVenues, next);
+          morePages = next.length === PAGE_SIZE;
+          currentPage += 1;
+        }
+
+        setVenues(allVenues);
+        setHasMore(false);
+      } catch (err) {
+        if (cancelled) return;
+        setBrowseError(err?.message || "Failed to load venues.");
+      } finally {
+        if (cancelled) return;
+        setIsLoadingBrowse(false);
+      }
+    }
+
+    loadBrowseData();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [selectedCountry]);
 
   const baseList = useMemo(() => {
     if (q) return results;
@@ -79,7 +142,8 @@ export default function Venues() {
   const error = q ? searchError : browseError;
   const isLoading = q ? isSearching : isLoadingBrowse;
 
-  const canLoadMore = !q && hasMore && !isLoadingBrowse;
+  const canLoadMore =
+    !q && !selectedCountry && hasMore && !isLoadingBrowse;
 
   return (
     <div className={styles.page}>
@@ -116,7 +180,10 @@ export default function Venues() {
               Showing <strong>{filteredList.length}</strong>{" "}
               {q ? (
                 <>
-                  results · Filter: <span className={styles.query}>&quot;{query.trim()}&quot;</span>
+                  results · Filter:{" "}
+                  <span className={styles.query}>
+                    &quot;{query.trim()}&quot;
+                  </span>
                 </>
               ) : selectedCountry ? (
                 <>
@@ -175,7 +242,11 @@ export default function Venues() {
               onClick={() => load(page + 1)}
               disabled={!canLoadMore}
             >
-              {isLoadingBrowse ? "Loading..." : hasMore ? "Show more" : "No more venues"}
+              {isLoadingBrowse
+                ? "Loading..."
+                : hasMore
+                ? "Show more"
+                : "No more venues"}
             </button>
           </div>
         )}

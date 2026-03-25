@@ -27,13 +27,6 @@ function matchesQuery(venue, q) {
   return hay.includes(q);
 }
 
-/**
-* useVenuesSearch()
-* - Same live search as you had in Home:
-* - debounce
-* - fetches page by page until it finds a match (stops early)
-* - request-cancel via requestIdRef
-*/
 export default function useVenuesSearch(options = {}) {
   const {
     pageSize = DEFAULT_PAGE_SIZE,
@@ -43,7 +36,6 @@ export default function useVenuesSearch(options = {}) {
 
   const [query, setQuery] = useState("");
   const [results, setResults] = useState([]);
-
   const [isSearching, setIsSearching] = useState(false);
   const [error, setError] = useState("");
 
@@ -85,14 +77,11 @@ export default function useVenuesSearch(options = {}) {
             const next = Array.isArray(data) ? data : [];
             all.push(...next);
 
-            const filtered = all.filter((v) => matchesQuery(v, q));
+            const filtered = all.filter((venue) => matchesQuery(venue, q));
             setResults(filtered);
 
             hasMore = next.length === pageSize;
             page += 1;
-
-           
-            if (filtered.length > 0) break;
           }
         } catch (e) {
           if (requestIdRef.current !== myRequestId) return;
@@ -114,7 +103,7 @@ export default function useVenuesSearch(options = {}) {
   return {
     query,
     setQuery,
-    q, 
+    q,
     results,
     isSearching,
     error,
