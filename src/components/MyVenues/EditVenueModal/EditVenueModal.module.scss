@@ -14,8 +14,8 @@
   width: min(720px, 100%);
   background: $color-white;
   border-radius: 16px;
-  border: 1px solid #eee;
-  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.18);
+  border: 1px solid $color-border-lighter;
+  box-shadow: $shadow-modal;
   padding: 14px;
 }
 
@@ -31,7 +31,7 @@
 }
 
 .close {
-  border: 1px solid #ddd;
+  border: 1px solid $color-border-soft;
   background: $color-white;
   border-radius: 10px;
   padding: 8px 10px;
@@ -61,7 +61,7 @@
 .textarea {
   width: 100%;
   padding: 10px;
-  border: 1px solid #cfcfcf;
+  border: 1px solid $color-input-border;
   border-radius: 10px;
   outline: none;
 }

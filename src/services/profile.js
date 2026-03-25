@@ -11,7 +11,7 @@ export function getMyBookings(name) {
   return request(`${profileBookingsByName(name)}?_venue=true`);
 }
 
-// ✅ NEW: update avatar
+// Update avatar
 export function updateAvatar(username, avatar) {
   console.log("service:updateAvatar ->", { username, avatar });
 

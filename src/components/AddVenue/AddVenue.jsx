@@ -1,85 +1,24 @@
-// src/components/AddVenue/AddVenue.jsx
 import { useMemo, useState } from "react";
 import { createVenue } from "../../services/venues";
+import {
+  buildVenuePayload,
+  validateVenue,
+  venueAllTouched,
+  venueInitialValues,
+} from "../../utils/venueForm";
 import ErrorMessage from "../ui/ErrorMessage/ErrorMessage";
 import styles from "./AddVenue.module.scss";
 
-function validate(values) {
-  const errors = {};
-
-  if (!values.name.trim()) errors.name = "Venue name is required.";
-  if (!values.description.trim()) errors.description = "Description is required.";
-
-  if (!values.mediaUrl.trim()) {
-    errors.mediaUrl = "Media URL is required.";
-  } else {
-    try {
-      new URL(values.mediaUrl);
-    } catch {
-      errors.mediaUrl = "Media URL must be a valid URL.";
-    }
-  }
-
-  const price = Number(values.price);
-  if (!values.price) errors.price = "Price is required.";
-  else if (Number.isNaN(price) || price < 1) {
-    errors.price = "Price must be a number (min 1).";
-  }
-
-  const maxGuests = Number(values.maxGuests);
-  if (!values.maxGuests) errors.maxGuests = "Max guests is required.";
-  else if (Number.isNaN(maxGuests) || maxGuests < 1) {
-    errors.maxGuests = "Max guests must be a number (min 1).";
-  }
-
-  if (!values.country.trim()) errors.country = "Country is required.";
-
-  return errors;
-}
-
-const initialValues = {
-  name: "",
-  description: "",
-  mediaUrl: "",
-  price: "",
-  maxGuests: "",
-  country: "",
-};
-
-const allTouched = {
-  name: true,
-  description: true,
-  mediaUrl: true,
-  price: true,
-  maxGuests: true,
-  country: true,
-};
-
-function buildPayload(values) {
-  return {
-    name: values.name.trim(),
-    description: values.description.trim(),
-    media: [
-      {
-        url: values.mediaUrl.trim(),
-        alt: values.name.trim() || "Venue image",
-      },
-    ],
-    price: Number(values.price),
-    maxGuests: Number(values.maxGuests),
-    location: {
-      country: values.country.trim(),
-    },
-  };
-}
-
 export default function AddVenue({ onCreated, onToast }) {
-  const [values, setValues] = useState(initialValues);
+  const [values, setValues] = useState(venueInitialValues);
   const [touched, setTouched] = useState({});
   const [submitError, setSubmitError] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const errors = useMemo(() => validate(values), [values]);
+  const errors = useMemo(
+    () => validateVenue(values, { mediaRequired: true }),
+    [values]
+  );
 
   function showError(field) {
     return Boolean(touched[field] && errors[field]);
@@ -96,37 +35,36 @@ export default function AddVenue({ onCreated, onToast }) {
   async function handleSubmit(e) {
     e.preventDefault();
     setSubmitError("");
+    setTouched(venueAllTouched);
 
-    // ✅ UX: på submit → vis alle feltfeil
-    setTouched(allTouched);
-
-    const currentErrors = validate(values);
+    const currentErrors = validateVenue(values, { mediaRequired: true });
     const isValidNow = Object.keys(currentErrors).length === 0;
 
     if (!isValidNow) {
-      onToast?.({ variant: "error", message: "Please fix the highlighted fields." });
+      onToast?.({
+        variant: "error",
+        message: "Please fix the highlighted fields.",
+      });
       return;
     }
 
     try {
       setIsSubmitting(true);
 
-      const payload = buildPayload(values);
-      console.log("🟦 AddVenue payload:", payload);
-
+      const payload = buildVenuePayload(values);
       const created = await createVenue(payload);
-      console.log("🟩 Venue created:", created);
 
-      onToast?.({ variant: "success", message: "Venue created successfully!" });
+      onToast?.({
+        variant: "success",
+        message: "Venue created successfully!",
+      });
 
-      setValues(initialValues);
+      setValues(venueInitialValues);
       setTouched({});
 
       onCreated?.(created);
     } catch (err) {
       const msg = err?.message || "Failed to create venue.";
-      console.error("❌ Create venue error:", err);
-
       setSubmitError(msg);
       onToast?.({ variant: "error", message: msg });
     } finally {
@@ -141,13 +79,11 @@ export default function AddVenue({ onCreated, onToast }) {
           Add venue
         </h2>
 
-        {/* ✅ Endret tekst her */}
         <p className={styles.subtitle}>
           Fill in the details below to publish a new venue.
         </p>
       </header>
 
-      {/* API/submit error (ikke feltfeil) */}
       <ErrorMessage message={submitError} />
 
       <form onSubmit={handleSubmit} className={styles.form} noValidate>
@@ -184,10 +120,16 @@ export default function AddVenue({ onCreated, onToast }) {
             onChange={(e) => setField("description", e.target.value)}
             onBlur={() => markTouched("description")}
             aria-invalid={showError("description")}
-            aria-describedby={showError("description") ? "venue-description-error" : undefined}
+            aria-describedby={
+              showError("description") ? "venue-description-error" : undefined
+            }
           />
           {showError("description") && (
-            <p id="venue-description-error" className={styles.fieldError} role="alert">
+            <p
+              id="venue-description-error"
+              className={styles.fieldError}
+              role="alert"
+            >
               {errors.description}
             </p>
           )}
@@ -250,11 +192,17 @@ export default function AddVenue({ onCreated, onToast }) {
               onChange={(e) => setField("maxGuests", e.target.value)}
               onBlur={() => markTouched("maxGuests")}
               aria-invalid={showError("maxGuests")}
-              aria-describedby={showError("maxGuests") ? "venue-maxGuests-error" : undefined}
+              aria-describedby={
+                showError("maxGuests") ? "venue-maxGuests-error" : undefined
+              }
               min={1}
             />
             {showError("maxGuests") && (
-              <p id="venue-maxGuests-error" className={styles.fieldError} role="alert">
+              <p
+                id="venue-maxGuests-error"
+                className={styles.fieldError}
+                role="alert"
+              >
                 {errors.maxGuests}
               </p>
             )}

@@ -7,9 +7,9 @@ const AVATAR_URL_KEY = "avatarUrl";
 const AVATAR_ALT_KEY = "avatarAlt";
 
 /**
- * Slå av/på logging her.
- * Sett til false når du vil rydde før innlevering.
- */
+* Turn logging on/off here.
+* Set to false when you want to clear before submission.
+*/
 const DEBUG_AUTH = true;
 
 function log(...args) {
@@ -21,9 +21,9 @@ function emitAuthChange() {
 }
 
 /**
- * Oppdater auth i localStorage uten å overskrive alt.
- * Du kan sende inn bare { avatarUrl } eller bare { venueManager } osv.
- */
+* Update auth in localStorage without overwriting everything.
+* You can submit just { avatarUrl } or just { venueManager } etc.
+*/
 export function setAuth({ token, name, venueManager, avatarUrl, avatarAlt }) {
   const before = getAuth();
 

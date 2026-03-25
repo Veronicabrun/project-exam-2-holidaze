@@ -5,7 +5,6 @@ import ProtectedRoute from "./components/ProtectedRoute/ProtectedRoute";
 import VenueManagerRoute from "./components/VenueManagerRoute/VenueManagerRoute";
 import Layout from "./layout/Layout";
 
-
 import Home from "./pages/Home/Home";
 import Venues from "./pages/Venues/Venues";
 import Venue from "./pages/Venue/Venue";
@@ -24,7 +23,7 @@ export default function App() {
         <Route index element={<Home />} />
         <Route path="venues" element={<Venues />} />
 
-        {/* Viktig: denne må matche Linkene dine: /venue/:id */}
+        {/* Important: this must match your Links: /venue/:id */}
         <Route path="venue/:id" element={<Venue />} />
 
         <Route path="login" element={<Login />} />
@@ -41,7 +40,7 @@ export default function App() {
         />
 
         {/* Venue Manag
-        er only */}
+        is only */}
         <Route
           path="admin"
           element={

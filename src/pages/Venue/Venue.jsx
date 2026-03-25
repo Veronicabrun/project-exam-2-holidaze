@@ -1,24 +1,17 @@
-// src/pages/Venue/Venue.jsx
 import { useEffect, useMemo, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { getVenue } from "../../services/venues";
 import { createBooking } from "../../services/bookings";
-import {
-  isDateRangeAvailable,
-  toDateOnly,
-  rangesOverlap,
-} from "../../services/availability";
+import { isDateRangeAvailable, toDateOnly, rangesOverlap, } from "../../services/availability";
 
 import useAuth from "../../hooks/useAuth";
-
 import VenueHeader from "../../components/VenueDetails/VenueHeader/VenueHeader";
 import BookingCard from "../../components/VenueDetails/BookingCard/BookingCard";
 import BookedDates from "../../components/VenueDetails/BookedDates/BookedDates";
 import UpcomingBookings from "../../components/VenueDetails/UpcomingBookings/UpcomingBookings";
-
 import Toast from "../../components/ui/Toast/Toast";
 import Loading from "../../components/ui/Loading/Loading";
-import ErrorMessage from "../../components/ui/ErrorMessage/ErrorMessage"; // ✅ NY
+import ErrorMessage from "../../components/ui/ErrorMessage/ErrorMessage";
 import styles from "./Venue.module.scss";
 
 function toDateOnlyISO(isoString) {
@@ -35,7 +28,6 @@ export default function Venue() {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
 
-  // Booking state
   const [dateFrom, setDateFrom] = useState("");
   const [dateTo, setDateTo] = useState("");
   const [guests, setGuests] = useState(1);
@@ -43,7 +35,6 @@ export default function Venue() {
   const [bookingError, setBookingError] = useState("");
   const [bookingLoading, setBookingLoading] = useState(false);
 
-  // Toast state
   const [toast, setToast] = useState({
     open: false,
     message: "",
@@ -83,7 +74,6 @@ export default function Venue() {
 
   useEffect(() => {
     fetchVenue();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id]);
 
   const isOwner = useMemo(() => {
@@ -172,13 +162,26 @@ export default function Venue() {
       return;
     }
 
+    const guestsNumber = Number(guests);
+
+    if (
+      !Number.isInteger(guestsNumber) ||
+      guestsNumber < 1 ||
+      guestsNumber > Number(venue?.maxGuests || 1)
+    ) {
+      const msg = `Guests must be between 1 and ${venue?.maxGuests || 1}.`;
+      setBookingError(msg);
+      showToast({ variant: "error", message: msg });
+      return;
+    }
+
     try {
       setBookingLoading(true);
 
       await createBooking({
         dateFrom,
         dateTo,
-        guests: Number(guests),
+        guests: guestsNumber,
         venueId: id,
       });
 
@@ -202,7 +205,6 @@ export default function Venue() {
     return <Loading text="Loading venue..." fullScreen />;
   }
 
-  // ✅ Kun endring her: bruk ErrorMessage-komponenten
   if (error) {
     return (
       <div className={styles.page}>

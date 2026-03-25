@@ -1,8 +1,8 @@
-import { render, screen } from '@testing-library/react';
-import App from './App';
+import { render, screen } from "@testing-library/react";
+import ErrorMessage from "./components/ui/ErrorMessage/ErrorMessage";
 
-test('renders learn react link', () => {
-  render(<App />);
-  const linkElement = screen.getByText(/learn react/i);
-  expect(linkElement).toBeInTheDocument();
-});
+test("renders error message text", () => {
+  render(<ErrorMessage message="Something went wrong." />);
+
+  expect(screen.getByText(/something went wrong\./i)).toBeInTheDocument();
+})

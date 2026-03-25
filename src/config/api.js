@@ -13,7 +13,7 @@ export const PROFILES = `${HOLIDAZE_BASE}/profiles`;
 export const profileByName = (name) => `${PROFILES}/${name}`;
 export const profileBookingsByName = (name) => `${PROFILES}/${name}/bookings`;
 
-// ✅ NY: venues owned by profile (venue manager)
+// venues owned by profile (venue manager)
 export const profileVenuesByName = (name) => `${PROFILES}/${name}/venues`;
 
 // Venues

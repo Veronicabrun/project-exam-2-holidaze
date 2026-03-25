@@ -88,11 +88,12 @@ export default function Venues() {
           <h1 className={styles.title}>
             {selectedCountry ? `Venues in ${selectedCountry}` : "Explore venues"}
           </h1>
-          <p className={styles.subtitle}>
-            {selectedCountry
-              ? `Browse venues filtered by ${selectedCountry}.`
-              : "Browse venues and click a card to view details and book."}
-          </p>
+
+          {selectedCountry && (
+            <p className={styles.subtitle}>
+              Browse venues filtered by {selectedCountry}.
+            </p>
+          )}
         </header>
 
         <div className={styles.controls}>
@@ -174,7 +175,7 @@ export default function Venues() {
               onClick={() => load(page + 1)}
               disabled={!canLoadMore}
             >
-              {isLoadingBrowse ? "Loading..." : hasMore ? "Load more" : "No more venues"}
+              {isLoadingBrowse ? "Loading..." : hasMore ? "Show more" : "No more venues"}
             </button>
           </div>
         )}

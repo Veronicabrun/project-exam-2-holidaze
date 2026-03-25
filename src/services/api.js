@@ -28,6 +28,5 @@ export async function request(url, options = {}) {
     throw new Error(message);
   }
 
-  // ✅ Normaliser: komponenter får alltid "ferdig data"
   return json?.data ?? json;
 }

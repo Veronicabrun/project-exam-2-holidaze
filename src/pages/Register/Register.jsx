@@ -7,7 +7,7 @@ import {
   isStudNoroffEmail,
   isValidPassword,
   isValidName,
-} from "../../utils/validators";
+} from "../../utils/validation";
 
 import styles from "./Register.module.scss";
 

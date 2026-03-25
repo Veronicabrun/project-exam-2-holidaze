@@ -7,7 +7,7 @@ export default function Admin() {
   return (
     <main>
       <h1>Venue Manager</h1>
-      <p>Welcome, {name} 👋</p>
+      <p>Welcome, {name} </p>
 
       <section>
         <h2>Next steps</h2>

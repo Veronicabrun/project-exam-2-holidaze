@@ -28,12 +28,12 @@ function matchesQuery(venue, q) {
 }
 
 /**
- * useVenuesSearch()
- * - Samme live-search som du hadde i Home:
- *   - debounce
- *   - henter side for side til den finner treff (stopper tidlig)
- *   - request-cancel via requestIdRef
- */
+* useVenuesSearch()
+* - Same live search as you had in Home:
+* - debounce
+* - fetches page by page until it finds a match (stops early)
+* - request-cancel via requestIdRef
+*/
 export default function useVenuesSearch(options = {}) {
   const {
     pageSize = DEFAULT_PAGE_SIZE,
@@ -52,7 +52,6 @@ export default function useVenuesSearch(options = {}) {
   const q = useMemo(() => normalize(query), [query]);
 
   useEffect(() => {
-    // Tomt søk: nullstill (parent bestemmer hva som vises da)
     if (!q) {
       setResults([]);
       setError("");
@@ -74,7 +73,6 @@ export default function useVenuesSearch(options = {}) {
           let hasMore = true;
 
           while (hasMore && page <= maxPages) {
-            // avbryt hvis ny request starter
             if (requestIdRef.current !== myRequestId) return;
 
             const data = await getVenues({
@@ -93,7 +91,7 @@ export default function useVenuesSearch(options = {}) {
             hasMore = next.length === pageSize;
             page += 1;
 
-            // stop tidlig når vi har treff (samme som Home-koden din)
+           
             if (filtered.length > 0) break;
           }
         } catch (e) {
@@ -116,7 +114,7 @@ export default function useVenuesSearch(options = {}) {
   return {
     query,
     setQuery,
-    q, // normalisert (praktisk i UI)
+    q, 
     results,
     isSearching,
     error,

@@ -3,7 +3,7 @@ import { useNavigate, Link } from "react-router-dom";
 import { setAuth } from "../../utils/auth";
 import { loginUser } from "../../services/authService";
 import { getProfile } from "../../services/profile";
-import { isValidEmail, isValidPassword } from "../../utils/validators";
+import { isValidEmail, isValidPassword } from "../../utils/validation";
 import styles from "./Login.module.scss";
 
 export default function Login() {

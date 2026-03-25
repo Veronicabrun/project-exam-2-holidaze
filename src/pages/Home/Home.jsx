@@ -16,7 +16,7 @@ export default function Home() {
   const { query, setQuery, q, results, isSearching, error: searchError, clear } =
     useVenuesSearch();
 
-  // Nyeste venues
+  // Newest venues
   const [newest, setNewest] = useState([]);
   const [isLoadingNewest, setIsLoadingNewest] = useState(false);
   const [newestError, setNewestError] = useState("");
@@ -54,7 +54,7 @@ export default function Home() {
     };
   }, []);
 
-  // Hvilke venues vises
+  // Which venues are shown
   const listToShow = useMemo(() => {
     if (!q) return newest;
     return results;
@@ -66,7 +66,7 @@ export default function Home() {
   // Error state
   const error = q ? searchError : newestError;
 
-  // Banner + categories vises kun når man ikke søker
+  // Banner + categories are only displayed when not searching
   const showExtras = !q;
 
   return (
