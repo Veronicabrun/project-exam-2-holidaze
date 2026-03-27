@@ -257,22 +257,29 @@ export default function Venue() {
         </div>
 
         <aside className={styles.right}>
-          <BookingCard
-            price={venue.price}
-            maxGuests={venue.maxGuests}
-            isLoggedIn={isLoggedIn}
-            isOwner={isOwner}
-            dateFrom={dateFrom}
-            dateTo={dateTo}
-            guests={guests}
-            onDateFromChange={setDateFrom}
-            onDateToChange={setDateTo}
-            onGuestsChange={setGuests}
-            dateValidation={dateValidation}
-            bookingLoading={bookingLoading}
-            bookingError={bookingError}
-            onSubmit={handleBookingSubmit}
-          />
+        <BookingCard
+  price={venue.price}
+  maxGuests={venue.maxGuests}
+  isLoggedIn={isLoggedIn}
+  isOwner={isOwner}
+  bookings={venue.bookings || []}
+  dateFrom={dateFrom}
+  dateTo={dateTo}
+  guests={guests}
+  onDateFromChange={(value) => {
+    setDateFrom(value);
+    setBookingError("");
+  }}
+  onDateToChange={(value) => {
+    setDateTo(value);
+    setBookingError("");
+  }}
+  onGuestsChange={setGuests}
+  dateValidation={dateValidation}
+  bookingLoading={bookingLoading}
+  bookingError={bookingError}
+  onSubmit={handleBookingSubmit}
+/>
         </aside>
       </div>
     </div>
