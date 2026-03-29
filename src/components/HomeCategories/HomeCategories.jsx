@@ -51,7 +51,7 @@ export default function HomeCategories() {
                   <img
                     className={styles.media}
                     src={item.image}
-                    alt={`Destination image of ${item.title}`}
+                    alt={`View of ${item.title}`}
                     loading="lazy"
                   />
                 </div>

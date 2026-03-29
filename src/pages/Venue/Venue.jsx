@@ -1,8 +1,12 @@
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { getVenue } from "../../services/venues";
 import { createBooking } from "../../services/bookings";
-import { isDateRangeAvailable, toDateOnly, rangesOverlap, } from "../../services/availability";
+import {
+  isDateRangeAvailable,
+  toDateOnly,
+  rangesOverlap,
+} from "../../services/availability";
 
 import useAuth from "../../hooks/useAuth";
 import VenueHeader from "../../components/VenueDetails/VenueHeader/VenueHeader";
@@ -55,7 +59,7 @@ export default function Venue() {
     setToast((t) => ({ ...t, open: false }));
   }
 
-  async function fetchVenue() {
+  const fetchVenue = useCallback(async () => {
     setError("");
     setIsLoading(true);
 
@@ -70,11 +74,11 @@ export default function Venue() {
     } finally {
       setIsLoading(false);
     }
-  }
+  }, [id]);
 
   useEffect(() => {
     fetchVenue();
-  }, [id]);
+  }, [fetchVenue]);
 
   const isOwner = useMemo(() => {
     const myName = auth?.name;
@@ -257,29 +261,29 @@ export default function Venue() {
         </div>
 
         <aside className={styles.right}>
-        <BookingCard
-  price={venue.price}
-  maxGuests={venue.maxGuests}
-  isLoggedIn={isLoggedIn}
-  isOwner={isOwner}
-  bookings={venue.bookings || []}
-  dateFrom={dateFrom}
-  dateTo={dateTo}
-  guests={guests}
-  onDateFromChange={(value) => {
-    setDateFrom(value);
-    setBookingError("");
-  }}
-  onDateToChange={(value) => {
-    setDateTo(value);
-    setBookingError("");
-  }}
-  onGuestsChange={setGuests}
-  dateValidation={dateValidation}
-  bookingLoading={bookingLoading}
-  bookingError={bookingError}
-  onSubmit={handleBookingSubmit}
-/>
+          <BookingCard
+            price={venue.price}
+            maxGuests={venue.maxGuests}
+            isLoggedIn={isLoggedIn}
+            isOwner={isOwner}
+            bookings={venue.bookings || []}
+            dateFrom={dateFrom}
+            dateTo={dateTo}
+            guests={guests}
+            onDateFromChange={(value) => {
+              setDateFrom(value);
+              setBookingError("");
+            }}
+            onDateToChange={(value) => {
+              setDateTo(value);
+              setBookingError("");
+            }}
+            onGuestsChange={setGuests}
+            dateValidation={dateValidation}
+            bookingLoading={bookingLoading}
+            bookingError={bookingError}
+            onSubmit={handleBookingSubmit}
+          />
         </aside>
       </div>
     </div>
