@@ -1,5 +1,3 @@
-// src/services/venues.js
-
 import { request } from "./api";
 import {
   VENUES,
@@ -8,8 +6,14 @@ import {
 } from "../config/api";
 
 /**
- * Get all venues (with pagination + sorting)
- * Default: newest first
+ * Get venues with pagination and sorting.
+ *
+ * @param {Object} [options={}] - Query options.
+ * @param {number} [options.page=1] - Page number.
+ * @param {number} [options.limit=20] - Number of venues per page.
+ * @param {string} [options.sort="created"] - Field to sort by.
+ * @param {string} [options.sortOrder="desc"] - Sort direction.
+ * @returns {Promise<Array>} Venue list from the API.
  */
 export async function getVenues(options = {}) {
   const {
@@ -32,8 +36,13 @@ export async function getVenues(options = {}) {
 }
 
 /**
- * Get single venue
- * Can include bookings and owner
+ * Get a single venue by ID.
+ *
+ * @param {string} id - Venue ID.
+ * @param {Object} [options={}] - Include options.
+ * @param {boolean} [options.withBookings=false] - Include venue bookings.
+ * @param {boolean} [options.withOwner=false] - Include venue owner.
+ * @returns {Promise<Object>} Venue data from the API.
  */
 export async function getVenue(id, options = {}) {
   const { withBookings = false, withOwner = false } = options;
@@ -57,7 +66,10 @@ export async function getVenue(id, options = {}) {
 }
 
 /**
- * Create venue
+ * Create a new venue.
+ *
+ * @param {Object} payload - Venue payload.
+ * @returns {Promise<Object>} Created venue data from the API.
  */
 export async function createVenue(payload) {
   return request(VENUES, {
@@ -67,14 +79,21 @@ export async function createVenue(payload) {
 }
 
 /**
- * Get venues for specific profile
+ * Get all venues owned by a profile.
+ *
+ * @param {string} profileName - Profile username.
+ * @returns {Promise<Array>} Venue list from the API.
  */
 export async function getMyVenues(profileName) {
   return request(profileVenuesByName(profileName));
 }
 
 /**
- * Update venue
+ * Update an existing venue.
+ *
+ * @param {string} id - Venue ID.
+ * @param {Object} payload - Updated venue payload.
+ * @returns {Promise<Object>} Updated venue data from the API.
  */
 export async function updateVenue(id, payload) {
   return request(venueById(id), {
@@ -84,7 +103,10 @@ export async function updateVenue(id, payload) {
 }
 
 /**
- * Delete venue
+ * Delete a venue by ID.
+ *
+ * @param {string} id - Venue ID.
+ * @returns {Promise<Object>} API response.
  */
 export async function deleteVenue(id) {
   return request(venueById(id), {

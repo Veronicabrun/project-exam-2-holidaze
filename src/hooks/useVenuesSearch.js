@@ -1,4 +1,3 @@
-// src/hooks/useVenuesSearch.js
 import { useEffect, useMemo, useRef, useState } from "react";
 import { getVenues } from "../services/venues";
 
@@ -6,10 +5,23 @@ const DEFAULT_PAGE_SIZE = 20;
 const DEFAULT_MAX_PAGES = 15;
 const DEFAULT_DEBOUNCE_MS = 300;
 
+/**
+ * Normalize a search value for case-insensitive matching.
+ *
+ * @param {string} value - Search input value.
+ * @returns {string} Normalized value.
+ */
 function normalize(value) {
   return String(value || "").trim().toLowerCase();
 }
 
+/**
+ * Check whether a venue matches the search query.
+ *
+ * @param {Object} venue - Venue object.
+ * @param {string} q - Normalized search query.
+ * @returns {boolean} True if the venue matches the query.
+ */
 function matchesQuery(venue, q) {
   const hay = [
     venue?.name,
@@ -27,6 +39,15 @@ function matchesQuery(venue, q) {
   return hay.includes(q);
 }
 
+/**
+ * Search venues client-side by loading paginated results and filtering them.
+ *
+ * @param {Object} [options={}] - Hook options.
+ * @param {number} [options.pageSize=20] - Number of venues fetched per page.
+ * @param {number} [options.maxPages=15] - Maximum number of pages to search through.
+ * @param {number} [options.debounceMs=300] - Debounce delay before search starts.
+ * @returns {Object} Search state and actions.
+ */
 export default function useVenuesSearch(options = {}) {
   const {
     pageSize = DEFAULT_PAGE_SIZE,
@@ -96,6 +117,9 @@ export default function useVenuesSearch(options = {}) {
     return () => clearTimeout(timer);
   }, [q, pageSize, maxPages, debounceMs]);
 
+  /**
+   * Clear the current search query.
+   */
   function clear() {
     setQuery("");
   }
