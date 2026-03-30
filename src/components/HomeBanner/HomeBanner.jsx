@@ -1,5 +1,6 @@
 import styles from "./HomeBanner.module.scss";
 import heroImage from "../../assets/images/hero.jpg";
+import { ArrowRightLongIcon } from "../ui/Icons/Icons";
 
 export default function HomeBanner() {
   return (
@@ -25,7 +26,8 @@ export default function HomeBanner() {
             </p>
 
             <a className={styles.button} href="/venues">
-              Explore venues
+              <span>Explore</span>
+              <ArrowRightLongIcon className={styles.arrowIcon} />
             </a>
           </div>
         </div>

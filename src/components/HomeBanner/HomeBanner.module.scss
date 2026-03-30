@@ -66,10 +66,24 @@
   text-decoration: none;
   font-weight: 800;
   border: 1px solid $color-primary-25;
+
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.arrowIcon {
+  width: 18px;
+  height: 18px;
+  transition: transform 0.25s ease;
 }
 
 .button:hover {
   background: $color-secondary-hover;
+}
+
+.button:hover .arrowIcon {
+  transform: translateX(6px);
 }
 
 @media (max-width: 900px) {

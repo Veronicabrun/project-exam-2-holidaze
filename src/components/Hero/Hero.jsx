@@ -30,6 +30,17 @@ export default function Hero({ query, onQueryChange }) {
           </div>
         </div>
       </div>
+
+      <svg
+        className={styles.divider}
+        viewBox="0 0 1440 140"
+        preserveAspectRatio="none"
+        aria-hidden="true"
+      >
+        <path
+          d="M0,20 C240,70 480,110 720,110 C960,110 1200,70 1440,20 L1440,140 L0,140 Z"
+        />
+      </svg>
     </section>
   );
 }

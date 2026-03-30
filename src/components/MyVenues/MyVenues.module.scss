@@ -133,8 +133,9 @@
 .iconBtn svg {
   width: 16px;
   height: 16px;
-  fill: currentColor;
   color: $color-primary;
+  fill: none;
+  stroke: currentColor;
 }
 
 .danger svg {

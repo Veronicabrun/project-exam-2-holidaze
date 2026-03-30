@@ -1,0 +1,141 @@
+@use "../../styles/variables" as *;
+
+.section {
+  padding: 10px 0 56px;
+  overflow: hidden;
+}
+
+.inner {
+  width: 100%;
+  display: grid;
+  gap: 18px;
+}
+
+.header {
+  width: min(1100px, calc(100% - 32px));
+  margin: 0 auto;
+  display: grid;
+  gap: 6px;
+}
+
+.title {
+  margin: 0;
+  margin-top: 10px;
+  font-size: 22px;
+  color: $color-black;
+}
+
+.text {
+  margin: 0;
+  color: rgba(12, 13, 7, 0.72);
+  font-style: italic;
+}
+
+.viewport {
+  overflow: hidden;
+  width: 100%;
+}
+
+.track {
+  display: flex;
+  align-items: end;
+  gap: 18px;
+  width: max-content;
+  animation: scrollLeft 70s linear infinite;
+}
+
+.viewport:hover .track {
+  animation-play-state: paused;
+}
+
+.card {
+  flex: 0 0 auto;
+  border-radius: 18px;
+  overflow: hidden;
+  background: $color-surface-muted;
+  box-shadow: 0 14px 35px rgba(0, 0, 0, 0.08);
+}
+
+/* RENAMED */
+.small {
+  width: 260px;
+  height: 300px;
+}
+
+.medium {
+  width: 260px;
+  height: 280px;
+}
+
+.large {
+  width: 260px;
+  height: 340px;
+}
+
+.image {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: cover;
+}
+
+@keyframes scrollLeft {
+  from {
+    transform: translateX(0);
+  }
+
+  to {
+    transform: translateX(calc(-50% - 9px));
+  }
+}
+
+@media (max-width: 900px) {
+  .track {
+    animation-duration: 60s;
+    gap: 14px;
+  }
+
+  .small {
+    width: 210px;
+    height: 220px;
+  }
+
+  .medium {
+    width: 210px;
+    height: 220px;
+  }
+
+  .large {
+    width: 210px;
+    height: 260px;
+  }
+}
+
+@media (max-width: 560px) {
+  .section {
+    padding: 8px 0 42px;
+  }
+
+  .title {
+    font-size: 20px;
+  }
+
+  .track {
+    animation-duration: 52s;
+  }
+
+  .small {
+    width: 175px;
+    height: 180px;
+  }
+
+  .medium {
+    width: 175px;
+    height: 190px;
+  }
+
+  .large {
+    width: 175px;
+    height: 220px;
+  }
+}

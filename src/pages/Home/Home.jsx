@@ -2,7 +2,9 @@ import { useEffect, useMemo, useState } from "react";
 import Hero from "../../components/Hero/Hero";
 import VenueCard from "../../components/VenueCard/VenueCard";
 import HomeBanner from "../../components/HomeBanner/HomeBanner";
+import InspirationCarousel from "../../components/InspirationCarousel/InspirationCarousel";
 import HomeCategories from "../../components/HomeCategories/HomeCategories";
+import Featured from "../../components/Featured/Featured";
 import { getVenues } from "../../services/venues";
 import Loading from "../../components/ui/Loading/Loading";
 import ErrorMessage from "../../components/ui/ErrorMessage/ErrorMessage";
@@ -12,11 +14,16 @@ import styles from "./Home.module.scss";
 const NEWEST_LIMIT = 6;
 
 export default function Home() {
-  // Live search
-  const { query, setQuery, q, results, isSearching, error: searchError, clear } =
-    useVenuesSearch();
+  const {
+    query,
+    setQuery,
+    q,
+    results,
+    isSearching,
+    error: searchError,
+    clear,
+  } = useVenuesSearch();
 
-  // Newest venues
   const [newest, setNewest] = useState([]);
   const [isLoadingNewest, setIsLoadingNewest] = useState(false);
   const [newestError, setNewestError] = useState("");
@@ -54,27 +61,19 @@ export default function Home() {
     };
   }, []);
 
-  // Which venues are shown
   const listToShow = useMemo(() => {
     if (!q) return newest;
     return results;
   }, [q, newest, results]);
 
-  // Loading state
   const isLoading = q ? isSearching : isLoadingNewest;
-
-  // Error state
   const error = q ? searchError : newestError;
-
-  // Banner + categories are only displayed when not searching
   const showExtras = !q;
 
   return (
     <>
-      {/* Hero */}
       <Hero query={query} onQueryChange={setQuery} />
 
-      {/* Venue cards */}
       <section className={styles.section} aria-labelledby="results-title">
         <div className={styles.inner}>
           <div className={styles.header}>
@@ -105,14 +104,10 @@ export default function Home() {
           {error && <ErrorMessage message={error} />}
 
           {isLoading ? (
-            <Loading
-              text={q ? "Searching venues..." : "Loading venues..."}
-            />
+            <Loading text={q ? "Searching venues..." : "Loading venues..."} />
           ) : listToShow.length === 0 ? (
             <p className={styles.empty}>
-              {q
-                ? "No venues match your search."
-                : "No venues yet."}
+              {q ? "No venues match your search." : "No venues yet."}
             </p>
           ) : (
             <ul className={styles.grid} aria-label="Venues">
@@ -126,11 +121,10 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Banner */}
       {showExtras && <HomeBanner />}
-
-      {/* Destination cards */}
       {showExtras && <HomeCategories />}
+      {showExtras && <Featured />}
+      {showExtras && <InspirationCarousel />}
     </>
   );
 }
