@@ -35,7 +35,7 @@ export default function HomeCategories() {
       <div className={styles.inner}>
         <div className={styles.header}>
           <h2 id="home-categories-title" className={styles.title}>
-            Explore by destination
+            Explore destinations
           </h2>
         </div>
 

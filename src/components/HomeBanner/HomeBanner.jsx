@@ -17,7 +17,7 @@ export default function HomeBanner() {
 
           <div className={styles.right}>
             <h2 className={styles.title}>
-              Find things to do for everything you like
+              Find your perfect stay
             </h2>
 
             <p className={styles.text}>
