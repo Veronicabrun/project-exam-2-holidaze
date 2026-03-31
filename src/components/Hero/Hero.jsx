@@ -8,7 +8,9 @@ export default function Hero({ query, onQueryChange }) {
 
       <div className={styles.content}>
         <h1 className={styles.title}>Welcome to Holidaze</h1>
-        <p className={styles.subtitle}>Find and book your perfect holiday</p>
+        <p className={styles.subtitle}>
+          Find and book your perfect holiday
+        </p>
 
         <div className={styles.searchWrap}>
           <label className={styles.srOnly} htmlFor="hero-search">
@@ -37,9 +39,7 @@ export default function Hero({ query, onQueryChange }) {
         preserveAspectRatio="none"
         aria-hidden="true"
       >
-        <path
-          d="M0,20 C240,70 480,110 720,110 C960,110 1200,70 1440,20 L1440,140 L0,140 Z"
-        />
+        <path d="M0,20 C240,70 480,110 720,110 C960,110 1200,70 1440,20 L1440,140 L0,140 Z" />
       </svg>
     </section>
   );

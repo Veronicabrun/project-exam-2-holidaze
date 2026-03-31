@@ -28,6 +28,7 @@
   color: $color-white;
 }
 
+/* TITLE (ingen animation) */
 .title {
   margin: 0 0 8px;
   font-size: clamp(32px, 4.5vw, 54px);
@@ -36,12 +37,17 @@
   font-family: $font-heading;
 }
 
+/* SUBTITLE (SLIDE IN) */
 .subtitle {
   margin: 0 0 18px;
   font-size: 16px;
   font-weight: 700;
+
+  animation: slideInLeft 0.9s ease-out;
+  animation-fill-mode: both;
 }
 
+/* SEARCH */
 .searchWrap {
   display: grid;
   place-items: center;
@@ -90,6 +96,7 @@
   border: 0;
 }
 
+/* DIVIDER */
 .divider {
   position: absolute;
   left: 0;
@@ -104,6 +111,19 @@
   fill: $color-white;
 }
 
+/* ANIMATION */
+@keyframes slideInLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-50px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* RESPONSIVE */
 @media (max-width: 900px) {
   .hero {
     min-height: 520px;
