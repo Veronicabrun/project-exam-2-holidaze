@@ -1,8 +1,6 @@
 @use "./variables" as *;
 
-/* ===============================
-   RESET
-================================ */
+/* Rest */
 
 *,
 *::before,
@@ -17,9 +15,7 @@ body {
   padding: 0;
 }
 
-/* ===============================
-   GLOBAL BODY
-================================ */
+/* Global Body */
 
 body {
   font-family: $font-base;
@@ -34,36 +30,51 @@ body {
   color: $color-black;
 }
 
-/* ===============================
-   ROOT
-================================ */
+/* Root */
 
 #root {
   min-height: 100vh;
 }
 
-/* ===============================
-   IMAGES
-================================ */
+/* Images */
 
 img {
   max-width: 100%;
   display: block;
 }
 
-/* ===============================
-   TYPOGRAPHY (valgfri finpuss)
-================================ */
+/* Typography */
 
 h1,
 h2,
-h3 {
+h3,
+h4,
+h5,
+h6 {
+  font-family: $font-heading;
   font-weight: 700;
+  letter-spacing: -0.01em;
 }
 
-/* ===============================
-   CODE
-================================ */
+/* Form elements */
+
+button,
+input,
+textarea,
+select {
+  font: inherit;
+  font-family: $font-base;
+}
+
+/* Links */
+
+a {
+  font-family: inherit;
+  color: inherit;
+  text-decoration: none;
+}
+
+/* Code */
 
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New", monospace;
