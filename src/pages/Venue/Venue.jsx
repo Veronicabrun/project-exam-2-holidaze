@@ -19,7 +19,10 @@ import ErrorMessage from "../../components/ui/ErrorMessage/ErrorMessage";
 import styles from "./Venue.module.scss";
 
 function toDateOnlyISO(isoString) {
-  return new Date(isoString).toISOString().slice(0, 10);
+  if (!isoString) return "";
+  const date = new Date(isoString);
+  if (Number.isNaN(date.getTime())) return "";
+  return date.toISOString().slice(0, 10);
 }
 
 export default function Venue() {

@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import styles from "./HomeBanner.module.scss";
 import heroImage from "../../assets/images/hero.jpg";
 import { ArrowRightLongIcon } from "../ui/Icons/Icons";
@@ -25,10 +26,10 @@ export default function HomeBanner() {
               next stay easily.
             </p>
 
-            <a className={styles.button} href="/venues">
+            <Link className={styles.button} to="/venues">
               <span>Explore</span>
               <ArrowRightLongIcon className={styles.arrowIcon} />
-            </a>
+            </Link>
           </div>
         </div>
       </div>

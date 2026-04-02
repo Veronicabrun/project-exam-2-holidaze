@@ -7,20 +7,26 @@ function safeText(value, fallback = "") {
 }
 
 export default function VenueCard({ venue }) {
+  if (!venue) return null;
+
+  const id = venue?.id;
+  const name = safeText(venue?.name, "Venue");
+
   const imageUrl =
     venue?.media?.[0]?.url || "https://placehold.co/900x600?text=Venue";
-  const imageAlt = venue?.media?.[0]?.alt || venue?.name || "Venue";
+  const imageAlt = venue?.media?.[0]?.alt || name;
 
   const city = safeText(venue?.location?.city);
   const country = safeText(venue?.location?.country);
   const location = [city, country].filter(Boolean).join(", ");
 
+  const maxGuests = venue?.maxGuests;
+  const price = venue?.price;
+
+  const href = id ? `/venue/${id}` : "/venues";
+
   return (
-    <Link
-      to={`/venue/${venue.id}`}
-      className={styles.card}
-      aria-label={`View ${venue.name}`}
-    >
+    <Link to={href} className={styles.card} aria-label={`View ${name}`}>
       <div className={styles.mediaWrap}>
         <img
           className={styles.media}
@@ -31,7 +37,7 @@ export default function VenueCard({ venue }) {
       </div>
 
       <div className={styles.body}>
-        <h3 className={styles.title}>{venue.name}</h3>
+        <h3 className={styles.title}>{name}</h3>
 
         <p className={styles.meta}>
           <LocationIcon className={styles.icon} />
@@ -41,12 +47,20 @@ export default function VenueCard({ venue }) {
         <div className={styles.footer}>
           <span className={styles.small}>
             <GuestsIcon className={styles.icon} />
-            <span>{venue.maxGuests} guests</span>
+            <span>
+              {maxGuests ? `${maxGuests} guests` : "Guests unavailable"}
+            </span>
           </span>
 
           <span className={styles.price}>
-            <span className={styles.priceValue}>${venue.price}</span>{" "}
-            <span className={styles.priceSuffix}>/ night</span>
+            {typeof price === "number" ? (
+              <>
+                <span className={styles.priceValue}>${price}</span>{" "}
+                <span className={styles.priceSuffix}>/ night</span>
+              </>
+            ) : (
+              <span className={styles.priceSuffix}>Price unavailable</span>
+            )}
           </span>
         </div>
       </div>

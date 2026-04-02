@@ -1,13 +1,19 @@
-// src/components/VenueDetails/UpcomingBookings.jsx
 import styles from "./UpcomingBookings.module.scss";
 
 function dateOnly(iso) {
-  return new Date(iso).toISOString().slice(0, 10);
+  if (!iso) return "";
+
+  const date = new Date(iso);
+
+  if (Number.isNaN(date.getTime())) return "";
+
+  return date.toISOString().slice(0, 10);
 }
 
 export default function UpcomingBookings({ bookings = [] }) {
   const sorted = bookings
     .slice()
+    .filter((b) => dateOnly(b?.dateFrom) && dateOnly(b?.dateTo))
     .sort((a, b) => new Date(a.dateFrom) - new Date(b.dateFrom));
 
   return (

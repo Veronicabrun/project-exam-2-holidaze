@@ -2,7 +2,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { getVenues } from "../services/venues";
 
 const DEFAULT_PAGE_SIZE = 20;
-const DEFAULT_MAX_PAGES = 15;
+const DEFAULT_MAX_PAGES = 10;
 const DEFAULT_DEBOUNCE_MS = 300;
 
 /**

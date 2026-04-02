@@ -12,7 +12,10 @@ import DeleteVenueModal from "./DeleteVenueModal/DeleteVenueModal";
 import styles from "./MyVenues.module.scss";
 
 function dateOnly(iso) {
-  return new Date(iso).toISOString().slice(0, 10);
+  if (!iso) return "";
+  const date = new Date(iso);
+  if (Number.isNaN(date.getTime())) return "";
+  return date.toISOString().slice(0, 10);
 }
 
 export default function MyVenues({ username, onToast }) {

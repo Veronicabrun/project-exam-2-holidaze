@@ -2,7 +2,13 @@ import BookingItem from "../BookingItem/BookingItem";
 import styles from "./BookingsList.module.scss";
 
 function dateOnlyISO(value) {
-  return new Date(value).toISOString().slice(0, 10);
+  if (!value) return "";
+
+  const date = new Date(value);
+
+  if (Number.isNaN(date.getTime())) return "";
+
+  return date.toISOString().slice(0, 10);
 }
 
 export default function BookingsList({
@@ -14,11 +20,17 @@ export default function BookingsList({
   const today = dateOnlyISO(new Date());
 
   const upcoming = list
-    .filter((b) => dateOnlyISO(b.dateTo) >= today)
+    .filter((b) => {
+      const dateTo = dateOnlyISO(b?.dateTo);
+      return dateTo && dateTo >= today;
+    })
     .sort((a, b) => new Date(a.dateFrom) - new Date(b.dateFrom));
 
   const past = list
-    .filter((b) => dateOnlyISO(b.dateTo) < today)
+    .filter((b) => {
+      const dateTo = dateOnlyISO(b?.dateTo);
+      return dateTo && dateTo < today;
+    })
     .sort((a, b) => new Date(b.dateFrom) - new Date(a.dateFrom));
 
   if (upcoming.length === 0 && past.length === 0) {

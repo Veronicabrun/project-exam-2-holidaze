@@ -12,7 +12,11 @@ export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  const [errors, setErrors] = useState({ email: "", password: "", form: "" });
+  const [errors, setErrors] = useState({
+    email: "",
+    password: "",
+    form: "",
+  });
   const [submitted, setSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
 
@@ -27,7 +31,9 @@ export default function Login() {
 
     if (field === "password") {
       if (!value) return "Password is required.";
-      if (!isValidPassword(value)) return "Password must be at least 8 characters.";
+      if (!isValidPassword(value)) {
+        return "Password must be at least 8 characters.";
+      }
       return "";
     }
 
@@ -52,31 +58,42 @@ export default function Login() {
     if (!validateAll()) return;
 
     setLoading(true);
-    setErrors((p) => ({ ...p, form: "" }));
+    setErrors((prev) => ({ ...prev, form: "" }));
 
     try {
-      const loginResponse = await loginUser({ email, password });
+      const loginResponse = await loginUser({
+        email: email.trim(),
+        password,
+      });
 
       const token = loginResponse?.accessToken;
       const name = loginResponse?.name;
 
-      if (!token || !name) throw new Error("Missing token or username from login response.");
+      if (!token || !name) {
+        throw new Error("Missing token or username from login response.");
+      }
 
+      // Selve loginen er nå godkjent
       setAuth({ token, name });
 
-      const profile = await getProfile(name);
-      const venueManager = Boolean(profile?.venueManager);
+      // Ekstra profilinfo - fint å ha, men skal ikke ødelegge login
+      try {
+        const profile = await getProfile(name);
 
-      setAuth({
-        venueManager,
-        avatarUrl: profile?.avatar?.url || "",
-        avatarAlt: profile?.avatar?.alt || "User avatar",
-      });
+        setAuth({
+          venueManager: Boolean(profile?.venueManager),
+          avatarUrl: profile?.avatar?.url || "",
+          avatarAlt: profile?.avatar?.alt || "User avatar",
+        });
+      } catch {
+        // Bevisst tom:
+        // brukeren er allerede logget inn
+      }
 
       navigate("/profile", { replace: true });
     } catch (err) {
-      setErrors((p) => ({
-        ...p,
+      setErrors((prev) => ({
+        ...prev,
         form: err?.message || "Login failed. Please try again.",
       }));
     } finally {
@@ -91,7 +108,9 @@ export default function Login() {
     <div className={styles.page}>
       <div className={styles.card}>
         <h1 className={styles.title}>Login</h1>
-        <p className={styles.subtitle}>Log in to book venues or manage your venues.</p>
+        <p className={styles.subtitle}>
+          Log in to book venues or manage your venues.
+        </p>
 
         <form onSubmit={onSubmit} noValidate className={styles.form}>
           <div className={styles.field}>
@@ -109,14 +128,16 @@ export default function Login() {
                 setEmail(val);
 
                 if (submitted) {
-                  setErrors((p) => ({
-                    ...p,
+                  setErrors((prev) => ({
+                    ...prev,
                     email: validateField("email", val),
                     form: "",
                   }));
                 }
               }}
-              className={`${styles.input} ${showEmailError ? styles.inputError : ""}`}
+              className={`${styles.input} ${
+                showEmailError ? styles.inputError : ""
+              }`}
               aria-invalid={Boolean(showEmailError)}
             />
             {showEmailError && (
@@ -142,14 +163,16 @@ export default function Login() {
                 setPassword(val);
 
                 if (submitted) {
-                  setErrors((p) => ({
-                    ...p,
+                  setErrors((prev) => ({
+                    ...prev,
                     password: validateField("password", val),
                     form: "",
                   }));
                 }
               }}
-              className={`${styles.input} ${showPasswordError ? styles.inputError : ""}`}
+              className={`${styles.input} ${
+                showPasswordError ? styles.inputError : ""
+              }`}
               aria-invalid={Boolean(showPasswordError)}
             />
             {showPasswordError && (
@@ -171,7 +194,10 @@ export default function Login() {
         </form>
 
         <p className={styles.footerText}>
-          Don&apos;t have an account? <Link className={styles.inlineLink} to="/register">Register here</Link>
+          Don&apos;t have an account?{" "}
+          <Link className={styles.inlineLink} to="/register">
+            Register here
+          </Link>
         </p>
       </div>
     </div>

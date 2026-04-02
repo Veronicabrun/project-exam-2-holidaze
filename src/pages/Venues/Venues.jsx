@@ -1,5 +1,5 @@
+import { Link, useSearchParams } from "react-router-dom";
 import { useEffect, useMemo, useState } from "react";
-import { useSearchParams } from "react-router-dom";
 import VenueCard from "../../components/VenueCard/VenueCard";
 import Loading from "../../components/ui/Loading/Loading";
 import ErrorMessage from "../../components/ui/ErrorMessage/ErrorMessage";
@@ -80,7 +80,6 @@ export default function Venues() {
         setHasMore(true);
         setPage(1);
 
-        // Normal explore page: load first page only
         if (!selectedCountry) {
           const firstPage = await fetchPage(1);
 
@@ -92,7 +91,6 @@ export default function Venues() {
           return;
         }
 
-        // Country page: load multiple pages to collect more matches
         let allVenues = [];
         let currentPage = 1;
         let morePages = true;
@@ -142,8 +140,7 @@ export default function Venues() {
   const error = q ? searchError : browseError;
   const isLoading = q ? isSearching : isLoadingBrowse;
 
-  const canLoadMore =
-    !q && !selectedCountry && hasMore && !isLoadingBrowse;
+  const canLoadMore = !q && !selectedCountry && hasMore && !isLoadingBrowse;
 
   return (
     <div className={styles.page}>
@@ -187,7 +184,8 @@ export default function Venues() {
                 </>
               ) : selectedCountry ? (
                 <>
-                  venues in <span className={styles.query}>{selectedCountry}</span>
+                  venues in{" "}
+                  <span className={styles.query}>{selectedCountry}</span>
                 </>
               ) : (
                 <>loaded</>
@@ -203,9 +201,9 @@ export default function Venues() {
                 )}
 
                 {selectedCountry && (
-                  <a href="/venues" className={styles.clear}>
+                  <Link to="/venues" className={styles.clear}>
                     Clear country
-                  </a>
+                  </Link>
                 )}
               </div>
             )}
