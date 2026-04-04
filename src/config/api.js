@@ -1,5 +1,5 @@
 // src/config/api.js
-export const API_BASE = "https://v2.api.noroff.dev";
+export const API_BASE = process.env.REACT_APP_API_BASE || "https://v2.api.noroff.dev";
 
 // Auth
 export const AUTH_REGISTER = `${API_BASE}/auth/register`;
