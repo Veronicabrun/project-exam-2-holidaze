@@ -16,10 +16,7 @@ export default function VenueCard({ venue }) {
     venue?.media?.[0]?.url || "https://placehold.co/900x600?text=Venue";
   const imageAlt = venue?.media?.[0]?.alt || name;
 
-  const city = safeText(venue?.location?.city);
-  const country = safeText(venue?.location?.country);
-  const location = [city, country].filter(Boolean).join(", ");
-
+  const country = safeText(venue?.location?.country, "Somewhere in the world");
   const maxGuests = venue?.maxGuests;
   const price = venue?.price;
 
@@ -37,30 +34,34 @@ export default function VenueCard({ venue }) {
       </div>
 
       <div className={styles.body}>
-        <h3 className={styles.title}>{name}</h3>
+        <div className={styles.topRow}>
+          <h3 className={styles.title}>{name}</h3>
 
-        <p className={styles.meta}>
-          <LocationIcon className={styles.icon} />
-          <span>{location || "Somewhere in the world"}</span>
-        </p>
+          <div className={styles.price}>
+            {typeof price === "number" ? (
+              <>
+                <span className={styles.priceValue}>${price}</span>
+                <span className={styles.priceSuffix}>/ night</span>
+              </>
+            ) : (
+              <span className={styles.priceUnavailable}>Price unavailable</span>
+            )}
+          </div>
+        </div>
 
-        <div className={styles.footer}>
-          <span className={styles.small}>
-            <GuestsIcon className={styles.icon} />
+        <div className={styles.metaRow}>
+          <span className={styles.metaItem}>
+            <GuestsIcon className={styles.metaIcon} />
             <span>
               {maxGuests ? `${maxGuests} guests` : "Guests unavailable"}
             </span>
           </span>
 
-          <span className={styles.price}>
-            {typeof price === "number" ? (
-              <>
-                <span className={styles.priceValue}>${price}</span>{" "}
-                <span className={styles.priceSuffix}>/ night</span>
-              </>
-            ) : (
-              <span className={styles.priceSuffix}>Price unavailable</span>
-            )}
+          <span className={styles.metaDivider}>•</span>
+
+          <span className={styles.metaItem}>
+            <LocationIcon className={styles.metaIcon} />
+            <span>{country}</span>
           </span>
         </div>
       </div>

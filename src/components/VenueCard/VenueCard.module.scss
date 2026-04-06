@@ -7,7 +7,7 @@
   border-radius: 16px;
   overflow: hidden;
   border: 1px solid $color-border;
-  box-shadow: 0 14px 35px rgba(0, 0, 0, 0.08);
+  box-shadow: $shadow-card-soft;
   display: grid;
   transition: transform 140ms ease, box-shadow 140ms ease;
 }
@@ -20,6 +20,7 @@
 .mediaWrap {
   aspect-ratio: 16 / 10;
   background: $color-surface-muted;
+  overflow: hidden;
 }
 
 .media {
@@ -30,60 +31,87 @@
 }
 
 .body {
-  padding: 12px 12px 14px;
+  padding: 16px;
   display: grid;
-  gap: 6px;
+  gap: 10px;
+}
+
+.topRow {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
 }
 
 .title {
   margin: 0;
-  font-size: 16px;
-  font-weight: 700;
+  font-size: 18px;
+  font-weight: 800;
   line-height: 1.2;
+  min-width: 0;
 }
 
-.meta {
-  margin: 0;
-  font-size: 13px;
-  opacity: 0.75;
-  display: flex;
-  align-items: center;
-  gap: 6px;
-}
-
-.footer {
-  margin-top: 6px;
-  display: flex;
+.price {
+  display: inline-flex;
   align-items: baseline;
-  justify-content: space-between;
-  gap: 10px;
+  gap: 6px;
+  white-space: nowrap;
+  flex: 0 0 auto;
 }
 
-.small {
+.priceValue {
+  color: $color-accent;
+  font-size: 18px;
+  font-weight: 800;
+  line-height: 1;
+}
+
+.priceSuffix {
+  color: $color-text-muted;
   font-size: 13px;
-  opacity: 0.75;
+  font-weight: 600;
+}
+
+.priceUnavailable {
+  color: $color-text-muted;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.metaRow {
   display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-top: 4px;
+  font-size: 14px;
+  color: $color-text-muted;
+}
+
+.metaItem {
+  display: inline-flex;
   align-items: center;
   gap: 6px;
 }
 
-.icon {
+.metaIcon {
   width: 14px;
   height: 14px;
   flex: 0 0 14px;
   color: $color-primary;
 }
 
-.price {
-  font-weight: 800;
-  white-space: nowrap;
+.metaDivider {
+  color: rgba(0, 0, 0, 0.3);
 }
 
-.priceValue {
-  color: $color-accent;
-}
+@media (max-width: 560px) {
+  .topRow {
+    flex-direction: column;
+    align-items: flex-start;
+  }
 
-.priceSuffix {
-  color: $color-text-muted;
-  font-weight: 600;
+  .title {
+    font-size: 17px;
+  }
 }
