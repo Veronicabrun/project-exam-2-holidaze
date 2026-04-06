@@ -4,7 +4,13 @@ import Loading from "../ui/Loading/Loading";
 import ErrorMessage from "../ui/ErrorMessage/ErrorMessage";
 import { deleteVenue, getMyVenues, getVenue } from "../../services/venues";
 
-import { EditIcon, DeleteIcon, BookingsIcon } from "../ui/Icons/Icons";
+import {
+  EditIcon,
+  DeleteIcon,
+  BookingsIcon,
+  GuestsIcon,
+  LocationIcon,
+} from "../ui/Icons/Icons";
 
 import EditVenueModal from "./EditVenueModal/EditVenueModal";
 import DeleteVenueModal from "./DeleteVenueModal/DeleteVenueModal";
@@ -176,25 +182,32 @@ export default function MyVenues({ username, onToast }) {
               </div>
 
               <div className={styles.cardBody}>
-                <h3 className={styles.cardTitle}>{v.name}</h3>
+                <div className={styles.topRow}>
+                  <h3 className={styles.cardTitle}>{v.name}</h3>
+
+                  <div className={styles.price}>
+                    <span className={styles.priceValue}>${v.price}</span>
+                    <span className={styles.priceSuffix}>/ night</span>
+                  </div>
+                </div>
 
                 <p className={styles.cardDesc}>
                   {v.description || "No description."}
                 </p>
 
-                <div className={styles.meta}>
-                  <span className={styles.price}>
-                    <strong>Price:</strong>{" "}
-                    <span className={styles.priceValue}>${v.price}</span>{" "}
-                    <span className={styles.priceSuffix}>/ night</span>
+                <div className={styles.metaRow}>
+                  <span className={styles.metaItem}>
+                    <GuestsIcon className={styles.metaIcon} />
+                    <span>
+                      {v.maxGuests ? `${v.maxGuests} guests` : "Guests unavailable"}
+                    </span>
                   </span>
 
-                  <span>
-                    <strong>Guests:</strong> {v.maxGuests}
-                  </span>
+                  <span className={styles.metaDivider}>•</span>
 
-                  <span>
-                    <strong>Country:</strong> {v.location?.country || "-"}
+                  <span className={styles.metaItem}>
+                    <LocationIcon className={styles.metaIcon} />
+                    <span>{v.location?.country || "Country unavailable"}</span>
                   </span>
                 </div>
 
