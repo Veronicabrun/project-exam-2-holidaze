@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import { GuestsIcon, BookingsIcon } from "../../ui/Icons/Icons";
 import styles from "./BookingItem.module.scss";
 
 function dateOnly(iso) {
@@ -43,16 +44,19 @@ export default function BookingItem({ booking }) {
       </div>
 
       <div className={styles.body}>
-        <div className={styles.titleRow}>
-          <h3 className={styles.title}>{venueName}</h3>
-          <span className={styles.badge}>
-            {booking?.guests || 1} guest{booking?.guests === 1 ? "" : "s"}
-          </span>
-        </div>
+        <h3 className={styles.title}>{venueName}</h3>
 
-        <p className={styles.dates}>
-          {from && to ? `${from} → ${to}` : "Dates unavailable"}
-        </p>
+        <div className={styles.metaRow}>
+          <p className={styles.dates}>
+            <BookingsIcon className={styles.iconSmall} />
+            <span>{from && to ? `${from} → ${to}` : "Dates unavailable"}</span>
+          </p>
+
+          <div className={styles.guests} aria-label={`${booking?.guests || 1} guests`}>
+            <GuestsIcon className={styles.icon} />
+            <span>{booking?.guests || 1}</span>
+          </div>
+        </div>
       </div>
     </Link>
   );
