@@ -3,10 +3,10 @@ import { useEffect, useState } from "react";
 import { getAuth } from "../utils/auth";
 
 /**
- * useAuth()
- * - Gir deg alltid "fersk" auth (token, name, avatar, venueManager)
- * - Re-render UI automatisk ved login/logout (authchange) + storage events.
- */
+* useAuth()
+* - Always gives you "fresh" auth (token, name, avatar, venueManager)
+* - Re-render UI automatically on login/logout (authchange) + storage events.
+*/
 export default function useAuth() {
   const [auth, setAuthState] = useState(() => getAuth());
 
@@ -18,7 +18,7 @@ export default function useAuth() {
     window.addEventListener("authchange", syncAuth);
     window.addEventListener("storage", syncAuth);
 
-    // sørg for at state er riktig ved mount
+   // make sure state is correct at mount
     syncAuth();
 
     return () => {

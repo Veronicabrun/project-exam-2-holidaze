@@ -1,5 +1,3 @@
-// src/components/ui/Icons/Icons.jsx
-
 export function GuestsIcon({ className = "" }) {
   return (
     <svg
@@ -143,6 +141,77 @@ export function ArrowRightLongIcon({ className = "" }) {
       fill="currentColor"
     >
       <path d="M30.76,2.31l7.47,7.46h-10.04c-10.65,0-20.66,4.15-28.19,11.67l2.31,2.31c6.91-6.91,16.1-10.72,25.88-10.72h10.04l-7.47,7.47,2.31,2.31,11.41-11.41L33.06,0l-2.3,2.31Z" />
+    </svg>
+  );
+}
+
+/* Email icon */
+export function EmailIcon({ className = "" }) {
+  return (
+    <svg
+      className={className}
+      viewBox="0 0 24 24"
+      aria-hidden="true"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.8"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <path d="M4 6h16v12H4z" />
+      <path d="M4 8l8 6 8-6" />
+    </svg>
+  );
+}
+
+/* Phone icon */
+export function PhoneIcon({ className = "" }) {
+  return (
+    <svg
+      className={className}
+      viewBox="0 0 24 24"
+      aria-hidden="true"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.8"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.8 19.8 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.12 4.18 2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.12.9.33 1.78.63 2.61a2 2 0 0 1-.45 2.11L8 9.91a16 16 0 0 0 6.09 6.09l1.47-1.29a2 2 0 0 1 2.11-.45c.83.3 1.71.51 2.61.63A2 2 0 0 1 22 16.92z" />
+    </svg>
+  );
+}
+
+/* Instagram icon */
+export function InstagramIcon({ className = "" }) {
+  return (
+    <svg
+      className={className}
+      viewBox="0 0 24 24"
+      aria-hidden="true"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.8"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <rect x="3" y="3" width="18" height="18" rx="5" />
+      <circle cx="12" cy="12" r="4" />
+      <circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none" />
+    </svg>
+  );
+}
+
+/* Facebook icon */
+export function FacebookIcon({ className = "" }) {
+  return (
+    <svg
+      className={className}
+      viewBox="0 0 24 24"
+      aria-hidden="true"
+      fill="currentColor"
+    >
+      <path d="M13.5 22v-8h2.7l.4-3h-3.1V9.1c0-.9.3-1.6 1.7-1.6H17V4.8c-.3 0-1.3-.1-2.5-.1-2.5 0-4.2 1.5-4.2 4.3V11H7.5v3h2.8v8h3.2Z" />
     </svg>
   );
 }
