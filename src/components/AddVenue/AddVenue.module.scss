@@ -1,7 +1,9 @@
 @use "../../styles/variables" as *;
 
 .container {
-  max-width: 760px;
+  width: 100%;
+  max-width: 860px;
+  margin: 0 auto;
 }
 
 .header {
@@ -23,6 +25,7 @@
   background: $color-white;
   border: 1px solid rgba(0, 0, 0, 0.08);
   border-radius: 16px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
   padding: 16px;
   display: grid;
   gap: 16px;
