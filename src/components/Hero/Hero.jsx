@@ -9,7 +9,7 @@ export default function Hero({ query, onQueryChange }) {
       <div className={styles.content}>
         <h1 className={styles.title}>Welcome to Holidaze</h1>
         <p className={styles.subtitle}>
-          Find and book your perfect holiday
+          Find your perfect stay, anywhere in the world
         </p>
 
         <div className={styles.searchWrap}>
