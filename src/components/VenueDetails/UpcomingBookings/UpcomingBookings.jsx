@@ -30,7 +30,7 @@ export default function UpcomingBookings({ bookings = [] }) {
                 {b.customer?.name || "Customer"}
               </div>
               <div className={styles.meta}>
-                Check in: {dateOnly(b.dateFrom)} · Checkout: {dateOnly(b.dateTo)}
+                Check-in: {dateOnly(b.dateFrom)} · Check-out: {dateOnly(b.dateTo)}
               </div>
               <div className={styles.meta}>Guests: {b.guests}</div>
             </li>
