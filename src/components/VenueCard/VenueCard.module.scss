@@ -107,11 +107,20 @@
 
 @media (max-width: 560px) {
   .topRow {
-    flex-direction: column;
+    flex-direction: row;
     align-items: flex-start;
+    justify-content: space-between;
+    gap: 10px;
   }
 
   .title {
     font-size: 17px;
+    min-width: 0;
+    flex: 1;
+  }
+
+  .price {
+    flex: 0 0 auto;
+    white-space: nowrap;
   }
 }
