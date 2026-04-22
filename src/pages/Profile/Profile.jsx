@@ -65,7 +65,6 @@ export default function Profile() {
         const profileData = await getProfile(username);
         setProfile(profileData);
 
-        // hold localStorage i sync (Nav + andre steder bruker dette)
         setAuth({
           venueManager: Boolean(profileData?.venueManager),
           avatarUrl: profileData?.avatar?.url || "",

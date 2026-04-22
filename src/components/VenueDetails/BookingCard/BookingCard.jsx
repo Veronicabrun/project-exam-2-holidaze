@@ -52,7 +52,6 @@ function getDisabledDates(bookings = []) {
 
     let current = new Date(start);
 
-    // blokker alle nettene i bookingen, men ikke checkout-dagen
     while (current < end) {
       dates.push(new Date(current));
       current = addDays(current, 1);

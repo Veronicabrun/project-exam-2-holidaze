@@ -14,13 +14,6 @@ export default function Footer() {
     <footer className={styles.footer}>
       <div className={styles.inner}>
         <div className={styles.top}>
-          <div className={styles.brand}>
-            <h2 className={styles.logo}>Holidaze</h2>
-            <p className={styles.tagline}>
-              Find and book your perfect holiday venue.
-            </p>
-          </div>
-
           <nav className={styles.links} aria-label="Footer navigation">
             <h3 className={styles.sectionTitle}>Links</h3>
             <Link to="/">Home</Link>

@@ -39,8 +39,7 @@ export default function App() {
           }
         />
 
-        {/* Venue Manag
-        is only */}
+        {/* Venue Manager only */}
         <Route
           path="admin"
           element={

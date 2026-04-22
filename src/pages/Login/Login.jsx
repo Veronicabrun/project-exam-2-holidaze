@@ -73,10 +73,8 @@ export default function Login() {
         throw new Error("Missing token or username from login response.");
       }
 
-      // Selve loginen er nå godkjent
       setAuth({ token, name });
 
-      // Ekstra profilinfo - fint å ha, men skal ikke ødelegge login
       try {
         const profile = await getProfile(name);
 
@@ -86,8 +84,8 @@ export default function Login() {
           avatarAlt: profile?.avatar?.alt || "User avatar",
         });
       } catch {
-        // Bevisst tom:
-        // brukeren er allerede logget inn
+      
+        
       }
 
       navigate("/profile", { replace: true });
