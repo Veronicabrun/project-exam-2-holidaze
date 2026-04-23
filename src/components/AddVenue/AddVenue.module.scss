@@ -63,6 +63,26 @@
   gap: 16px;
 }
 
+.checkRow {
+  display: flex;
+  gap: 18px;
+  flex-wrap: wrap;
+  margin-top: 4px;
+}
+
+.checkItem {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  color: $color-black;
+}
+
+.checkItem input {
+  width: 16px;
+  height: 16px;
+}
+
 .fieldError {
   margin: 0;
   color: $color-danger-text;
@@ -82,6 +102,15 @@
   color: $color-white;
   font-weight: 800;
   cursor: pointer;
+  transition: background 160ms ease, transform 120ms ease;
+}
+
+.button:hover:not(:disabled) {
+  background: $color-primary-hover;
+}
+
+.button:active:not(:disabled) {
+  transform: scale(0.99);
 }
 
 .button:disabled {

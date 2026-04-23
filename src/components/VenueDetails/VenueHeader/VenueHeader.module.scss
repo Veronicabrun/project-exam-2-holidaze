@@ -57,6 +57,26 @@
   color: $color-text-muted;
 }
 
+.ratingRow {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 14px;
+  font-weight: 700;
+  color: $color-black;
+}
+
+.ratingIcon {
+  width: 15px;
+  height: 15px;
+  color: $color-accent;
+  flex: 0 0 15px;
+}
+
+.ratingValue {
+  line-height: 1;
+}
+
 .meta {
   display: flex;
   flex-wrap: wrap;

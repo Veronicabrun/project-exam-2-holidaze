@@ -209,25 +209,76 @@ export default function AddVenue({ onCreated, onToast }) {
           </div>
         </div>
 
+        <div className={styles.twoCol}>
+          <div className={styles.field}>
+            <label className={styles.label} htmlFor="venue-country">
+              Country
+            </label>
+            <input
+              id="venue-country"
+              className={`${styles.input} ${showError("country") ? styles.inputError : ""}`}
+              value={values.country}
+              onChange={(e) => setField("country", e.target.value)}
+              onBlur={() => markTouched("country")}
+              aria-invalid={showError("country")}
+              aria-describedby={showError("country") ? "venue-country-error" : undefined}
+              autoComplete="country-name"
+            />
+            {showError("country") && (
+              <p id="venue-country-error" className={styles.fieldError} role="alert">
+                {errors.country}
+              </p>
+            )}
+          </div>
+
+          <div className={styles.field}>
+            <label className={styles.label} htmlFor="venue-rating">
+              Rating (0–5)
+            </label>
+            <input
+              id="venue-rating"
+              type="number"
+              min="0"
+              max="5"
+              step="0.1"
+              className={`${styles.input} ${showError("rating") ? styles.inputError : ""}`}
+              value={values.rating}
+              onChange={(e) => setField("rating", e.target.value)}
+              onBlur={() => markTouched("rating")}
+              aria-invalid={showError("rating")}
+              aria-describedby={showError("rating") ? "venue-rating-error" : undefined}
+              placeholder="Optional"
+            />
+            {showError("rating") && (
+              <p id="venue-rating-error" className={styles.fieldError} role="alert">
+                {errors.rating}
+              </p>
+            )}
+          </div>
+        </div>
+
         <div className={styles.field}>
-          <label className={styles.label} htmlFor="venue-country">
-            Country
-          </label>
-          <input
-            id="venue-country"
-            className={`${styles.input} ${showError("country") ? styles.inputError : ""}`}
-            value={values.country}
-            onChange={(e) => setField("country", e.target.value)}
-            onBlur={() => markTouched("country")}
-            aria-invalid={showError("country")}
-            aria-describedby={showError("country") ? "venue-country-error" : undefined}
-            autoComplete="country-name"
-          />
-          {showError("country") && (
-            <p id="venue-country-error" className={styles.fieldError} role="alert">
-              {errors.country}
-            </p>
-          )}
+          <span className={styles.label}>Amenities</span>
+
+          <div className={styles.checkRow}>
+            <label className={styles.checkItem}>
+              <input
+                type="checkbox"
+                checked={values.wifi}
+                onChange={(e) => setField("wifi", e.target.checked)}
+              />
+              <span>Wifi</span>
+            </label>
+
+            <label className={styles.checkItem}>
+              <input
+                type="checkbox"
+                checked={values.pets}
+                onChange={(e) => setField("pets", e.target.checked)}
+              />
+              <span>Pets allowed</span>
+            </label>
+          </div>
         </div>
 
         <button type="submit" className={styles.button} disabled={isSubmitting}>

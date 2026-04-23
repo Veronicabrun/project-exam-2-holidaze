@@ -55,6 +55,7 @@
 
 .label {
   font-weight: 500;
+  font-size: 14px;
 }
 
 .input,
@@ -88,6 +89,26 @@
   grid-template-columns: 1fr 1fr;
 }
 
+.checkRow {
+  display: flex;
+  gap: 18px;
+  flex-wrap: wrap;
+  margin-top: 4px;
+}
+
+.checkItem {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  color: $color-black;
+}
+
+.checkItem input {
+  width: 16px;
+  height: 16px;
+}
+
 .footer {
   display: flex;
   justify-content: flex-end;
@@ -102,6 +123,27 @@
   background: $color-primary;
   color: $color-white;
   cursor: pointer;
+  transition: background 160ms ease, transform 120ms ease;
+}
+
+.btn:hover:not(:disabled) {
+  background: $color-primary-hover;
+}
+
+.btn:active:not(:disabled) {
+  transform: scale(0.99);
+}
+
+.btnGhost {
+  transition: background 160ms ease, transform 120ms ease;
+}
+
+.btnGhost:hover:not(:disabled) {
+  background: $color-secondary-hover;
+}
+
+.btnGhost:active:not(:disabled) {
+  transform: scale(0.99);
 }
 
 .btnGhost {

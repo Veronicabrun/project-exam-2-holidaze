@@ -212,21 +212,69 @@ export default function EditVenueModal({
             </div>
           </div>
 
+          <div className={styles.twoCol}>
+            <div className={styles.field}>
+              <label className={styles.label} htmlFor="edit-country">
+                Country
+              </label>
+              <input
+                id="edit-country"
+                className={`${styles.input} ${showError("country") ? styles.inputError : ""}`}
+                value={values.country}
+                onChange={(e) => setField("country", e.target.value)}
+                onBlur={() => markTouched("country")}
+                aria-invalid={showError("country")}
+              />
+              {showError("country") && (
+                <p className={styles.fieldError}>{errors.country}</p>
+              )}
+            </div>
+
+            <div className={styles.field}>
+              <label className={styles.label} htmlFor="edit-rating">
+                Rating (0–5)
+              </label>
+              <input
+                id="edit-rating"
+                type="number"
+                min="0"
+                max="5"
+                step="0.1"
+                className={`${styles.input} ${showError("rating") ? styles.inputError : ""}`}
+                value={values.rating}
+                onChange={(e) => setField("rating", e.target.value)}
+                onBlur={() => markTouched("rating")}
+                aria-invalid={showError("rating")}
+                placeholder="Optional"
+              />
+              {showError("rating") && (
+                <p className={styles.fieldError}>{errors.rating}</p>
+              )}
+            </div>
+          </div>
+
           <div className={styles.field}>
-            <label className={styles.label} htmlFor="edit-country">
-              Country
-            </label>
-            <input
-              id="edit-country"
-              className={`${styles.input} ${showError("country") ? styles.inputError : ""}`}
-              value={values.country}
-              onChange={(e) => setField("country", e.target.value)}
-              onBlur={() => markTouched("country")}
-              aria-invalid={showError("country")}
-            />
-            {showError("country") && (
-              <p className={styles.fieldError}>{errors.country}</p>
-            )}
+            <span className={styles.label}>Amenities</span>
+
+            <div className={styles.checkRow}>
+              <label className={styles.checkItem}>
+                <input
+                  type="checkbox"
+                  checked={values.wifi}
+                  onChange={(e) => setField("wifi", e.target.checked)}
+                />
+                <span>Wifi</span>
+              </label>
+
+              <label className={styles.checkItem}>
+                <input
+                  type="checkbox"
+                  checked={values.pets}
+                  onChange={(e) => setField("pets", e.target.checked)}
+                />
+                <span>Pets allowed</span>
+              </label>
+            </div>
           </div>
 
           <div className={styles.footer}>

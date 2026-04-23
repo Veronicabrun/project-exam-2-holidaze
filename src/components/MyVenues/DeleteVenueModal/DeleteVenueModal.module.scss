@@ -36,6 +36,15 @@
   border-radius: 10px;
   padding: 8px 10px;
   cursor: pointer;
+  transition: background 140ms ease, transform 120ms ease;
+}
+
+.close:hover:not(:disabled) {
+  background: $color-surface-muted;
+}
+
+.close:active:not(:disabled) {
+  transform: scale(0.97);
 }
 
 .text {
@@ -62,6 +71,15 @@
   background: $color-secondary;
   color: $color-primary;
   cursor: pointer;
+  transition: background 160ms ease, transform 120ms ease;
+}
+
+.btnGhost:hover:not(:disabled) {
+  background: $color-secondary-hover;
+}
+
+.btnGhost:active:not(:disabled) {
+  transform: scale(0.99);
 }
 
 .btnDanger {
@@ -71,6 +89,15 @@
   background: $color-accent;
   color: $color-white;
   cursor: pointer;
+  transition: background 160ms ease, transform 120ms ease;
+}
+
+.btnDanger:hover:not(:disabled) {
+  background: $color-accent-hover;
+}
+
+.btnDanger:active:not(:disabled) {
+  transform: scale(0.99);
 }
 
 .btnGhost:disabled,

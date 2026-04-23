@@ -1,5 +1,11 @@
 import { Link } from "react-router-dom";
-import { GuestsIcon, LocationIcon } from "../ui/Icons/Icons";
+import {
+  GuestsIcon,
+  LocationIcon,
+  WifiIcon,
+  PetsIcon,
+  StarIcon,
+} from "../ui/Icons/Icons";
 import styles from "./VenueCard.module.scss";
 
 function safeText(value, fallback = "") {
@@ -19,6 +25,10 @@ export default function VenueCard({ venue }) {
   const country = safeText(venue?.location?.country, "Somewhere in the world");
   const maxGuests = venue?.maxGuests;
   const price = venue?.price;
+  const rating = typeof venue?.rating === "number" ? venue.rating : 0;
+
+  const hasWifi = Boolean(venue?.meta?.wifi);
+  const hasPets = Boolean(venue?.meta?.pets);
 
   const href = id ? `/venue/${id}` : "/venues";
 
@@ -49,6 +59,11 @@ export default function VenueCard({ venue }) {
           </div>
         </div>
 
+        <div className={styles.ratingRow}>
+          <StarIcon className={styles.ratingIcon} />
+          <span className={styles.ratingValue}>{rating.toFixed(1)}</span>
+        </div>
+
         <div className={styles.metaRow}>
           <span className={styles.metaItem}>
             <GuestsIcon className={styles.metaIcon} />
@@ -63,6 +78,26 @@ export default function VenueCard({ venue }) {
             <LocationIcon className={styles.metaIcon} />
             <span>{country}</span>
           </span>
+
+          {hasWifi && (
+            <>
+              <span className={styles.metaDivider}>•</span>
+              <span className={styles.metaItem}>
+                <WifiIcon className={styles.metaIcon} />
+                <span>Wifi</span>
+              </span>
+            </>
+          )}
+
+          {hasPets && (
+            <>
+              <span className={styles.metaDivider}>•</span>
+              <span className={styles.metaItem}>
+                <PetsIcon className={styles.metaIcon} />
+                <span>Pets</span>
+              </span>
+            </>
+          )}
         </div>
       </div>
     </Link>

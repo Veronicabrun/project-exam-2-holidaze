@@ -52,7 +52,6 @@ export function SearchIcon({ className = "" }) {
   );
 }
 
-/* Edit icon */
 export function EditIcon({ className = "" }) {
   return (
     <svg
@@ -71,7 +70,6 @@ export function EditIcon({ className = "" }) {
   );
 }
 
-/* Trash icon */
 export function DeleteIcon({ className = "" }) {
   return (
     <svg
@@ -92,7 +90,6 @@ export function DeleteIcon({ className = "" }) {
   );
 }
 
-/* Calendar icon */
 export function BookingsIcon({ className = "" }) {
   return (
     <svg
@@ -112,7 +109,6 @@ export function BookingsIcon({ className = "" }) {
   );
 }
 
-/* Plane icon */
 export function PlaneTripIcon({ className = "" }) {
   return (
     <svg
@@ -131,7 +127,6 @@ export function PlaneTripIcon({ className = "" }) {
   );
 }
 
-/* Arrow icon */
 export function ArrowRightLongIcon({ className = "" }) {
   return (
     <svg
@@ -145,7 +140,6 @@ export function ArrowRightLongIcon({ className = "" }) {
   );
 }
 
-/* Email icon */
 export function EmailIcon({ className = "" }) {
   return (
     <svg
@@ -164,7 +158,6 @@ export function EmailIcon({ className = "" }) {
   );
 }
 
-/* Phone icon */
 export function PhoneIcon({ className = "" }) {
   return (
     <svg
@@ -182,7 +175,6 @@ export function PhoneIcon({ className = "" }) {
   );
 }
 
-/* Instagram icon */
 export function InstagramIcon({ className = "" }) {
   return (
     <svg
@@ -202,7 +194,6 @@ export function InstagramIcon({ className = "" }) {
   );
 }
 
-/* Facebook icon */
 export function FacebookIcon({ className = "" }) {
   return (
     <svg
@@ -212,6 +203,60 @@ export function FacebookIcon({ className = "" }) {
       fill="currentColor"
     >
       <path d="M13.5 22v-8h2.7l.4-3h-3.1V9.1c0-.9.3-1.6 1.7-1.6H17V4.8c-.3 0-1.3-.1-2.5-.1-2.5 0-4.2 1.5-4.2 4.3V11H7.5v3h2.8v8h3.2Z" />
+    </svg>
+  );
+}
+
+export function WifiIcon({ className = "" }) {
+  return (
+    <svg
+      className={className}
+      viewBox="0 0 24 24"
+      aria-hidden="true"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.8"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <path d="M2.5 8.5C7.5 4.5 16.5 4.5 21.5 8.5" />
+      <path d="M6 12c3.2-2.6 8.8-2.6 12 0" />
+      <path d="M9.5 15.5c1.5-1.2 3.5-1.2 5 0" />
+      <circle cx="12" cy="19" r="1" fill="currentColor" stroke="none" />
+    </svg>
+  );
+}
+
+export function PetsIcon({ className = "" }) {
+  return (
+    <svg
+      className={className}
+      viewBox="0 0 24 24"
+      aria-hidden="true"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.8"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <circle cx="5" cy="9" r="2" />
+      <circle cx="9" cy="5" r="2" />
+      <circle cx="15" cy="5" r="2" />
+      <circle cx="19" cy="9" r="2" />
+      <path d="M12 21c-3.2 0-5.5-2.3-5.5-4.5 0-1.7 1.3-3 3-3 1 0 1.9.5 2.5 1.2.6-.7 1.5-1.2 2.5-1.2 1.7 0 3 1.3 3 3 0 2.2-2.3 4.5-5.5 4.5z" />
+    </svg>
+  );
+}
+
+export function StarIcon({ className = "" }) {
+  return (
+    <svg
+      className={className}
+      viewBox="0 0 24 24"
+      aria-hidden="true"
+      fill="currentColor"
+    >
+      <path d="M12 2.8l2.84 5.76 6.35.92-4.59 4.47 1.08 6.32L12 17.33 6.32 20.27l1.08-6.32L2.81 9.48l6.35-.92L12 2.8z" />
     </svg>
   );
 }

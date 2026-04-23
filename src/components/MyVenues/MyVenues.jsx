@@ -10,6 +10,9 @@ import {
   BookingsIcon,
   GuestsIcon,
   LocationIcon,
+  WifiIcon,
+  PetsIcon,
+  StarIcon,
 } from "../ui/Icons/Icons";
 
 import EditVenueModal from "./EditVenueModal/EditVenueModal";
@@ -162,141 +165,172 @@ export default function MyVenues({ username, onToast }) {
 
       {hasVenues && (
         <ul className={styles.grid}>
-          {venues.map((v) => (
-            <li
-              key={v.id}
-              className={styles.card}
-              onClick={() => navigate(`/venue/${v.id}`)}
-              aria-label={`View ${v.name}`}
-            >
-              <div className={styles.mediaWrap}>
-                <img
-                  className={styles.media}
-                  src={
-                    v.media?.[0]?.url ||
-                    "https://placehold.co/600x400?text=Venue"
-                  }
-                  alt={v.media?.[0]?.alt || v.name || "Venue"}
-                  loading="lazy"
-                />
-              </div>
+          {venues.map((v) => {
+            const rating = typeof v?.rating === "number" ? v.rating : 0;
+            const hasWifi = Boolean(v?.meta?.wifi);
+            const hasPets = Boolean(v?.meta?.pets);
 
-              <div className={styles.cardBody}>
-                <div className={styles.topRow}>
-                  <h3 className={styles.cardTitle}>{v.name}</h3>
+            return (
+              <li
+                key={v.id}
+                className={styles.card}
+                onClick={() => navigate(`/venue/${v.id}`)}
+                aria-label={`View ${v.name}`}
+              >
+                <div className={styles.mediaWrap}>
+                  <img
+                    className={styles.media}
+                    src={
+                      v.media?.[0]?.url ||
+                      "https://placehold.co/600x400?text=Venue"
+                    }
+                    alt={v.media?.[0]?.alt || v.name || "Venue"}
+                    loading="lazy"
+                  />
+                </div>
 
-                  <div className={styles.price}>
-                    <span className={styles.priceValue}>${v.price}</span>
-                    <span className={styles.priceSuffix}>/ night</span>
+                <div className={styles.cardBody}>
+                  <div className={styles.topRow}>
+                    <h3 className={styles.cardTitle}>{v.name}</h3>
+
+                    <div className={styles.price}>
+                      <span className={styles.priceValue}>${v.price}</span>
+                      <span className={styles.priceSuffix}>/ night</span>
+                    </div>
+                  </div>
+
+                  <p className={styles.cardDesc}>
+                    {v.description || "No description."}
+                  </p>
+
+                  <div className={styles.ratingRow}>
+                    <StarIcon className={styles.ratingIcon} />
+                    <span className={styles.ratingValue}>{rating.toFixed(1)}</span>
+                  </div>
+
+                  <div className={styles.metaRow}>
+                    <span className={styles.metaItem}>
+                      <GuestsIcon className={styles.metaIcon} />
+                      <span>
+                        {v.maxGuests ? `${v.maxGuests} guests` : "Guests unavailable"}
+                      </span>
+                    </span>
+
+                    <span className={styles.metaDivider}>•</span>
+
+                    <span className={styles.metaItem}>
+                      <LocationIcon className={styles.metaIcon} />
+                      <span>{v.location?.country || "Country unavailable"}</span>
+                    </span>
+
+                    {hasWifi && (
+                      <>
+                        <span className={styles.metaDivider}>•</span>
+                        <span className={styles.metaItem}>
+                          <WifiIcon className={styles.metaIcon} />
+                          <span>Wifi</span>
+                        </span>
+                      </>
+                    )}
+
+                    {hasPets && (
+                      <>
+                        <span className={styles.metaDivider}>•</span>
+                        <span className={styles.metaItem}>
+                          <PetsIcon className={styles.metaIcon} />
+                          <span>Pets</span>
+                        </span>
+                      </>
+                    )}
+                  </div>
+
+                  <div className={styles.actions}>
+                    <button
+                      type="button"
+                      className={styles.iconBtn}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        openEdit(v);
+                      }}
+                      aria-label={`Edit ${v.name}`}
+                      title="Edit"
+                    >
+                      <EditIcon />
+                    </button>
+
+                    <button
+                      type="button"
+                      className={`${styles.iconBtn} ${styles.danger}`}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        openDelete(v);
+                      }}
+                      aria-label={`Delete ${v.name}`}
+                      title="Delete"
+                    >
+                      <DeleteIcon />
+                    </button>
+
+                    <button
+                      type="button"
+                      className={`${styles.iconBtn} ${
+                        expanded === v.id ? styles.activeIcon : ""
+                      }`}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        toggleBookings(v.id);
+                      }}
+                      aria-label={
+                        expanded === v.id
+                          ? `Hide bookings for ${v.name}`
+                          : `View bookings for ${v.name}`
+                      }
+                      title={expanded === v.id ? "Hide bookings" : "View bookings"}
+                    >
+                      <BookingsIcon />
+                    </button>
                   </div>
                 </div>
 
-                <p className={styles.cardDesc}>
-                  {v.description || "No description."}
-                </p>
-
-                <div className={styles.metaRow}>
-                  <span className={styles.metaItem}>
-                    <GuestsIcon className={styles.metaIcon} />
-                    <span>
-                      {v.maxGuests ? `${v.maxGuests} guests` : "Guests unavailable"}
-                    </span>
-                  </span>
-
-                  <span className={styles.metaDivider}>•</span>
-
-                  <span className={styles.metaItem}>
-                    <LocationIcon className={styles.metaIcon} />
-                    <span>{v.location?.country || "Country unavailable"}</span>
-                  </span>
-                </div>
-
-                <div className={styles.actions}>
-                  <button
-                    type="button"
-                    className={styles.iconBtn}
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      openEdit(v);
-                    }}
-                    aria-label={`Edit ${v.name}`}
-                    title="Edit"
+                {expanded === v.id && (
+                  <div
+                    className={styles.bookings}
+                    onClick={(e) => e.stopPropagation()}
                   >
-                    <EditIcon />
-                  </button>
+                    {loadingBookingsId === v.id ? (
+                      <Loading text="Loading bookings..." />
+                    ) : (
+                      <>
+                        <h4 className={styles.bookingsTitle}>Bookings</h4>
 
-                  <button
-                    type="button"
-                    className={`${styles.iconBtn} ${styles.danger}`}
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      openDelete(v);
-                    }}
-                    aria-label={`Delete ${v.name}`}
-                    title="Delete"
-                  >
-                    <DeleteIcon />
-                  </button>
-
-                  <button
-                    type="button"
-                    className={`${styles.iconBtn} ${
-                      expanded === v.id ? styles.activeIcon : ""
-                    }`}
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      toggleBookings(v.id);
-                    }}
-                    aria-label={
-                      expanded === v.id
-                        ? `Hide bookings for ${v.name}`
-                        : `View bookings for ${v.name}`
-                    }
-                    title={expanded === v.id ? "Hide bookings" : "View bookings"}
-                  >
-                    <BookingsIcon />
-                  </button>
-                </div>
-              </div>
-
-              {expanded === v.id && (
-                <div
-                  className={styles.bookings}
-                  onClick={(e) => e.stopPropagation()}
-                >
-                  {loadingBookingsId === v.id ? (
-                    <Loading text="Loading bookings..." />
-                  ) : (
-                    <>
-                      <h4 className={styles.bookingsTitle}>Bookings</h4>
-
-                      {(bookingsByVenue[v.id] || []).length === 0 ? (
-                        <p className={styles.bookingsEmpty}>
-                          No bookings yet for this venue.
-                        </p>
-                      ) : (
-                        <ul className={styles.bookingList}>
-                          {(bookingsByVenue[v.id] || []).map((b) => (
-                            <li key={b.id} className={styles.bookingItem}>
-                              <div>
-                                <strong>{b.customer?.name || "Customer"}</strong>
-                              </div>
-                              <div className={styles.bookingMeta}>
-                                {dateOnly(b.dateFrom)} → {dateOnly(b.dateTo)}
-                              </div>
-                              <div className={styles.bookingMeta}>
-                                Guests: {b.guests}
-                              </div>
-                            </li>
-                          ))}
-                        </ul>
-                      )}
-                    </>
-                  )}
-                </div>
-              )}
-            </li>
-          ))}
+                        {(bookingsByVenue[v.id] || []).length === 0 ? (
+                          <p className={styles.bookingsEmpty}>
+                            No bookings yet for this venue.
+                          </p>
+                        ) : (
+                          <ul className={styles.bookingList}>
+                            {(bookingsByVenue[v.id] || []).map((b) => (
+                              <li key={b.id} className={styles.bookingItem}>
+                                <div>
+                                  <strong>{b.customer?.name || "Customer"}</strong>
+                                </div>
+                                <div className={styles.bookingMeta}>
+                                  {dateOnly(b.dateFrom)} → {dateOnly(b.dateTo)}
+                                </div>
+                                <div className={styles.bookingMeta}>
+                                  Guests: {b.guests}
+                                </div>
+                              </li>
+                            ))}
+                          </ul>
+                        )}
+                      </>
+                    )}
+                  </div>
+                )}
+              </li>
+            );
+          })}
         </ul>
       )}
 

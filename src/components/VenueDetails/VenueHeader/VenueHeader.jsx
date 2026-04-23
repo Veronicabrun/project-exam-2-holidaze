@@ -1,4 +1,10 @@
-import { GuestsIcon, LocationIcon } from "../../ui/Icons/Icons";
+import {
+  GuestsIcon,
+  LocationIcon,
+  WifiIcon,
+  PetsIcon,
+  StarIcon,
+} from "../../ui/Icons/Icons";
 import styles from "./VenueHeader.module.scss";
 
 function safeText(value, fallback = "") {
@@ -6,7 +12,8 @@ function safeText(value, fallback = "") {
 }
 
 export default function VenueHeader({ venue }) {
-  const imageUrl = venue?.media?.[0]?.url || "https://placehold.co/1200x700?text=Venue";
+  const imageUrl =
+    venue?.media?.[0]?.url || "https://placehold.co/1200x700?text=Venue";
   const imageAlt = venue?.media?.[0]?.alt || venue?.name || "Venue image";
 
   const city = safeText(venue?.location?.city);
@@ -16,6 +23,10 @@ export default function VenueHeader({ venue }) {
   const ownerName = venue?.owner?.name || "";
   const ownerAvatarUrl = venue?.owner?.avatar?.url || "";
   const ownerAvatarAlt = venue?.owner?.avatar?.alt || ownerName || "Host avatar";
+
+  const rating = typeof venue?.rating === "number" ? venue.rating : 0;
+  const hasWifi = Boolean(venue?.meta?.wifi);
+  const hasPets = Boolean(venue?.meta?.pets);
 
   return (
     <header className={styles.header}>
@@ -33,6 +44,11 @@ export default function VenueHeader({ venue }) {
           </div>
         </div>
 
+        <div className={styles.ratingRow}>
+          <StarIcon className={styles.ratingIcon} />
+          <span className={styles.ratingValue}>{rating.toFixed(1)}</span>
+        </div>
+
         <div className={styles.meta}>
           <span className={styles.pill}>
             <GuestsIcon className={styles.icon} />
@@ -43,6 +59,20 @@ export default function VenueHeader({ venue }) {
             <span className={styles.pill}>
               <LocationIcon className={styles.icon} />
               <span>{location}</span>
+            </span>
+          ) : null}
+
+          {hasWifi ? (
+            <span className={styles.pill}>
+              <WifiIcon className={styles.icon} />
+              <span>Wifi</span>
+            </span>
+          ) : null}
+
+          {hasPets ? (
+            <span className={styles.pill}>
+              <PetsIcon className={styles.icon} />
+              <span>Pets</span>
             </span>
           ) : null}
 
