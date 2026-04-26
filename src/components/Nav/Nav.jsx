@@ -8,6 +8,7 @@ export default function Nav() {
   const navigate = useNavigate();
   const location = useLocation();
   const userMenuRef = useRef(null);
+  const mobileToggleRef = useRef(null);
 
   const auth = useAuth();
   const isLoggedIn = Boolean(auth?.token);
@@ -35,7 +36,11 @@ export default function Nav() {
     function onKeyDown(e) {
       if (e.key === "Escape") {
         setIsUserMenuOpen(false);
-        setIsMobileMenuOpen(false);
+
+        if (isMobileMenuOpen) {
+          setIsMobileMenuOpen(false);
+          mobileToggleRef.current?.focus();
+        }
       }
     }
 
@@ -49,7 +54,7 @@ export default function Nav() {
       window.removeEventListener("mousedown", onMouseDown);
       window.removeEventListener("keydown", onKeyDown);
     };
-  }, [isUserMenuOpen]);
+  }, [isUserMenuOpen, isMobileMenuOpen]);
 
   useEffect(() => {
     if (isMobileMenuOpen) {
@@ -73,11 +78,13 @@ export default function Nav() {
 
   function closeMobileMenu() {
     setIsMobileMenuOpen(false);
+    mobileToggleRef.current?.focus();
   }
 
   function goToProfile() {
     setIsUserMenuOpen(false);
     setIsMobileMenuOpen(false);
+    mobileToggleRef.current?.focus();
     navigate("/profile");
   }
 
@@ -85,6 +92,7 @@ export default function Nav() {
     doLogout();
     setIsUserMenuOpen(false);
     setIsMobileMenuOpen(false);
+    mobileToggleRef.current?.focus();
     navigate("/login", { replace: true });
   }
 
@@ -176,6 +184,7 @@ export default function Nav() {
           </nav>
 
           <button
+            ref={mobileToggleRef}
             type="button"
             className={styles.mobileToggle}
             onClick={openMobileMenu}
@@ -249,7 +258,7 @@ export default function Nav() {
             <NavLink
               to="/login"
               className={({ isActive }) =>
-                `${styles.mobileLink} ${isActive ? styles.mobileActive : ""}`
+                `${styles.mobileLink} ${styles.mobileActive ? styles.mobileActive : ""}`
               }
               onClick={closeMobileMenu}
             >
