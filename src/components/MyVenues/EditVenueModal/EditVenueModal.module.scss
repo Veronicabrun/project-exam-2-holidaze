@@ -33,9 +33,23 @@
 .close {
   border: 1px solid $color-border-soft;
   background: $color-white;
+  color: $color-black;
   border-radius: 10px;
   padding: 8px 10px;
   cursor: pointer;
+  transition: color 160ms ease, border-color 160ms ease, background 160ms ease;
+}
+
+.close:hover {
+  color: $color-primary;
+  border-color: $color-primary-25;
+  background: $color-surface-muted;
+}
+
+.checkItem input {
+  width: 16px;
+  height: 16px;
+  accent-color: $color-primary;
 }
 
 .subtitle {
@@ -104,10 +118,6 @@
   color: $color-black;
 }
 
-.checkItem input {
-  width: 16px;
-  height: 16px;
-}
 
 .footer {
   display: flex;
