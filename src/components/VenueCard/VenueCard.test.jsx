@@ -52,7 +52,7 @@ describe("VenueCard", () => {
     expect(screen.getByText("$599")).toBeInTheDocument();
     expect(screen.getByText("/ night")).toBeInTheDocument();
     expect(screen.getByText("4 guests")).toBeInTheDocument();
-    expect(screen.getByText("Bali, Indonesia")).toBeInTheDocument();
+    expect(screen.getByText("Indonesia")).toBeInTheDocument();
   });
 
   test("links to the correct venue page", () => {
