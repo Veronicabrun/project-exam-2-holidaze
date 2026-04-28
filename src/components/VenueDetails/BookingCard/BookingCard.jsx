@@ -130,7 +130,7 @@ export default function BookingCard({
 
       {isLoggedIn && isOwner && (
         <div className={styles.noticeInfo}>
-          You manage this venue, so you can’t book it yourself.
+          You are the manager of this venue, so booking is disabled.
         </div>
       )}
 
