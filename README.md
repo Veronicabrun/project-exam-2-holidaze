@@ -1,70 +1,213 @@
-# Getting Started with Create React App
+# Holidaze 🌍
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+## 📖 Description
 
-## Available Scripts
+Holidaze is a venue booking application developed as part of Project Exam 2 at Noroff.
 
-In the project directory, you can run:
+The application allows users to browse venues, book stays, and manage venues depending on their user role.
 
-### `npm start`
+* Visitors can browse venues and view venue details
+* Registered customers can book venues and manage their profile
+* Venue managers can create, edit, delete, and manage their own venues
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+⚠️ This is an exam project. Bookings are not real.
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+---
 
-### `npm test`
+## 🚀 Live Site
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+👉 https://your-netlify-link.netlify.app
 
-### `npm run build`
+---
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+## 📁 Repository
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+👉 https://github.com/Veronicabrun/project-exam-2-holidaze
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+---
 
-### `npm run eject`
+## 📊 Project Planning
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+GitHub Project board (Kanban + timeline):
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+👉 https://github.com/users/Veronicabrun/projects/1
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+---
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+## ✨ Features
 
-## Learn More
+### 👀 For all visitors
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+* View the home page
+* View all venues
+* Search and filter venues
+* View details for a specific venue
+* View venue images and information
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+Visitors cannot:
 
-### Code Splitting
+* Book venues
+* Access profile features
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+---
 
-### Analyzing the Bundle Size
+### 👤 For registered customers
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+* Register with a `stud.noroff.no` email
+* Login and logout
+* Book venues
+* Select booking dates using React Datepicker
+* Select number of guests
+* View upcoming bookings
+* View booked venues
+* Update avatar
 
-### Making a Progressive Web App
+---
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+### 🏢 For venue managers
 
-### Advanced Configuration
+* Access visitor features
+* Create new venues
+* Edit owned venues
+* Delete owned venues
+* View bookings made on owned venues
+* Update avatar
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+---
 
-### Deployment
+## 🛠️ Technologies
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+* React (Create React App)
+* React Router DOM
+* SCSS / Sass modules
+* React Datepicker
+* Noroff Holidaze API
+* Netlify
+* ESLint (via react-scripts)
+* Jest & React Testing Library
 
-### `npm run build` fails to minify
+---
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+## ⚙️ Getting Started
+
+### Clone the repository
+
+```bash
+git clone https://github.com/Veronicabrun/project-exam-2-holidaze.git
+cd project-exam-2-holidaze
+```
+
+### Install dependencies
+
+```bash
+npm install
+```
+
+### Run the project locally
+
+```bash
+npm start
+```
+
+The application will run at:
+http://localhost:3000
+
+### Build for production
+
+```bash
+npm run build
+```
+
+---
+
+## 🔑 Environment Variables
+
+Create a `.env` file in the root of the project:
+
+```env
+REACT_APP_API_KEY=your_api_key
+REACT_APP_API_BASE=https://v2.api.noroff.dev
+```
+
+You can get the API key from Noroff’s student portal.
+
+Do not commit your real `.env` file to GitHub.
+
+---
+
+## 🧪 Testing
+
+The project includes tests for components, pages, hooks, services, and validation logic.
+
+Run all tests with:
+
+```bash
+npm test -- --watchAll=false
+```
+
+Current result:
+
+```txt
+Test Suites: 8 passed, 8 total  
+Tests: 39 passed, 39 total  
+```
+
+---
+
+## ✅ Quality Assurance
+
+The application has been tested for:
+
+* Login, registration, and logout
+* Venue listing
+* Search and filtering
+* Venue detail page
+* Booking functionality
+* Profile features
+* Avatar updates
+* Venue manager functionality
+* Browser console errors
+* Netlify production build
+* Routing on deployed version
+
+---
+
+## 🚀 Deployment
+
+The application is deployed using Netlify.
+
+Steps:
+
+* Connected GitHub repository
+* Added environment variables
+* Configured build settings
+* Added `_redirects` for React routing
+* Fixed CI build issues (warnings treated as errors)
+* Verified all routes work in production
+
+Netlify settings:
+
+```txt
+Build command: npm run build  
+Publish directory: build  
+```
+
+Environment variables used in Netlify:
+
+```env
+REACT_APP_API_KEY  
+REACT_APP_API_BASE  
+CI=false  
+```
+
+---
+
+## 📸 Screenshots
+
+(Add screenshots here)
+
+---
+
+## 👩‍💻 Author
+
+Veronica 
