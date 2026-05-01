@@ -1,0 +1,22 @@
+@use "./variables" as *;
+
+@mixin card-surface($shadow: $shadow-card-soft) {
+  background: $color-white;
+  border: 1px solid $color-border;
+  border-radius: 16px;
+  box-shadow: $shadow;
+}
+
+@mixin primary-button {
+  border: 1px solid $color-primary-90;
+  background: $color-primary;
+  color: $color-white;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: background 160ms ease, transform 120ms ease;
+}
+
+@mixin input-focus {
+  border-color: $color-primary-90;
+  box-shadow: 0 0 0 4px $color-primary-18;
+}

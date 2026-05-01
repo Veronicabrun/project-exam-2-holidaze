@@ -1,10 +1,8 @@
 @use "../../../styles/variables" as *;
+@use "../../../styles/mixins" as *;
 
 .card {
-  background: $color-white;
-  border: 1px solid $color-border;
-  border-radius: 16px;
-  box-shadow: 0 18px 45px rgba(0, 0, 0, 0.08);
+  @include card-surface(0 18px 45px rgba(0, 0, 0, 0.08));
   padding: 16px;
 }
 
@@ -59,12 +57,6 @@
   gap: 12px;
 }
 
-.row2 {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 10px;
-}
-
 .field {
   display: grid;
   gap: 6px;
@@ -85,203 +77,12 @@
 }
 
 .input:focus {
-  border-color: $color-primary-90;
-  box-shadow: 0 0 0 4px $color-primary-18;
-}
-
-.stepper {
-  display: grid;
-  grid-template-columns: 44px 1fr 44px;
-  gap: 10px;
-  align-items: center;
-}
-
-.stepBtn {
-  height: 44px;
-  border-radius: 12px;
-  border: 1px solid $color-border-light;
-  background: $color-white;
-  cursor: pointer;
-  font-size: 18px;
-}
-
-.stepBtn:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
-}
-
-.stepInput {
-  height: 44px;
-  border-radius: 12px;
-  border: 1px solid $color-border-light;
-  padding: 0 12px;
-  outline: none;
-  width: 100%;
-  box-sizing: border-box;
-}
-
-.hint {
-  font-size: 12px;
-  opacity: 0.75;
-}
-
-.fieldError {
-  margin: 0;
-  color: $color-danger-text;
-}
-
-.success {
-  margin: 0;
-  color: $color-primary;
+  @include input-focus;
 }
 
 .btn {
+  @include primary-button;
   width: 100%;
   padding: 12px 14px;
-  border-radius: 12px;
-  border: 1px solid $color-primary-90;
-  background: $color-primary;
-  color: $color-white;
   font-weight: 800;
-  cursor: pointer;
-  transition: background 160ms ease, transform 120ms ease;
-}
-
-.btn:hover:not(:disabled) {
-  background: $color-primary-hover;
-}
-
-.btn:active:not(:disabled) {
-  transform: scale(0.99);
-}
-
-.btn:disabled {
-  background: rgba(4, 78, 81, 0.75);
-  border-color: rgba(4, 78, 81, 0.75);
-  color: $color-white;
-  cursor: not-allowed;
-  opacity: 1;
-}
-
-.total {
-  border-top: 1px solid $color-border;
-  padding-top: 12px;
-  display: grid;
-  gap: 6px;
-}
-
-.totalRow {
-  display: flex;
-  align-items: baseline;
-  justify-content: space-between;
-}
-
-.totalLabel {
-  font-weight: 800;
-}
-
-.totalValue {
-  font-weight: 900;
-  color: $color-accent;
-}
-
-.totalSub {
-  font-size: 12px;
-  color: $color-text-muted;
-}
-
-.datePreview {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 10px;
-}
-
-.previewBox {
-  border: 1px solid $color-border-light;
-  border-radius: 12px;
-  padding: 10px 12px;
-  background: $color-white;
-  display: grid;
-  gap: 4px;
-}
-
-.previewLabel {
-  font-size: 12px;
-  font-weight: 700;
-  opacity: 0.75;
-}
-
-.previewValue {
-  font-size: 14px;
-  font-weight: 600;
-}
-
-/* react-datepicker wrapper */
-:global(.react-datepicker-wrapper) {
-  width: 100%;
-}
-
-:global(.react-datepicker__input-container) {
-  width: 100%;
-}
-
-:global(.react-datepicker-popper) {
-  z-index: 30;
-}
-
-:global(.react-datepicker) {
-  border: 1px solid $color-border-light;
-  border-radius: 12px;
-  font-family: $font-base;
-  overflow: hidden;
-}
-
-:global(.react-datepicker__header) {
-  background: $color-white;
-  border-bottom: 1px solid $color-border;
-}
-
-:global(.react-datepicker__current-month) {
-  font-weight: 800;
-}
-
-:global(.react-datepicker__day-name) {
-  color: $color-black;
-}
-
-:global(.react-datepicker__day) {
-  border-radius: 8px;
-}
-
-:global(.react-datepicker__day:hover) {
-  background: $color-secondary;
-}
-
-:global(.react-datepicker__day--disabled) {
-  color: #b8b8b8;
-  text-decoration: line-through;
-  cursor: not-allowed;
-  background: transparent;
-}
-
-:global(.react-datepicker__day--disabled:hover) {
-  background: transparent;
-}
-
-:global(.react-datepicker__day--selected),
-:global(.react-datepicker__day--in-selecting-range),
-:global(.react-datepicker__day--in-range),
-:global(.react-datepicker__day--keyboard-selected) {
-  background-color: $color-primary !important;
-  color: $color-white !important;
-}
-
-@media (max-width: 980px) {
-  .row2 {
-    grid-template-columns: 1fr;
-  }
-
-  .datePreview {
-    grid-template-columns: 1fr;
-  }
 }
