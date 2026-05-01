@@ -8,7 +8,6 @@ import { profileByName, profileBookingsByName } from "../config/api";
  * @returns {Promise<Object>} Profile data from the API.
  */
 export function getProfile(name) {
-  console.log("service:getProfile ->", name);
   return request(profileByName(name));
 }
 
@@ -19,7 +18,6 @@ export function getProfile(name) {
  * @returns {Promise<Array>} List of bookings.
  */
 export function getMyBookings(name) {
-  console.log("service:getMyBookings ->", name);
   return request(`${profileBookingsByName(name)}?_venue=true`);
 }
 
@@ -33,8 +31,6 @@ export function getMyBookings(name) {
  * @returns {Promise<Object>} Updated profile data.
  */
 export function updateAvatar(username, avatar) {
-  console.log("service:updateAvatar ->", { username, avatar });
-
   return request(profileByName(username), {
     method: "PUT",
     body: JSON.stringify({

@@ -14,22 +14,15 @@ import Register from "./pages/Register/Register";
 import Admin from "./pages/Admin/Admin";
 
 export default function App() {
-  console.log("App.js:17 App rendered");
-
   return (
     <Routes>
       <Route path="/" element={<Layout />}>
-        {/* Public */}
         <Route index element={<Home />} />
         <Route path="venues" element={<Venues />} />
-
-        {/* Important: this must match your Links: /venue/:id */}
         <Route path="venue/:id" element={<Venue />} />
-
         <Route path="login" element={<Login />} />
         <Route path="register" element={<Register />} />
 
-        {/* Protected */}
         <Route
           path="profile"
           element={
@@ -39,7 +32,6 @@ export default function App() {
           }
         />
 
-        {/* Venue Manager only */}
         <Route
           path="admin"
           element={
@@ -54,7 +46,6 @@ export default function App() {
     </Routes>
   );
 }
-
 
 
 

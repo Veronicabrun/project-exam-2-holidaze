@@ -18,19 +18,16 @@ export default function AvatarEditor({
   const [error, setError] = useState("");
 
   useEffect(() => {
-    console.log("AvatarEditor: props changed ->", { avatarUrl, avatarAlt });
     setUrl(avatarUrl || "");
     setAlt(avatarAlt || "User avatar");
   }, [avatarUrl, avatarAlt]);
 
   function openModal() {
-    console.log("AvatarEditor: openModal");
     setError("");
     setIsOpen(true);
   }
 
   function closeModal() {
-    console.log("AvatarEditor: closeModal");
     setIsOpen(false);
   }
 
@@ -40,30 +37,24 @@ export default function AvatarEditor({
 
     if (!username) {
       setError("Missing username. Cannot update avatar.");
-      console.log("AvatarEditor: missing username");
       return;
     }
 
     if (!url.trim()) {
       setError("Please provide an image URL.");
-      console.log("AvatarEditor: empty url");
       return;
     }
 
     try {
       setLoading(true);
-      console.log("AvatarEditor: saving avatar ->", { username, url, alt });
 
       const res = await updateAvatar(username, {
         url: url.trim(),
         alt: alt.trim(),
       });
-      console.log("AvatarEditor: updateAvatar response ->", res);
 
       const updatedProfile = res?.data || res;
       const updatedAvatar = updatedProfile?.avatar;
-
-      console.log("AvatarEditor: updated avatar from API ->", updatedAvatar);
 
       if (onAvatarUpdated && updatedAvatar?.url) {
         onAvatarUpdated(updatedAvatar);
@@ -71,7 +62,6 @@ export default function AvatarEditor({
 
       closeModal();
     } catch (err) {
-      console.error("AvatarEditor: update error ->", err);
       setError(err.message || "Could not update avatar.");
     } finally {
       setLoading(false);
@@ -108,7 +98,6 @@ export default function AvatarEditor({
           aria-label="Edit avatar modal"
           onMouseDown={(e) => {
             if (e.target.classList.contains(styles.backdrop)) {
-              console.log("AvatarEditor: backdrop click -> close");
               closeModal();
             }
           }}

@@ -6,24 +6,14 @@ const VENUE_MANAGER_KEY = "venueManager";
 const AVATAR_URL_KEY = "avatarUrl";
 const AVATAR_ALT_KEY = "avatarAlt";
 
-/**
-* Turn logging on/off here.
-* Set to false when you want to clear before submission.
-*/
 const DEBUG_AUTH = true;
 
-function log(...args) {
-  if (DEBUG_AUTH) console.log(...args);
-}
+function log() {}
 
 function emitAuthChange() {
   window.dispatchEvent(new Event("authchange"));
 }
 
-/**
-* Update auth in localStorage without overwriting everything.
-* You can submit just { avatarUrl } or just { venueManager } etc.
-*/
 export function setAuth({ token, name, venueManager, avatarUrl, avatarAlt }) {
   const before = getAuth();
 

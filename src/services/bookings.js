@@ -12,13 +12,6 @@ import { BOOKINGS } from "../config/api";
  * @returns {Promise<Object>} Created booking data from the API.
  */
 export async function createBooking({ dateFrom, dateTo, guests, venueId }) {
-  console.log("createBooking() payload:", {
-    dateFrom,
-    dateTo,
-    guests,
-    venueId,
-  });
-
   return request(BOOKINGS, {
     method: "POST",
     body: JSON.stringify({

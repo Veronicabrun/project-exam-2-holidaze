@@ -5,9 +5,6 @@ export async function request(url, options = {}) {
   const { token } = getAuth();
   const apiKey = process.env.REACT_APP_API_KEY;
 
-  console.log("API KEY from env:", apiKey);
-  console.log("TOKEN from auth:", token ? token.slice(0, 12) + "..." : null);
-
   const headers = {
     "Content-Type": "application/json",
     ...(apiKey ? { "X-Noroff-API-Key": apiKey } : {}),

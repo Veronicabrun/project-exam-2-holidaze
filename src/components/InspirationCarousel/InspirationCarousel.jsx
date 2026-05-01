@@ -11,15 +11,51 @@ import hero8 from "../../assets/images/hero8.jpg";
 import hero9 from "../../assets/images/hero9.jpg";
 
 const images = [
-  { src: hero1, alt: "Travel inspiration 1", size: "small" },
-  { src: hero2, alt: "Travel inspiration 2", size: "medium" },
-  { src: hero3, alt: "Travel inspiration 3", size: "medium" },
-  { src: hero4, alt: "Travel inspiration 4", size: "large" },
-  { src: hero5, alt: "Travel inspiration 5", size: "medium" },
-  { src: hero6, alt: "Travel inspiration 6", size: "small" },
-  { src: hero7, alt: "Travel inspiration 7", size: "large" },
-  { src: hero8, alt: "Travel inspiration 8", size: "medium" },
-  { src: hero9, alt: "Travel inspiration 9", size: "small" },
+  {
+    src: hero1,
+    alt: "Gothic cathedral with palm trees and twin spires",
+    size: "small",
+  },
+  {
+    src: hero2,
+    alt: "Orange tree with ripe fruit in a Mediterranean setting",
+    size: "medium",
+  },
+  {
+    src: hero3,
+    alt: "Charming Mediterranean street with stone houses and potted plants",
+    size: "medium",
+  },
+  {
+    src: hero4,
+    alt: "Mediterranean balcony with green shutters and potted plant",
+    size: "large",
+  },
+  {
+    src: hero5,
+    alt: "Mediterranean coastal village with stone houses and turquoise water",
+    size: "medium",
+  },
+  {
+    src: hero6,
+    alt: "Tropical beach with palm trees and sun loungers on white sand",
+    size: "small",
+  },
+  {
+    src: hero7,
+    alt: "Tropical beach bungalow with palm trees and thatched roof",
+    size: "large",
+  },
+  {
+    src: hero8,
+    alt: "Tropical bungalow with garden path surrounded by lush greenery",
+    size: "medium",
+  },
+  {
+    src: hero9,
+    alt: "Luxury tropical villa with private pool and lush greenery",
+    size: "small",
+  },
 ];
 
 export default function InspirationCarousel() {
@@ -44,7 +80,7 @@ export default function InspirationCarousel() {
           <div className={styles.track}>
             {loopImages.map((image, index) => (
               <div
-                key={`${image.alt}-${index}`}
+                key={`${image.src}-${index}`}
                 className={`${styles.card} ${
                   image.size === "small"
                     ? styles.small
