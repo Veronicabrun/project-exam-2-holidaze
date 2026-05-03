@@ -15,7 +15,11 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0 20px;
+
+  /* Dette er key */
+  width: min(1200px, 100%);
+  margin: 0 auto;
+  padding: 0 16px;
 }
 
 .brand {
@@ -26,7 +30,7 @@
 .logo {
   color: $color-white;
   font-weight: 700;
-  font-size: 22px;
+  font-size: 28px;
    font-family: $font-heading;
 }
 
@@ -35,14 +39,14 @@
 .navDesktop {
   display: flex;
   align-items: center;
-  gap: 22px;
+  gap: 28px;
 }
 
 .link {
   position: relative;
   color: $color-white;
   text-decoration: none;
-  font-size: 15px;
+  font-size: 16px;
   padding: 10px 0;
   transition: opacity 140ms ease;
 }
@@ -330,6 +334,6 @@
   }
 
   .inner {
-    padding: 0 12px;
+    padding: 0 20px;
   }
 }
