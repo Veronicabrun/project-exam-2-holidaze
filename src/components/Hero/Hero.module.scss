@@ -59,7 +59,7 @@
   width: min(580px, 100%);
   background: $color-white;
   border-radius: 14px;
-  padding: 14px 16px;
+  padding: 10px 14px;
   display: flex;
   align-items: center;
   gap: 12px;
@@ -135,16 +135,17 @@
   }
 
   .title {
-    font-size: clamp(34px, 8.5vw, 50px);
+    font-size: clamp(36px, 8.5vw, 48px);
   }
 
   .subtitle {
     margin-bottom: 26px;
+    font-size: clamp(15px, 4vw, 18px);
+    line-height: 1.35;
   }
 
   .searchBar {
-    width: min(340px, 100%); 
-    padding: 12px 14px;
+    width: min(340px, 100%);
   }
 
   .input {
