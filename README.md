@@ -1,6 +1,6 @@
-# Holidaze 🌍
+# Holidaze 
 
-## 📖 Description
+##  Description
 
 Holidaze is a venue booking application developed as part of Project Exam 2 at Noroff.
 
