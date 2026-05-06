@@ -201,7 +201,7 @@ CI=false
 
 ---
 
-## 📸 Screenshots
+##  Screenshots
 
 (Add screenshots here)
 
