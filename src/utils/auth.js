@@ -6,17 +6,11 @@ const VENUE_MANAGER_KEY = "venueManager";
 const AVATAR_URL_KEY = "avatarUrl";
 const AVATAR_ALT_KEY = "avatarAlt";
 
-const DEBUG_AUTH = true;
-
-function log() {}
-
 function emitAuthChange() {
   window.dispatchEvent(new Event("authchange"));
 }
 
 export function setAuth({ token, name, venueManager, avatarUrl, avatarAlt }) {
-  const before = getAuth();
-
   if (typeof token === "string") localStorage.setItem(TOKEN_KEY, token);
   if (typeof name === "string") localStorage.setItem(NAME_KEY, name);
 
@@ -31,9 +25,6 @@ export function setAuth({ token, name, venueManager, avatarUrl, avatarAlt }) {
   if (typeof avatarAlt === "string") {
     localStorage.setItem(AVATAR_ALT_KEY, avatarAlt);
   }
-
-  const after = getAuth();
-  log("auth.js: setAuth ->", { before, after });
 
   emitAuthChange();
 }
@@ -58,8 +49,6 @@ export function getAuth() {
 }
 
 export function logout() {
-  log("auth.js: logout -> clearing localStorage keys");
-
   localStorage.removeItem(TOKEN_KEY);
   localStorage.removeItem(NAME_KEY);
   localStorage.removeItem(VENUE_MANAGER_KEY);
