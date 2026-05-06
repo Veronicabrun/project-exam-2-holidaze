@@ -14,29 +14,29 @@ The application allows users to browse venues, book stays, and manage venues dep
 
 ---
 
-## 🚀 Live Site
+##  Live Site
 
 👉 https://your-netlify-link.netlify.app
 
 ---
 
-## 📁 Repository
+##  Repository
 
-👉 https://github.com/Veronicabrun/project-exam-2-holidaze
+ https://github.com/Veronicabrun/project-exam-2-holidaze
 
 ---
 
-## 📊 Project Planning
+##  Project Planning
 
 GitHub Project board (Kanban + timeline):
 
-👉 https://github.com/users/Veronicabrun/projects/1
+ https://github.com/users/Veronicabrun/projects/1
 
 ---
 
-## ✨ Features
+##  Features
 
-### 👀 For all visitors
+###  For all visitors
 
 * View the home page
 * View all venues
@@ -51,7 +51,7 @@ Visitors cannot:
 
 ---
 
-### 👤 For registered customers
+###  For registered customers
 
 * Register with a `stud.noroff.no` email
 * Login and logout
@@ -64,7 +64,7 @@ Visitors cannot:
 
 ---
 
-### 🏢 For venue managers
+###  For venue managers
 
 * Access visitor features
 * Create new venues
@@ -75,7 +75,7 @@ Visitors cannot:
 
 ---
 
-## 🛠️ Technologies
+##  Technologies
 
 * React (Create React App)
 * React Router DOM
@@ -88,7 +88,7 @@ Visitors cannot:
 
 ---
 
-## ⚙️ Getting Started
+##  Getting Started
 
 ### Clone the repository
 
@@ -120,7 +120,7 @@ npm run build
 
 ---
 
-## 🔑 Environment Variables
+##  Environment Variables
 
 Create a `.env` file in the root of the project:
 
@@ -135,7 +135,7 @@ Do not commit your real `.env` file to GitHub.
 
 ---
 
-## 🧪 Testing
+##  Testing
 
 The project includes tests for components, pages, hooks, services, and validation logic.
 
@@ -154,7 +154,7 @@ Tests: 39 passed, 39 total
 
 ---
 
-## ✅ Quality Assurance
+##  Quality Assurance
 
 The application has been tested for:
 
@@ -172,7 +172,7 @@ The application has been tested for:
 
 ---
 
-## 🚀 Deployment
+##  Deployment
 
 The application is deployed using Netlify.
 
@@ -208,6 +208,6 @@ CI=false
 
 ---
 
-## 👩‍💻 Author
+##  Author
 
 Veronica 
