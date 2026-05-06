@@ -10,13 +10,12 @@ The application allows users to browse venues, book stays, and manage venues dep
 * Registered customers can book venues and manage their profile
 * Venue managers can create, edit, delete, and manage their own venues
 
-⚠️ This is an exam project. Bookings are not real.
 
 ---
 
 ##  Live Site
 
-👉 https://your-netlify-link.netlify.app
+ https://your-netlify-link.netlify.app
 
 ---
 
