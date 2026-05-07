@@ -1,5 +1,10 @@
 # Holidaze 
 
+##  Screenshots
+
+![Holidaze homepage](./README-assets/2026-05-07_21h10_58.png)
+---
+
 ##  Description
 
 Holidaze is a venue booking application developed as part of Project Exam 2 at Noroff.
@@ -198,12 +203,6 @@ REACT_APP_API_KEY
 REACT_APP_API_BASE  
 CI=false  
 ```
-
----
-
-##  Screenshots
-
-(Add screenshots here)
 
 ---
 
