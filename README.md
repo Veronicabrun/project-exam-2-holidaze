@@ -29,9 +29,11 @@ https://github.com/Veronicabrun/project-exam-2-holidaze.git
 
 ##  Project Planning
 
-GitHub Project board (Kanban + timeline):
+### Gantt Chart / Timeline
+https://github.com/users/Veronicabrun/projects/1/views/3
 
-https://github.com/users/Veronicabrun/projects/1
+### Kanban Board
+https://github.com/users/Veronicabrun/projects/1/views/2
 
 ---
 
