@@ -15,7 +15,7 @@ The application allows users to browse venues, book stays, and manage venues dep
 
 ##  Live Site
 
- https://your-netlify-link.netlify.app
+https://holidaze-by-veronica.netlify.app/
 
 ---
 
