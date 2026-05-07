@@ -1,7 +1,5 @@
 # Holidaze 
 
-##  Screenshots
-
 ![Holidaze homepage](./README-assets/homepage.png)
 
 ##  Description
