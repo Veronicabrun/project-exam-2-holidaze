@@ -2,8 +2,7 @@
 
 ##  Screenshots
 
-![Holidaze homepage](./README-assets/2026-05-07_21h10_58.png)
----
+![Holidaze homepage](./README-assets/homepage.png)
 
 ##  Description
 
