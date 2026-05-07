@@ -8,7 +8,7 @@ export default function DeleteVenueModal({
   onClose,
   onConfirm,
 }) {
- // Close modal on ESC key
+
   useEffect(() => {
     if (!open) return;
 
