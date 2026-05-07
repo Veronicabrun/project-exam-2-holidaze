@@ -188,7 +188,7 @@ export default function Venues() {
                   <span className={styles.query}>{selectedCountry}</span>
                 </>
               ) : (
-                <>loaded</>
+                <>venues</>
               )}
             </p>
 

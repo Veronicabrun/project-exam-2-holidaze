@@ -89,10 +89,13 @@ export default function Nav() {
   }
 
   function handleLogout() {
+    sessionStorage.setItem("logoutMessage", "You have been logged out.");
+
     doLogout();
     setIsUserMenuOpen(false);
     setIsMobileMenuOpen(false);
     mobileToggleRef.current?.focus();
+
     navigate("/login", { replace: true });
   }
 
@@ -258,7 +261,7 @@ export default function Nav() {
             <NavLink
               to="/login"
               className={({ isActive }) =>
-                `${styles.mobileLink} ${styles.mobileActive ? styles.mobileActive : ""}`
+                `${styles.mobileLink} ${isActive ? styles.mobileActive : ""}`
               }
               onClick={closeMobileMenu}
             >

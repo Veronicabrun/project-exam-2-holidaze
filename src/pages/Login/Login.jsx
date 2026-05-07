@@ -1,9 +1,10 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { setAuth } from "../../utils/auth";
 import { loginUser } from "../../services/authService";
 import { getProfile } from "../../services/profile";
 import { isValidEmail, isValidPassword } from "../../utils/validation";
+import Toast from "../../components/ui/Toast/Toast";
 import styles from "./Login.module.scss";
 
 export default function Login() {
@@ -19,6 +20,32 @@ export default function Login() {
   });
   const [submitted, setSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
+
+  const [toast, setToast] = useState({
+    open: false,
+    message: "",
+    variant: "success",
+    id: 0,
+  });
+
+  useEffect(() => {
+    const message = sessionStorage.getItem("logoutMessage");
+
+    if (!message) return;
+
+    setToast((prev) => ({
+      id: prev.id + 1,
+      open: true,
+      message,
+      variant: "success",
+    }));
+
+    sessionStorage.removeItem("logoutMessage");
+  }, []);
+
+  function closeToast() {
+    setToast((prev) => ({ ...prev, open: false }));
+  }
 
   function validateField(field, value) {
     const v = String(value).trim();
@@ -84,8 +111,7 @@ export default function Login() {
           avatarAlt: profile?.avatar?.alt || "User avatar",
         });
       } catch {
-      
-        
+        // Profile data is optional for login flow.
       }
 
       navigate("/profile", { replace: true });
@@ -104,6 +130,15 @@ export default function Login() {
 
   return (
     <div className={styles.page}>
+      <Toast
+        key={toast.id}
+        open={toast.open}
+        message={toast.message}
+        variant={toast.variant}
+        duration={2200}
+        onClose={closeToast}
+      />
+
       <div className={styles.card}>
         <h1 className={styles.title}>Login</h1>
         <p className={styles.subtitle}>
@@ -117,9 +152,10 @@ export default function Login() {
             </label>
             <input
               id="email"
+              name="email"
               type="email"
               required
-              autoComplete="username"
+              autoComplete="email"
               value={email}
               onChange={(e) => {
                 const val = e.target.value;
@@ -151,6 +187,7 @@ export default function Login() {
             </label>
             <input
               id="password"
+              name="password"
               type="password"
               required
               minLength={8}
