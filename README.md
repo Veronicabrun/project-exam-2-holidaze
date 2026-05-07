@@ -21,7 +21,7 @@ The application allows users to browse venues, book stays, and manage venues dep
 
 ##  Repository
 
- https://github.com/Veronicabrun/project-exam-2-holidaze
+https://github.com/Veronicabrun/project-exam-2-holidaze.git
 
 ---
 
