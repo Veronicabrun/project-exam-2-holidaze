@@ -29,7 +29,7 @@ https://github.com/Veronicabrun/project-exam-2-holidaze.git
 
 GitHub Project board (Kanban + timeline):
 
- https://github.com/users/Veronicabrun/projects/1
+https://github.com/users/Veronicabrun/projects/1
 
 ---
 
