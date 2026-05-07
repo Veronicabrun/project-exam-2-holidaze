@@ -149,12 +149,6 @@ export default function Venues() {
           <h1 className={styles.title}>
             {selectedCountry ? `Venues in ${selectedCountry}` : "Explore venues"}
           </h1>
-
-          {selectedCountry && (
-            <p className={styles.subtitle}>
-              Browse venues filtered by {selectedCountry}.
-            </p>
-          )}
         </header>
 
         <div className={styles.controls}>
