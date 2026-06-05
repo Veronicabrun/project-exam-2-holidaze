@@ -1,8 +1,12 @@
-# Holidaze 
+# Holidaze
 
 ![Holidaze homepage](./README-assets/homepage.png)
 
-##  Description
+A venue booking application where users can browse venues, book stays, and manage venues depending on their user role.
+
+---
+
+## Description
 
 Holidaze is a venue booking application developed as part of Project Exam 2 at Noroff.
 
@@ -12,34 +16,52 @@ The application allows users to browse venues, book stays, and manage venues dep
 * Registered customers can book venues and manage their profile
 * Venue managers can create, edit, delete, and manage their own venues
 
+---
+
+## Built With
+
+* React (Create React App)
+* React Router DOM
+* SCSS / Sass modules
+* React Datepicker
+* Noroff Holidaze API
+* Netlify
+* ESLint (via react-scripts)
+* Jest & React Testing Library
 
 ---
 
-##  Live Site
-
-https://holidaze-by-veronica.netlify.app/
-
----
-
-##  Repository
-
-https://github.com/Veronicabrun/project-exam-2-holidaze.git
-
----
-
-##  Project Planning
+## Project Planning
 
 ### Gantt Chart / Timeline
+
 https://github.com/users/Veronicabrun/projects/1/views/3
 
 ### Kanban Board
+
 https://github.com/users/Veronicabrun/projects/1/views/2
 
 ---
 
-##  Features
+## Design
 
-###  For all visitors
+### Web Prototype
+
+https://xd.adobe.com/view/c0b65d21-dd51-4cfd-943e-ade24cbfb03d-95e5/
+
+### Mobile Prototype
+
+https://xd.adobe.com/view/0d97c839-0b59-4b1e-bb3b-6abcbdbacf79-58c4/
+
+### Style Guide
+
+https://xd.adobe.com/view/80c86022-a748-49a1-a0c4-096f7e378225-d59b/
+
+---
+
+## Features
+
+### For all visitors
 
 * View the home page
 * View all venues
@@ -54,7 +76,7 @@ Visitors cannot:
 
 ---
 
-###  For registered customers
+### For registered customers
 
 * Register with a `stud.noroff.no` email
 * Login and logout
@@ -67,7 +89,7 @@ Visitors cannot:
 
 ---
 
-###  For venue managers
+### For venue managers
 
 * Access visitor features
 * Create new venues
@@ -78,25 +100,17 @@ Visitors cannot:
 
 ---
 
-##  Technologies
-
-* React (Create React App)
-* React Router DOM
-* SCSS / Sass modules
-* React Datepicker
-* Noroff Holidaze API
-* Netlify
-* ESLint (via react-scripts)
-* Jest & React Testing Library
-
----
-
-##  Getting Started
+## Getting Started
 
 ### Clone the repository
 
 ```bash
 git clone https://github.com/Veronicabrun/project-exam-2-holidaze.git
+```
+
+Go into the project folder:
+
+```bash
 cd project-exam-2-holidaze
 ```
 
@@ -106,6 +120,8 @@ cd project-exam-2-holidaze
 npm install
 ```
 
+---
+
 ### Run the project locally
 
 ```bash
@@ -113,7 +129,12 @@ npm start
 ```
 
 The application will run at:
+
+```txt
 http://localhost:3000
+```
+
+---
 
 ### Build for production
 
@@ -123,7 +144,7 @@ npm run build
 
 ---
 
-##  Environment Variables
+## Environment Variables
 
 Create a `.env` file in the root of the project:
 
@@ -138,7 +159,7 @@ Do not commit your real `.env` file to GitHub.
 
 ---
 
-##  Testing
+## Testing
 
 The project includes tests for components, pages, hooks, services, and validation logic.
 
@@ -151,13 +172,13 @@ npm test -- --watchAll=false
 Current result:
 
 ```txt
-Test Suites: 8 passed, 8 total  
-Tests: 39 passed, 39 total  
+Test Suites: 8 passed, 8 total
+Tests: 39 passed, 39 total
 ```
 
 ---
 
-##  Quality Assurance
+## Quality Assurance
 
 The application has been tested for:
 
@@ -175,7 +196,7 @@ The application has been tested for:
 
 ---
 
-##  Deployment
+## Deployment
 
 The application is deployed using Netlify.
 
@@ -191,20 +212,46 @@ Steps:
 Netlify settings:
 
 ```txt
-Build command: npm run build  
-Publish directory: build  
+Build command: npm run build
+Publish directory: build
 ```
 
 Environment variables used in Netlify:
 
 ```env
-REACT_APP_API_KEY  
-REACT_APP_API_BASE  
-CI=false  
+REACT_APP_API_KEY
+REACT_APP_API_BASE
+CI=false
 ```
 
 ---
 
-##  Author
+## Live Site
 
-Veronica 
+https://holidaze-by-veronica.netlify.app/
+
+---
+
+## Contact
+
+### GitHub
+
+https://github.com/Veronicabrun
+
+### LinkedIn
+
+https://www.linkedin.com/in/veronica-brun-pedersen-2860bb249/
+
+---
+
+## Author
+
+Veronica Brun-Pedersen
+
+---
+
+## Acknowledgments
+
+* Noroff API documentation
+* Venue and placeholder images from Unsplash
+* Adobe XD for design and prototyping
